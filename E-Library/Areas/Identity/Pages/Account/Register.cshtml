@@ -1,0 +1,21 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<form class="login-form" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+    <input type="email" placeholder="email address" asp-for="Input.Email" />
+    <span asp-validation-for="Input.Email" class="text-danger message"></span>
+    <input type="password" placeholder="password" asp-for="Input.Password" />
+    <span asp-validation-for="Input.Password" class="text-danger message"></span>
+    <input type="password" placeholder="repeat password" asp-for="Input.ConfirmPassword" />
+    <span asp-validation-for="Input.ConfirmPassword" class="text-danger message"></span>
+    <button type="submit">create</button>
+    <p class="message">Already registered? <a asp-page="./Login" id="signin-message">Sign In</a></p>
+</form>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

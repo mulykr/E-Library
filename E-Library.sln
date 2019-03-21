@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Library", "E-Library\E-Library.csproj", "{5B62E5DA-4DDC-404A-85A4-2B9132499E05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiBook", "E-Library\LiBook.csproj", "{5B62E5DA-4DDC-404A-85A4-2B9132499E05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
