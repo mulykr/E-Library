@@ -14,6 +14,9 @@ namespace E_Library.Data
         {
         }
         public DbSet<E_Library.Models.Author> Author { get; set; }
+
         public DbSet<E_Library.Models.Book> Book { get; set; }
+
+        public DbSet<AuthorBook> AuthorBooks { get; set; }
     }
 }

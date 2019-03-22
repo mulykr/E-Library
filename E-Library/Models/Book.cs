@@ -17,5 +17,7 @@ namespace E_Library.Models
 
         public double Price { get; set; }
 
+        public ICollection<AuthorBook> AuthorsBooks { get; set; }
+
     }
 }

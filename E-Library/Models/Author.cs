@@ -17,5 +17,6 @@ namespace E_Library.Models
 
         public string Biography { get; set; }
 
+        public ICollection<AuthorBook> AuthorsBooks { get; set; }
     }
 }
