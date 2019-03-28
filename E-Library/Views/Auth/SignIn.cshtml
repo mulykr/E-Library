@@ -1,0 +1,13 @@
+﻿@model LiBook.Models.SignInViewModel
+@{
+    ViewData["Title"] = "SignIn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form class="login-form" asp-action="SignIn">
+    <input type="text" placeholder="email" asp-for="Email" />
+    <input type="password" placeholder="password" asp-for="Password" />
+    <button id="signin-btn" type="submit">login</button>
+    <p class="message text-danger">@ViewData["Error"]</p>
+    <p class="message">Not registered? <a asp-action="SignUp" id="signup-message">Create an account</a></p>
+</form>

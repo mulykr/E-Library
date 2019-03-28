@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using E_Library.Models;
+using LiBook.Models;
 
-namespace E_Library.Data
+namespace LiBook.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
-        public DbSet<E_Library.Models.Author> Author { get; set; }
 
-        public DbSet<E_Library.Models.Book> Book { get; set; }
+        public DbSet<Author> Author { get; set; }
+
+        public DbSet<Book> Book { get; set; }
 
         public DbSet<AuthorBook> AuthorBooks { get; set; }
     }

@@ -1,0 +1,15 @@
+﻿@model SignUpViewModel
+@{
+    ViewData["Title"] = "SignUp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form class="login-form" method="post">
+    <input type="email" placeholder="email address" asp-for="Email" />
+    <input type="password" placeholder="password" asp-for="Password" />
+    <span asp-validation-for="Password" class="text-danger message"></span>
+    <input type="password" placeholder="repeat password" asp-for="ConfirmPassword" />
+    <span asp-validation-for="ConfirmPassword" class="text-danger message"></span>
+    <button type="submit">create</button>
+    <p class="message">Already registered? <a asp-action="SignIn" id="signin-message">Sign In</a></p>
+</form>
