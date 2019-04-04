@@ -5,44 +5,44 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Books</h2>
+    </div>
+    <div class="col-md-6 text-right">
+        <a asp-action="Create" class="btn btn-success">Create New</a>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImagePath)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImagePath)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row">
+    @foreach (var book in Model)
+    {
+        <div class="col-md-3">
+            <div class="card">
+                <img class="h-50 card-img-top" src="/pics/Books/@book.ImagePath" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">@book.Title</h5>
+                    <p class="card-text text-justify">
+                        @if (book.Description.Length > 125)
+                        {
+                            @(book.Description.Substring(0, 125)+"...")
+                        }
+                        else if (string.IsNullOrEmpty(book.Description))
+                        {
+                            <p>There is no description provided for this book.</p>
+                        }
+                        else
+                        {
+                            <p>
+                                @book.Description
+                            </p>
+                        }
+                    </p>
+                    <a href="/books/details/@book.Id" class="btn btn-success">Open</a> 
+                    <a href="/books/edit/@book.Id" class="btn btn-info">Edit</a> 
+                    <a href="/books/delete/@book.Id" class="btn btn-danger">Remove</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

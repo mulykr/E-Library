@@ -6,8 +6,6 @@
 }
 
 <h2>Create</h2>
-
-<h4>Book</h4>
 <hr />
 <form asp-action="Create" enctype="multipart/form-data">
     <div class="row">
@@ -19,8 +17,8 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImagePath" class="control-label"></label>
-                <input type="file" name="file" id="file" class="form-control" />
+                <label class="control-label">Choose image file</label>
+                <input type="file" name="file" class="form-control-file" />
                 <span asp-validation-for="ImagePath" class="text-danger"></span>
             </div>
         </div>
@@ -34,15 +32,13 @@
     </div>
     <div class="row">
         <div class="form-group col-lg-6">
-            <input type="submit" value="Save" class="btn btn-success" />
+            <input type="submit" value="Save" class="btn btn-success" /> 
+            <a asp-action="Index" class="btn btn-warning">Back to List</a>
+
         </div>
     </div>
 </form>
 
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
