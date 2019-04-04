@@ -22,18 +22,18 @@ namespace LiBook.Controllers
         // GET: Authors
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Author.ToListAsync());
+            return View(await _context.Authors.ToListAsync());
         }
 
         // GET: Authors/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var author = await _context.Author
+            var author = await _context.Authors
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (author == null)
             {
@@ -73,7 +73,7 @@ namespace LiBook.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Author.FindAsync(id);
+            var author = await _context.Authors.FindAsync(id);
             if (author == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace LiBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,FirstName,LastName,ImagePath,Biography")] Author author)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,ImagePath,Biography")] Author author)
         {
             if (id != author.Id)
             {
@@ -117,14 +117,14 @@ namespace LiBook.Controllers
         }
 
         // GET: Authors/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var author = await _context.Author
+            var author = await _context.Authors
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (author == null)
             {
@@ -137,17 +137,17 @@ namespace LiBook.Controllers
         // POST: Authors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var author = await _context.Author.FindAsync(id);
-            _context.Author.Remove(author);
+            var author = await _context.Authors.FindAsync(id);
+            _context.Authors.Remove(author);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AuthorExists(string id)
+        private bool AuthorExists(int id)
         {
-            return _context.Author.Any(e => e.Id == id);
+            return _context.Authors.Any(e => e.Id == id);
         }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace E_Library.Data.Migrations
+namespace LiBook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -21,8 +21,9 @@ namespace E_Library.Data.Migrations
 
             modelBuilder.Entity("E_Library.Models.Author", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Biography");
 
@@ -34,7 +35,7 @@ namespace E_Library.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Author");
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("E_Library.Models.AuthorBook", b =>
@@ -45,33 +46,36 @@ namespace E_Library.Data.Migrations
 
                     b.Property<string>("AuthorId");
 
+                    b.Property<int?>("AuthorId1");
+
                     b.Property<string>("BookId");
+
+                    b.Property<int?>("BookId1");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AuthorId1");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("BookId1");
 
                     b.ToTable("AuthorBooks");
                 });
 
             modelBuilder.Entity("E_Library.Models.Book", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description");
 
                     b.Property<string>("ImagePath");
 
-                    b.Property<double>("Price");
-
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Book");
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -243,11 +247,11 @@ namespace E_Library.Data.Migrations
                 {
                     b.HasOne("E_Library.Models.Author", "Author")
                         .WithMany("AuthorsBooks")
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId1");
 
                     b.HasOne("E_Library.Models.Book", "Book")
                         .WithMany("AuthorsBooks")
-                        .HasForeignKey("BookId");
+                        .HasForeignKey("BookId1");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

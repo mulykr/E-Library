@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace E_Library.Data.Migrations
+namespace LiBook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190322143030_InitMigr")]
-    partial class InitMigr
+    [Migration("20190404174835_Refactor1")]
+    partial class Refactor1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,8 +23,9 @@ namespace E_Library.Data.Migrations
 
             modelBuilder.Entity("E_Library.Models.Author", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Biography");
 
@@ -36,25 +37,47 @@ namespace E_Library.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Author");
+                    b.ToTable("Authors");
+                });
+
+            modelBuilder.Entity("E_Library.Models.AuthorBook", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AuthorId");
+
+                    b.Property<int?>("AuthorId1");
+
+                    b.Property<string>("BookId");
+
+                    b.Property<int?>("BookId1");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId1");
+
+                    b.HasIndex("BookId1");
+
+                    b.ToTable("AuthorBooks");
                 });
 
             modelBuilder.Entity("E_Library.Models.Book", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description");
 
                     b.Property<string>("ImagePath");
 
-                    b.Property<double>("Price");
-
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Book");
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -220,6 +243,17 @@ namespace E_Library.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("E_Library.Models.AuthorBook", b =>
+                {
+                    b.HasOne("E_Library.Models.Author", "Author")
+                        .WithMany("AuthorsBooks")
+                        .HasForeignKey("AuthorId1");
+
+                    b.HasOne("E_Library.Models.Book", "Book")
+                        .WithMany("AuthorsBooks")
+                        .HasForeignKey("BookId1");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
