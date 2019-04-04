@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using E_Library.Data;
 using E_Library.Models;
+using LiBook.Data;
 using LiBook.Utilities.Images;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -18,32 +19,26 @@ namespace LiBook.Controllers
 {
     public class BooksController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<Book> _repository;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public BooksController(ApplicationDbContext context, 
+        public BooksController(IRepository<Book> repository, 
             IHostingEnvironment env)
         {
-            _context = context;
+            _repository = repository;
             _hostingEnvironment = env;
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Books.ToListAsync());
+            return View(_repository.GetList());
         }
 
         // GET: Books/Details/5
-        public async Task<IActionResult> Details(int id)
+        public IActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var book = await _context.Books
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var book = _repository.Get(id);
             if (book == null)
             {
                 return NotFound();
@@ -63,7 +58,7 @@ namespace LiBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description")] Book book, IFormFile file)
+        public IActionResult Create([Bind("Id,Title,Description")] Book book, IFormFile file)
         {
             if (ModelState.IsValid)
             {
@@ -80,8 +75,8 @@ namespace LiBook.Controllers
 
                 try
                 {
-                    _context.Books.Add(book);
-                    _context.SaveChanges();
+                    _repository.Create(book);
+                    _repository.Save();
                 }
                 catch (Exception e)
                 {
@@ -94,14 +89,9 @@ namespace LiBook.Controllers
         }
 
         // GET: Books/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public IActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var book = await _context.Books.FindAsync(id);
+            var book = _repository.Get(id);
             if (book == null)
             {
                 return NotFound();
@@ -114,7 +104,7 @@ namespace LiBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,ImagePath,Price")] Book book)
+        public IActionResult Edit(int id, [Bind("Id,Title,Description")] Book book, IFormFile file)
         {
             if (id != book.Id)
             {
@@ -125,8 +115,34 @@ namespace LiBook.Controllers
             {
                 try
                 {
-                    _context.Update(book);
-                    await _context.SaveChangesAsync();
+                    var oldImageName = _repository.Get(id).ImagePath;
+
+                    if (file != null && file.Length > 0)
+                    {
+                        var cropped = ImageTool.CropMaxSquare(Image.FromStream(file.OpenReadStream()));
+                        var resized = ImageTool.Resize(cropped, 500, 500);
+
+                        var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "pics\\Books");
+                        if (!string.IsNullOrEmpty(oldImageName))
+                        {
+                            var oldPath = Path.Combine(uploads, oldImageName);
+                            if (System.IO.File.Exists(oldPath))
+                            {
+                                System.IO.File.Delete(oldPath);
+                            }
+                        }
+
+                        var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                        var filePath = Path.Combine(uploads, fileName);
+                        resized.Save(filePath);
+                        book.ImagePath = fileName;
+                    }
+                    else
+                    {
+                        book.ImagePath = oldImageName;
+                    }
+                    _repository.Update(book);
+                    _repository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -145,15 +161,9 @@ namespace LiBook.Controllers
         }
 
         // GET: Books/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var book = await _context.Books
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var book = _repository.Get(id);
             if (book == null)
             {
                 return NotFound();
@@ -165,17 +175,32 @@ namespace LiBook.Controllers
         // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var book = await _context.Books.FindAsync(id);
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
+            var book = _repository.Get(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            var imageName = book.ImagePath;
+            _repository.Delete(id);
+            _repository.Save();
+            if (imageName != null)
+            {
+                var uploads = Path.Combine(_hostingEnvironment.WebRootPath ?? "~\\wwwroot", "pics\\Books");
+                var path = Path.Combine(uploads, imageName);
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+            }
             return RedirectToAction(nameof(Index));
         }
 
         private bool BookExists(int id)
         {
-            return _context.Books.Any(e => e.Id == id);
+            return _repository.Get(id) != null;
         }
     }
 }

@@ -26,6 +26,7 @@ namespace LiBook.Data
         public Book Get(int id)
         {
             return _context.Books
+                .AsNoTracking()
                 .Include(item => item.AuthorsBooks)
                 .ThenInclude(item => item.Author)
                 .FirstOrDefault(item => item.Id == id);
