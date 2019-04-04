@@ -14,35 +14,43 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row card-columns">
     @foreach (var book in Model)
     {
         <div class="col-md-3">
             <div class="card">
-                <img class="h-50 card-img-top" src="/pics/Books/@book.ImagePath" alt="Card image cap">
+                @if (!string.IsNullOrEmpty(book.ImagePath))
+                {
+                    <img class="h-50 card-img-top" src="/pics/Books/@book.ImagePath" alt="Card image cap">
+                }
+                else
+                {
+                    <img class="h-50 card-img-top" src="/pics/Books/default.png" alt="Card image cap">
+                }
                 <div class="card-body">
                     <h5 class="card-title">@book.Title</h5>
                     <p class="card-text text-justify">
-                        @if (book.Description.Length > 125)
+                        @if (string.IsNullOrEmpty(book.Description))
                         {
-                            @(book.Description.Substring(0, 125)+"...")
-                        }
-                        else if (string.IsNullOrEmpty(book.Description))
-                        {
-                            <p>There is no description provided for this book.</p>
-                        }
-                        else
-                        {
-                            <p>
-                                @book.Description
-                            </p>
-                        }
-                    </p>
-                    <a href="/books/details/@book.Id" class="btn btn-success">Open</a> 
-                    <a href="/books/edit/@book.Id" class="btn btn-info">Edit</a> 
-                    <a href="/books/delete/@book.Id" class="btn btn-danger">Remove</a>
+                        <p>There is no description provided for this book.</p>
+                    }
+                    else if (book.Description.Length > 125)
+                    {
+                        @(book.Description.Substring(0, 125) + "...")
+                    }
+
+                    else
+                    {
+                        <p>
+                            @book.Description
+                        </p>
+                    }
+                        </p>
+                        <a href="/books/details/@book.Id" class="btn btn-success">Open</a>
+                        <a href="/books/edit/@book.Id" class="btn btn-info">Edit</a>
+                        <a href="/books/delete/@book.Id" class="btn btn-danger">Remove</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        }
 </div>

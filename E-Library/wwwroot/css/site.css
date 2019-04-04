@@ -133,3 +133,14 @@ body {
 .border-12 {
     border-width:12px !important;
 }
+
+.heart {
+    width: 1.5em;
+    margin-top: 0.5em;
+    transition: 0.5s;
+}
+
+.heart:hover {
+    transform: scale(1.2);
+    transition: 0.5s;
+}
