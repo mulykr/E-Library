@@ -12,6 +12,7 @@ namespace E_Library.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+
         }
         public DbSet<Author> Authors { get; set; }
 

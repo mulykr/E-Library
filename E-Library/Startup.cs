@@ -43,6 +43,8 @@ namespace E_Library
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddScoped<IRepository<Book>, BookRepository>();
+            services.AddScoped<IRepository<Author>, AuthorRepository>();
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

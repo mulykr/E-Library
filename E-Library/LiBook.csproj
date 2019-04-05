@@ -17,4 +17,8 @@
     <ProjectReference Include="..\LiBook.Utilities\LiBook.Utilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\pics\Authors\" />
+  </ItemGroup>
+
 </Project>

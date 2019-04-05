@@ -1,40 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using E_Library.Data;
 using E_Library.Models;
+using LiBook.Data;
+using LiBook.Utilities.Images;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace LiBook.Controllers
 {
     public class AuthorsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<Author> _repository;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public AuthorsController(ApplicationDbContext context)
+        public AuthorsController(IRepository<Author> repository,
+            IHostingEnvironment env)
         {
-            _context = context;
+            _repository = repository;
+            _hostingEnvironment = env;
         }
 
+       
+
         // GET: Authors
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Authors.ToListAsync());
+            return View( _repository.GetList());
         }
 
         // GET: Authors/Details/5
-        public async Task<IActionResult> Details(int id)
+        public IActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var author = await _context.Authors
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var author = _repository.Get(id);
             if (author == null)
             {
                 return NotFound();
@@ -54,26 +60,40 @@ namespace LiBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,ImagePath,Biography")] Author author)
+        public IActionResult Create([Bind("Id,FirstName,LastName,Biography")] Author author, IFormFile file)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(author);
-                await _context.SaveChangesAsync();
+                if (file != null && file.Length > 0)
+                {
+                    var cropped = ImageTool.CropMaxSquare(Image.FromStream(file.OpenReadStream()));
+                    var resized = ImageTool.Resize(cropped, 500, 500);
+                    var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "pics\\Authors");
+                    var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(uploads, fileName);
+                    author.ImagePath = fileName;
+                    resized.Save(filePath);
+                }
+
+                try
+                {
+                    _repository.Create(author);
+                    _repository.Save();
+                }
+                catch (Exception e)
+                {
+                    return View(e.Message);
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(author);
         }
 
         // GET: Authors/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public IActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var author = await _context.Authors.FindAsync(id);
+            var author = _repository.Get(id);
             if (author == null)
             {
                 return NotFound();
@@ -86,7 +106,7 @@ namespace LiBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,ImagePath,Biography")] Author author)
+        public IActionResult Edit(int id, [Bind("Id,FirstName,LastName,Biography")] Author author, IFormFile file)
         {
             if (id != author.Id)
             {
@@ -97,8 +117,34 @@ namespace LiBook.Controllers
             {
                 try
                 {
-                    _context.Update(author);
-                    await _context.SaveChangesAsync();
+                    var oldImageName = _repository.Get(id).ImagePath;
+
+                    if (file != null && file.Length > 0)
+                    {
+                        var cropped = ImageTool.CropMaxSquare(Image.FromStream(file.OpenReadStream()));
+                        var resized = ImageTool.Resize(cropped, 500, 500);
+
+                        var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "pics\\Authors");
+                        if (!string.IsNullOrEmpty(oldImageName))
+                        {
+                            var oldPath = Path.Combine(uploads, oldImageName);
+                            if (System.IO.File.Exists(oldPath))
+                            {
+                                System.IO.File.Delete(oldPath);
+                            }
+                        }
+
+                        var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                        var filePath = Path.Combine(uploads, fileName);
+                        resized.Save(filePath);
+                        author.ImagePath = fileName;
+                    }
+                    else
+                    {
+                        author.ImagePath = oldImageName;
+                    }
+                    _repository.Update(author);
+                    _repository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -117,15 +163,9 @@ namespace LiBook.Controllers
         }
 
         // GET: Authors/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public IActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var author = await _context.Authors
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var author = _repository.Get(id);
             if (author == null)
             {
                 return NotFound();
@@ -137,17 +177,32 @@ namespace LiBook.Controllers
         // POST: Authors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var author = await _context.Authors.FindAsync(id);
-            _context.Authors.Remove(author);
-            await _context.SaveChangesAsync();
+            var author = _repository.Get(id);
+            if (author == null)
+            {
+                return NotFound();
+            }
+
+            var imageName = author.ImagePath;
+            _repository.Delete(id);
+            _repository.Save();
+            if (imageName != null)
+            {
+                var uploads = Path.Combine(_hostingEnvironment.WebRootPath ?? "~\\wwwroot", "pics\\Authors");
+                var path = Path.Combine(uploads, imageName);
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+            }
             return RedirectToAction(nameof(Index));
         }
 
         private bool AuthorExists(int id)
         {
-            return _context.Authors.Any(e => e.Id == id);
+            return _repository.Get(id) != null;
         }
     }
 }
