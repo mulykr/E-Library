@@ -7,12 +7,7 @@
     <RootNamespace>LiBook</RootNamespace>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget></PlatformTarget>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
@@ -20,13 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="wwwroot\pics\Authors\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\LiBook.Data\LiBook.Data.csproj" />
     <ProjectReference Include="..\LiBook.Services\LiBook.Services.csproj" />
-    <ProjectReference Include="..\LiBook.Utilities\LiBook.Utilities.csproj" />
   </ItemGroup>
 
 </Project>
