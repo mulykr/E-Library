@@ -2,45 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using LiBook.Data;
-using LiBook.Models;
+using LiBook.Data.Entities;
+using LiBook.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace LiBook.Data
+namespace LiBook.Data.Repositories
 {
-    public class BookRepository : IRepository<Book>
+    public class AuthorRepository : IRepository<Author>
     {
         private readonly ApplicationDbContext _context;
 
-        public BookRepository(ApplicationDbContext context)
+        public AuthorRepository(ApplicationDbContext context)
         {
             _context = context;
             _disposed = false;
         }
 
-        public IEnumerable<Book> GetList()
+        public IEnumerable<Author> GetList()
         {
-            return _context.Books;
+            return _context.Authors;
         }
 
-        public Book Get(int id)
+        public Author Get(int id)
         {
-            return _context.Books
+            return _context.Authors
                 .AsNoTracking()
                 .Include(item => item.AuthorsBooks)
-                .ThenInclude(item => item.Author)
+                .ThenInclude(item => item.Book)
                 .FirstOrDefault(item => item.Id == id);
         }
 
-        public IEnumerable<Book> Get(Expression<Func<Book, bool>> filter = null, Func<IQueryable<Book>, IOrderedQueryable<Book>> orderBy = null, string includeProperties = "")
+        public IEnumerable<Author> Get(Expression<Func<Author, bool>> filter = null, Func<IQueryable<Author>, IOrderedQueryable<Author>> orderBy = null, string includeProperties = "")
         {
-            IQueryable<Book> query = _context.Books;
+            IQueryable<Author> query = _context.Authors;
             if (filter != null)
             {
                 query = query.Where(filter);
             }
             foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                (new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 query = query.Include(includeProperty);
             }
@@ -54,27 +54,21 @@ namespace LiBook.Data
             }
         }
 
-        public void Create(Book item)
+        public void Create(Author item)
         {
-            _context.Books.Add(item);
-            _context.SaveChanges();
-
+            _context.Authors.Add(item);
         }
 
-        public void Update(Book item)
+        public void Update(Author item)
         {
-            _context.Books.Update(item);
-            _context.SaveChanges();
-
+            _context.Authors.Update(item);
         }
 
         public void Delete(int id)
         {
-            var book = _context.Books.Find(id);
-            if (book != null)
-                _context.Books.Remove(book);
-            _context.SaveChanges();
-
+            var author = _context.Authors.Find(id);
+            if (author != null)
+                _context.Authors.Remove(author);
         }
 
         public void Save()

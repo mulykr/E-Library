@@ -1,44 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using LiBook.Services.Interfaces;
-using LiBook.Models.DTO;
-using System.Linq;
-using System.Linq.Expressions;
-using LiBook.Data;
-using LiBook.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using LiBook.Utilities.Images;
 using System.IO;
 using System.Drawing;
+using System.Linq;
+using AutoMapper;
+using LiBook.Data.Entities;
+using LiBook.Data.Interfaces;
+using LiBook.Services.DTO;
 
 namespace LiBook.Services
 {
-    public class BookService:IBookService
+    public class BookService : IBookService
     {
-
+        private readonly IMapper _mapper;
         private readonly IRepository<Book> _repository;
         private readonly IHostingEnvironment _hostingEnvironment;
 
         public BookService(IRepository<Book> repository,
-            IHostingEnvironment env)
+            IHostingEnvironment env,
+            IMapper mapper)
         {
             _repository = repository;
             _hostingEnvironment = env;
+            _mapper = mapper;
         }
 
-        public IEnumerable<Book> GetList()
+        public IEnumerable<BookDto> GetList()
         {
-            return _repository.GetList();
+            return _repository.GetList().Select(item => _mapper.Map<Book, BookDto>(item));
         }
 
-        public Book Get(int id)
+        public BookDto Get(int id)
         {
-            return _repository.Get(id);
+            return _mapper.Map<Book, BookDto>(_repository.Get(id));
         }
 
-        public void Create(Book item, IFormFile file)
+        public void Create(BookDto item, IFormFile file)
         {
             if (file != null && file.Length > 0)
             {
@@ -51,11 +52,12 @@ namespace LiBook.Services
                 resized.Save(filePath);
             }
 
-            _repository.Create(item);
+            var book = _mapper.Map<BookDto, Book>(item);
+            _repository.Create(book);
             _repository.Save();
         }
 
-        public void Update(Book item, IFormFile file)
+        public void Update(BookDto item, IFormFile file)
         {
 
             var oldImageName = Get(item.Id).ImagePath;
@@ -69,9 +71,9 @@ namespace LiBook.Services
                 if (!string.IsNullOrEmpty(oldImageName))
                 {
                     var oldPath = Path.Combine(uploads, oldImageName);
-                    if (System.IO.File.Exists(oldPath))
+                    if (File.Exists(oldPath))
                     {
-                        System.IO.File.Delete(oldPath);
+                        File.Delete(oldPath);
                     }
                 }
 
@@ -84,7 +86,9 @@ namespace LiBook.Services
             {
                 item.ImagePath = oldImageName;
             }
-            _repository.Update(item);
+
+            var book = _mapper.Map<BookDto, Book>(item);
+            _repository.Update(book);
             _repository.Save();
 
         }
@@ -98,9 +102,9 @@ namespace LiBook.Services
             {
                 var uploads = Path.Combine(_hostingEnvironment.WebRootPath ?? "~\\wwwroot", "pics\\Books");
                 var path = Path.Combine(uploads, imageName);
-                if (System.IO.File.Exists(path))
+                if (File.Exists(path))
                 {
-                    System.IO.File.Delete(path);
+                    File.Delete(path);
                 }
             }
 

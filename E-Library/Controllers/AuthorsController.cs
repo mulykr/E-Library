@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LiBook.Data;
+using LiBook.Data.Entities;
 using LiBook.Models;
+using LiBook.Services.DTO;
 using LiBook.Utilities.Images;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -52,15 +55,15 @@ namespace LiBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,FirstName,LastName,Biography")] Author author, IFormFile file)
+        public IActionResult Create([Bind("Id,FirstName,LastName,Biography")] AuthorViewModel author, IFormFile file)
         {
             if (ModelState.IsValid)
             {
-               
-
                 try
                 {
-                    _service.Create(author,file);
+                    var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AuthorViewModel, AuthorDto>()).CreateMapper();
+                    var item = mapper.Map<AuthorViewModel, AuthorDto>(author);
+                    _service.Create(item, file);
                 }
                 catch (Exception e)
                 {
@@ -88,7 +91,7 @@ namespace LiBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,FirstName,LastName,Biography")] Author author, IFormFile file)
+        public IActionResult Edit(int id, [Bind("Id,FirstName,LastName,Biography")] AuthorViewModel author, IFormFile file)
         {
             if (id != author.Id)
             {
@@ -99,8 +102,9 @@ namespace LiBook.Controllers
             {
                 try
                 {
-                    
-                    _service.Update(author,file);
+                    var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AuthorViewModel, AuthorDto>()).CreateMapper();
+                    var item = mapper.Map<AuthorViewModel, AuthorDto>(author);
+                    _service.Update(item, file);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

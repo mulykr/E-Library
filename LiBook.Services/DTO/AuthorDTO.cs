@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace LiBook.Models
+namespace LiBook.Services.DTO
 {
-    public class Author
+    public class AuthorDto
     {
         public int Id { get; set; }
 
@@ -17,6 +14,6 @@ namespace LiBook.Models
 
         public string Biography { get; set; }
 
-        public ICollection<AuthorBook> AuthorsBooks { get; set; }
+        public ICollection<AuthorBookDto> AuthorsBooks { get; set; }
     }
 }

@@ -5,8 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\LiBook.Data\LiBook.Data.csproj" />
-    <ProjectReference Include="..\LiBook.Models\LiBook.Models.csproj" />
     <ProjectReference Include="..\LiBook.Utilities\LiBook.Utilities.csproj" />
   </ItemGroup>
 

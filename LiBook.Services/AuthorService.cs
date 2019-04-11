@@ -1,44 +1,45 @@
 ﻿using System.Collections.Generic;
-using System.Text;
-using LiBook.Services.Interfaces;
-using LiBook.Models.DTO;
+using System;
+using System.IO;
+using System.Drawing;
 using System.Linq;
-using System.Linq.Expressions;
-using LiBook.Data;
-using LiBook.Models;
+using AutoMapper;
+using LiBook.Data.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using LiBook.Utilities.Images;
-using System.IO;
-using System.Drawing;
-using System;
+using LiBook.Data.Interfaces;
+using LiBook.Services.DTO;
+using LiBook.Services.Interfaces;
 
 namespace LiBook.Services
 {
     public class AuthorService : IAuthorService
     {
-
+        private readonly IMapper _mapper;
         private readonly IRepository<Author> _repository;
         private readonly IHostingEnvironment _hostingEnvironment;
 
         public AuthorService(IRepository<Author> repository,
-            IHostingEnvironment env)
+            IHostingEnvironment env,
+            IMapper mapper)
         {
             _repository = repository;
             _hostingEnvironment = env;
+            _mapper = mapper;
         }
 
-        public IEnumerable<Author> GetList()
+        public IEnumerable<AuthorDto> GetList()
         {
-            return _repository.GetList();
+            return _repository.GetList().Select(item => _mapper.Map<Author, AuthorDto>(item));
         }
 
-        public Author Get(int id)
+        public AuthorDto Get(int id)
         {
-            return _repository.Get(id);
+            return _mapper.Map<Author, AuthorDto>(_repository.Get(id));
         }
 
-        public void Create(Author item, IFormFile file)
+        public void Create(AuthorDto item, IFormFile file)
         {
             if (file != null && file.Length > 0)
             {
@@ -50,12 +51,14 @@ namespace LiBook.Services
                 item.ImagePath = fileName;
                 resized.Save(filePath);
             }
-            _repository.Create(item);
+
+            var author = _mapper.Map<AuthorDto, Author>(item);
+            _repository.Create(author);
             _repository.Save();
 
         }
 
-        public void Update(Author item, IFormFile file)
+        public void Update(AuthorDto item, IFormFile file)
         {
             var oldImageName = Get(item.Id).ImagePath;
 
@@ -68,9 +71,9 @@ namespace LiBook.Services
                 if (!string.IsNullOrEmpty(oldImageName))
                 {
                     var oldPath = Path.Combine(uploads, oldImageName);
-                    if (System.IO.File.Exists(oldPath))
+                    if (File.Exists(oldPath))
                     {
-                        System.IO.File.Delete(oldPath);
+                        File.Delete(oldPath);
                     }
                 }
 
@@ -84,7 +87,8 @@ namespace LiBook.Services
                 item.ImagePath = oldImageName;
             }
 
-            _repository.Update(item);
+            var author = _mapper.Map<AuthorDto, Author>(item);
+            _repository.Update(author);
             _repository.Save();
 
         }
@@ -97,9 +101,9 @@ namespace LiBook.Services
             {
                 var uploads = Path.Combine(_hostingEnvironment.WebRootPath ?? "~\\wwwroot", "pics\\Authors");
                 var path = Path.Combine(uploads, imageName);
-                if (System.IO.File.Exists(path))
+                if (File.Exists(path))
                 {
-                    System.IO.File.Delete(path);
+                    File.Delete(path);
                 }
             }
             _repository.Delete(id);

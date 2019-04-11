@@ -1,27 +1,31 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LiBook.Models;
 using Microsoft.AspNetCore.Http;
-using LiBook.Models.DTO;
 using LiBook.Services.Interfaces;
 using AutoMapper;
+using LiBook.Data.Entities;
+using LiBook.Services.DTO;
 
 namespace LiBook.Controllers
 {
     public class BooksController : Controller
     {
         private readonly IBookService _service;
+        private readonly IMapper _mapper;
 
-        public BooksController(IBookService service)
+        public BooksController(IBookService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         // GET: Books
         public IActionResult Index()
         {
-            return View(_service.GetList());
+            return View(_service.GetList().Select(item => _mapper.Map<BookDto, BookViewModel>(item)));
         }
 
         // GET: Books/Details/5
@@ -33,7 +37,7 @@ namespace LiBook.Controllers
                 return NotFound();
             }
 
-            return View(book);
+            return View(_mapper.Map<BookDto, BookViewModel>(book));
         }
 
         // GET: Books/Create
@@ -51,8 +55,7 @@ namespace LiBook.Controllers
             {
                 try
                 {
-                    var mapper = new MapperConfiguration(cfg => cfg.CreateMap<BookViewModel, Book > ()).CreateMapper();
-                    var newBook = mapper.Map<BookViewModel, Book>(book);
+                    var newBook = _mapper.Map<BookViewModel, BookDto>(book);
                     _service.Create(newBook, file);
                 }
                 catch (Exception e)
@@ -73,7 +76,7 @@ namespace LiBook.Controllers
             {
                 return NotFound();
             }
-            return View(book);
+            return View(_mapper.Map<BookDto, BookViewModel>(book));
         }
 
         // POST: Books/Edit/5
@@ -92,7 +95,7 @@ namespace LiBook.Controllers
                 {
                     var mapper = new MapperConfiguration(cfg => cfg.CreateMap<BookViewModel, Book>()).CreateMapper();
 
-                    var updatedBook = mapper.Map<BookViewModel, Book>(book);
+                    var updatedBook = mapper.Map<BookViewModel, BookDto>(book);
                     _service.Update(updatedBook,file);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -118,7 +121,7 @@ namespace LiBook.Controllers
                 return NotFound();
             }
 
-            return View(book);
+            return View(_mapper.Map<BookDto, BookViewModel>(book));
         }
 
         // POST: Books/Delete/5

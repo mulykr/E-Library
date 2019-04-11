@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LiBook.Models
+namespace LiBook.Data.Entities
 {
     public class Book
     {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace LiBook.Models
+﻿namespace LiBook.Data.Entities
 {
     public class AuthorBook
     {
