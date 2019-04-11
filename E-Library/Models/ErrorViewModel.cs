@@ -1,6 +1,4 @@
-using System;
-
-namespace E_Library.Models
+namespace LiBook.Models
 {
     public class ErrorViewModel
     {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using E_Library.Models;
+using LiBook.Models;
 
-namespace E_Library.Controllers
+namespace LiBook.Controllers
 {
     public class HomeController : Controller
     {

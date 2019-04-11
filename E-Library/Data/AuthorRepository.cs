@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using E_Library.Data;
-using E_Library.Models;
+using LiBook.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LiBook.Data

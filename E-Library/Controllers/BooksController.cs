@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net.Mime;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using E_Library.Data;
-using E_Library.Models;
 using LiBook.Data;
+using LiBook.Models;
 using LiBook.Utilities.Images;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

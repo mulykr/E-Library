@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using E_Library.Models;
+using LiBook.Models;
 
-namespace E_Library.Data
+namespace LiBook.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
