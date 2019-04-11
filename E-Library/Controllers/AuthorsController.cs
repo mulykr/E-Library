@@ -8,33 +8,31 @@ using LiBook.Models;
 using LiBook.Utilities.Images;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using LiBook.Services.Interfaces;
 
 namespace LiBook.Controllers
 {
     public class AuthorsController : Controller
     {
-        private readonly IRepository<Author> _repository;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IAuthorService _service;
 
-        public AuthorsController(IRepository<Author> repository,
-            IHostingEnvironment env)
+        public AuthorsController(IAuthorService service)
         {
-            _repository = repository;
-            _hostingEnvironment = env;
+            _service = service;
         }
 
-       
+
 
         // GET: Authors
         public IActionResult Index()
         {
-            return View( _repository.GetList());
+            return View(_service.GetList());
         }
 
         // GET: Authors/Details/5
         public IActionResult Details(int id)
         {
-            var author = _repository.Get(id);
+            var author = _service.Get(id);
             if (author == null)
             {
                 return NotFound();
@@ -58,21 +56,11 @@ namespace LiBook.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (file != null && file.Length > 0)
-                {
-                    var cropped = ImageTool.CropMaxSquare(Image.FromStream(file.OpenReadStream()));
-                    var resized = ImageTool.Resize(cropped, 500, 500);
-                    var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "pics\\Authors");
-                    var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                    var filePath = Path.Combine(uploads, fileName);
-                    author.ImagePath = fileName;
-                    resized.Save(filePath);
-                }
+               
 
                 try
                 {
-                    _repository.Create(author);
-                    _repository.Save();
+                    _service.Create(author,file);
                 }
                 catch (Exception e)
                 {
@@ -87,7 +75,7 @@ namespace LiBook.Controllers
         // GET: Authors/Edit/5
         public IActionResult Edit(int id)
         {
-            var author = _repository.Get(id);
+            var author = _service.Get(id);
             if (author == null)
             {
                 return NotFound();
@@ -111,34 +99,8 @@ namespace LiBook.Controllers
             {
                 try
                 {
-                    var oldImageName = _repository.Get(id).ImagePath;
-
-                    if (file != null && file.Length > 0)
-                    {
-                        var cropped = ImageTool.CropMaxSquare(Image.FromStream(file.OpenReadStream()));
-                        var resized = ImageTool.Resize(cropped, 500, 500);
-
-                        var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "pics\\Authors");
-                        if (!string.IsNullOrEmpty(oldImageName))
-                        {
-                            var oldPath = Path.Combine(uploads, oldImageName);
-                            if (System.IO.File.Exists(oldPath))
-                            {
-                                System.IO.File.Delete(oldPath);
-                            }
-                        }
-
-                        var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                        var filePath = Path.Combine(uploads, fileName);
-                        resized.Save(filePath);
-                        author.ImagePath = fileName;
-                    }
-                    else
-                    {
-                        author.ImagePath = oldImageName;
-                    }
-                    _repository.Update(author);
-                    _repository.Save();
+                    
+                    _service.Update(author,file);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -159,7 +121,7 @@ namespace LiBook.Controllers
         // GET: Authors/Delete/5
         public IActionResult Delete(int id)
         {
-            var author = _repository.Get(id);
+            var author = _service.Get(id);
             if (author == null)
             {
                 return NotFound();
@@ -173,30 +135,13 @@ namespace LiBook.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var author = _repository.Get(id);
-            if (author == null)
-            {
-                return NotFound();
-            }
-
-            var imageName = author.ImagePath;
-            _repository.Delete(id);
-            _repository.Save();
-            if (imageName != null)
-            {
-                var uploads = Path.Combine(_hostingEnvironment.WebRootPath ?? "~\\wwwroot", "pics\\Authors");
-                var path = Path.Combine(uploads, imageName);
-                if (System.IO.File.Exists(path))
-                {
-                    System.IO.File.Delete(path);
-                }
-            }
+            _service.Delete(id);           
             return RedirectToAction(nameof(Index));
         }
 
         private bool AuthorExists(int id)
         {
-            return _repository.Get(id) != null;
+            return _service.Get(id) != null;
         }
     }
 }
