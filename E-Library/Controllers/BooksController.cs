@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Drawing;
-using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using LiBook.Data;
 using LiBook.Models;
-using LiBook.Utilities.Images;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using LiBook.Models.DTO;
 using LiBook.Services.Interfaces;
 using AutoMapper;
-using LiBook.Services;
 
 namespace LiBook.Controllers
 {
     public class BooksController : Controller
     {
-
         private readonly IBookService _service;
 
         public BooksController(IBookService service)
@@ -50,8 +43,6 @@ namespace LiBook.Controllers
         }
 
         // POST: Books/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Id,Title,Description")] BookViewModel book, IFormFile file)
@@ -61,10 +52,8 @@ namespace LiBook.Controllers
                 try
                 {
                     var mapper = new MapperConfiguration(cfg => cfg.CreateMap<BookViewModel, Book > ()).CreateMapper();
-                    
-                    Book _book = new Book();
-                    _book = mapper.Map<BookViewModel, Book>(book);
-                    _service.Create(_book, file);
+                    var newBook = mapper.Map<BookViewModel, Book>(book);
+                    _service.Create(newBook, file);
                 }
                 catch (Exception e)
                 {
@@ -88,8 +77,6 @@ namespace LiBook.Controllers
         }
 
         // POST: Books/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("Id,Title,Description")] BookViewModel book, IFormFile file)
@@ -105,9 +92,8 @@ namespace LiBook.Controllers
                 {
                     var mapper = new MapperConfiguration(cfg => cfg.CreateMap<BookViewModel, Book>()).CreateMapper();
 
-                    Book _book = new Book();
-                    _book = mapper.Map<BookViewModel, Book>(book);
-                    _service.Update(_book,file);
+                    var updatedBook = mapper.Map<BookViewModel, Book>(book);
+                    _service.Update(updatedBook,file);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -115,10 +101,8 @@ namespace LiBook.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
