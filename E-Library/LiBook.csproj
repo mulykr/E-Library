@@ -12,20 +12,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LiBook.Data\LiBook.Data.csproj" />
-    <ProjectReference Include="..\LiBook.Models\LiBook.Models.csproj" />
-    <ProjectReference Include="..\LiBook.Utilities\LiBook.Utilities.csproj" />
+    <Folder Include="Data\" />
+    <Folder Include="wwwroot\pics\Authors\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="wwwroot\pics\Authors\" />
+    <ProjectReference Include="..\LiBook.Models\LiBook.Models.csproj" />
+    <ProjectReference Include="..\LiBook.Services\LiBook.Services.csproj" />
+    <ProjectReference Include="..\LiBook.Utilities\LiBook.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

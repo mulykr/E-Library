@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -11,14 +12,10 @@ namespace LiBook.Services.Interfaces
         IEnumerable<T> GetList();
         T Get(int id);
 
-        IEnumerable<T> Get(
-            Expression<Func<T, bool>> filter = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            string includeProperties = "");
-        void Create(T item);
-        void Update(T item);
+        
+        void Create(T item, IFormFile file);
+        void Update(T item, IFormFile file);
         void Delete(int id);
-        void Save();
         
     }
 }

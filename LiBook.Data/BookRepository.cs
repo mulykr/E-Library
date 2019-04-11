@@ -57,11 +57,15 @@ namespace LiBook.Data
         public void Create(Book item)
         {
             _context.Books.Add(item);
+            _context.SaveChanges();
+
         }
 
         public void Update(Book item)
         {
             _context.Books.Update(item);
+            _context.SaveChanges();
+
         }
 
         public void Delete(int id)
@@ -69,6 +73,8 @@ namespace LiBook.Data
             var book = _context.Books.Find(id);
             if (book != null)
                 _context.Books.Remove(book);
+            _context.SaveChanges();
+
         }
 
         public void Save()
