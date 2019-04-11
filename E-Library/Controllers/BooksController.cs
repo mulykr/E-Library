@@ -8,31 +8,33 @@ using LiBook.Models;
 using LiBook.Utilities.Images;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using LiBook.Models.DTO;
+using LiBook.Services.Interfaces;
+using AutoMapper;
+using LiBook.Services;
 
 namespace LiBook.Controllers
 {
     public class BooksController : Controller
     {
-        private readonly IRepository<Book> _repository;
-        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public BooksController(IRepository<Book> repository, 
-            IHostingEnvironment env)
+        private readonly IBookService _service;
+
+        public BooksController(IBookService service)
         {
-            _repository = repository;
-            _hostingEnvironment = env;
+            _service = service;
         }
 
         // GET: Books
         public IActionResult Index()
         {
-            return View(_repository.GetList());
+            return View(_service.GetList());
         }
 
         // GET: Books/Details/5
         public IActionResult Details(int id)
         {
-            var book = _repository.Get(id);
+            var book = _service.Get(id);
             if (book == null)
             {
                 return NotFound();
@@ -52,25 +54,17 @@ namespace LiBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Title,Description")] Book book, IFormFile file)
+        public IActionResult Create([Bind("Id,Title,Description")] BookViewModel book, IFormFile file)
         {
             if (ModelState.IsValid)
             {
-                if (file != null && file.Length > 0)
-                {
-                    var cropped = ImageTool.CropMaxSquare(Image.FromStream(file.OpenReadStream()));
-                    var resized = ImageTool.Resize(cropped, 500, 500);
-                    var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "pics\\Books");
-                    var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                    var filePath = Path.Combine(uploads, fileName);
-                    book.ImagePath = fileName;
-                    resized.Save(filePath);
-                }
-
                 try
                 {
-                    _repository.Create(book);
-                    _repository.Save();
+                    var mapper = new MapperConfiguration(cfg => cfg.CreateMap<BookViewModel, Book > ()).CreateMapper();
+                    
+                    Book _book = new Book();
+                    _book = mapper.Map<BookViewModel, Book>(book);
+                    _service.Create(_book, file);
                 }
                 catch (Exception e)
                 {
@@ -85,7 +79,7 @@ namespace LiBook.Controllers
         // GET: Books/Edit/5
         public IActionResult Edit(int id)
         {
-            var book = _repository.Get(id);
+            var book = _service.Get(id);
             if (book == null)
             {
                 return NotFound();
@@ -98,7 +92,7 @@ namespace LiBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,Title,Description")] Book book, IFormFile file)
+        public IActionResult Edit(int id, [Bind("Id,Title,Description")] BookViewModel book, IFormFile file)
         {
             if (id != book.Id)
             {
@@ -109,34 +103,11 @@ namespace LiBook.Controllers
             {
                 try
                 {
-                    var oldImageName = _repository.Get(id).ImagePath;
+                    var mapper = new MapperConfiguration(cfg => cfg.CreateMap<BookViewModel, Book>()).CreateMapper();
 
-                    if (file != null && file.Length > 0)
-                    {
-                        var cropped = ImageTool.CropMaxSquare(Image.FromStream(file.OpenReadStream()));
-                        var resized = ImageTool.Resize(cropped, 500, 500);
-
-                        var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "pics\\Books");
-                        if (!string.IsNullOrEmpty(oldImageName))
-                        {
-                            var oldPath = Path.Combine(uploads, oldImageName);
-                            if (System.IO.File.Exists(oldPath))
-                            {
-                                System.IO.File.Delete(oldPath);
-                            }
-                        }
-
-                        var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                        var filePath = Path.Combine(uploads, fileName);
-                        resized.Save(filePath);
-                        book.ImagePath = fileName;
-                    }
-                    else
-                    {
-                        book.ImagePath = oldImageName;
-                    }
-                    _repository.Update(book);
-                    _repository.Save();
+                    Book _book = new Book();
+                    _book = mapper.Map<BookViewModel, Book>(book);
+                    _service.Update(_book,file);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -157,7 +128,7 @@ namespace LiBook.Controllers
         // GET: Books/Delete/5
         public IActionResult Delete(int id)
         {
-            var book = _repository.Get(id);
+            var book = _service.Get(id);
             if (book == null)
             {
                 return NotFound();
@@ -171,30 +142,14 @@ namespace LiBook.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var book = _repository.Get(id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            var imageName = book.ImagePath;
-            _repository.Delete(id);
-            _repository.Save();
-            if (imageName != null)
-            {
-                var uploads = Path.Combine(_hostingEnvironment.WebRootPath ?? "~\\wwwroot", "pics\\Books");
-                var path = Path.Combine(uploads, imageName);
-                if (System.IO.File.Exists(path))
-                {
-                    System.IO.File.Delete(path);
-                }
-            }
+            _service.Delete(id);
+            
             return RedirectToAction(nameof(Index));
         }
 
         private bool BookExists(int id)
         {
-            return _repository.Get(id) != null;
+            return _service.Get(id) != null;
         }
     }
 }
