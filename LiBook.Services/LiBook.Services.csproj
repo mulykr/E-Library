@@ -4,4 +4,11 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\E-Library\LiBook.csproj" />
+    <ProjectReference Include="..\LiBook.Data\LiBook.Data.csproj" />
+    <ProjectReference Include="..\LiBook.Models\LiBook.Models.csproj" />
+    <ProjectReference Include="..\LiBook.Utilities\LiBook.Utilities.csproj" />
+  </ItemGroup>
+
 </Project>
