@@ -18,11 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LiBook.Data\LiBook.Data.csproj" />
     <ProjectReference Include="..\LiBook.Models\LiBook.Models.csproj" />
     <ProjectReference Include="..\LiBook.Utilities\LiBook.Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\" />
     <Folder Include="wwwroot\pics\Authors\" />
   </ItemGroup>
 
