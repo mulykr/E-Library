@@ -56,8 +56,6 @@ namespace LiBook.Controllers
             {
                 try
                 {
-                    //var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AuthorViewModel, AuthorDto>()).CreateMapper();
-                    //var item = mapper.Map<AuthorViewModel, AuthorDto>(author);
                     var newAuthor = _mapper.Map<AuthorViewModel, AuthorDto>(author);
                     _service.Create(newAuthor, file);
                 }
@@ -98,8 +96,7 @@ namespace LiBook.Controllers
             {
                 try
                 {
-                    var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AuthorViewModel, AuthorDto>()).CreateMapper();
-                    var updateAuthor = mapper.Map<AuthorViewModel, AuthorDto>(author);
+                    var updateAuthor = _mapper.Map<AuthorViewModel, AuthorDto>(author);
                     _service.Update(updateAuthor, file);
                 }
                 catch (DbUpdateConcurrencyException)

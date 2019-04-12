@@ -93,9 +93,7 @@ namespace LiBook.Controllers
             {
                 try
                 {
-                    var mapper = new MapperConfiguration(cfg => cfg.CreateMap<BookViewModel, Book>()).CreateMapper();
-
-                    var updatedBook = mapper.Map<BookViewModel, BookDto>(book);
+                    var updatedBook = _mapper.Map<BookViewModel, BookDto>(book);
                     _service.Update(updatedBook,file);
                 }
                 catch (DbUpdateConcurrencyException)
