@@ -1,35 +1,30 @@
 ﻿using System;
-using System.Drawing;
-using System.IO;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using LiBook.Data;
-using LiBook.Data.Entities;
 using LiBook.Models;
 using LiBook.Services.DTO;
-using LiBook.Utilities.Images;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using LiBook.Services.Interfaces;
+using System.Linq;
 
 namespace LiBook.Controllers
 {
     public class AuthorsController : Controller
     {
         private readonly IAuthorService _service;
+        private readonly IMapper _mapper;
 
-        public AuthorsController(IAuthorService service)
+        public AuthorsController(IAuthorService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
-
-
 
         // GET: Authors
         public IActionResult Index()
         {
-            return View(_service.GetList());
+            return View(_service.GetList().Select(item => _mapper.Map<AuthorDto, AuthorViewModel>(item)));
         }
 
         // GET: Authors/Details/5
@@ -41,7 +36,7 @@ namespace LiBook.Controllers
                 return NotFound();
             }
 
-            return View(author);
+            return View(_mapper.Map<AuthorDto,AuthorViewModel>(author));
         }
 
         // GET: Authors/Create
@@ -61,9 +56,10 @@ namespace LiBook.Controllers
             {
                 try
                 {
-                    var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AuthorViewModel, AuthorDto>()).CreateMapper();
-                    var item = mapper.Map<AuthorViewModel, AuthorDto>(author);
-                    _service.Create(item, file);
+                    //var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AuthorViewModel, AuthorDto>()).CreateMapper();
+                    //var item = mapper.Map<AuthorViewModel, AuthorDto>(author);
+                    var newAuthor = _mapper.Map<AuthorViewModel, AuthorDto>(author);
+                    _service.Create(newAuthor, file);
                 }
                 catch (Exception e)
                 {
@@ -83,7 +79,7 @@ namespace LiBook.Controllers
             {
                 return NotFound();
             }
-            return View(author);
+            return View(_mapper.Map<AuthorDto, AuthorViewModel>(author));
         }
 
         // POST: Authors/Edit/5
@@ -103,8 +99,8 @@ namespace LiBook.Controllers
                 try
                 {
                     var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AuthorViewModel, AuthorDto>()).CreateMapper();
-                    var item = mapper.Map<AuthorViewModel, AuthorDto>(author);
-                    _service.Update(item, file);
+                    var updateAuthor = mapper.Map<AuthorViewModel, AuthorDto>(author);
+                    _service.Update(updateAuthor, file);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -131,7 +127,7 @@ namespace LiBook.Controllers
                 return NotFound();
             }
 
-            return View(author);
+            return View(_mapper.Map<AuthorDto, AuthorViewModel>(author));
         }
 
         // POST: Authors/Delete/5
