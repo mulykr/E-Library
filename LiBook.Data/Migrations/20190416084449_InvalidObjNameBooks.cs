@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace LiBook.Migrations
+namespace LiBook.Data.Migrations
 {
-    public partial class Refactor1 : Migration
+    public partial class InvalidObjNameBooks : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -4,8 +4,10 @@ using LiBook.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace LiBook.Migrations
+namespace LiBook.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -14,11 +16,11 @@ namespace LiBook.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("E_Library.Models.Author", b =>
+            modelBuilder.Entity("LiBook.Data.Entities.Author", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,7 +39,7 @@ namespace LiBook.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("E_Library.Models.AuthorBook", b =>
+            modelBuilder.Entity("LiBook.Data.Entities.AuthorBook", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +62,7 @@ namespace LiBook.Migrations
                     b.ToTable("AuthorBooks");
                 });
 
-            modelBuilder.Entity("E_Library.Models.Book", b =>
+            modelBuilder.Entity("LiBook.Data.Entities.Book", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -242,13 +244,13 @@ namespace LiBook.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("E_Library.Models.AuthorBook", b =>
+            modelBuilder.Entity("LiBook.Data.Entities.AuthorBook", b =>
                 {
-                    b.HasOne("E_Library.Models.Author", "Author")
+                    b.HasOne("LiBook.Data.Entities.Author", "Author")
                         .WithMany("AuthorsBooks")
                         .HasForeignKey("AuthorId1");
 
-                    b.HasOne("E_Library.Models.Book", "Book")
+                    b.HasOne("LiBook.Data.Entities.Book", "Book")
                         .WithMany("AuthorsBooks")
                         .HasForeignKey("BookId1");
                 });
