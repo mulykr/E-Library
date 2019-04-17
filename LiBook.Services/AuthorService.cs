@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
 using System.Linq;
 using AutoMapper;
 using LiBook.Data.Entities;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using LiBook.Utilities.Images;
 using LiBook.Data.Interfaces;
@@ -18,14 +17,11 @@ namespace LiBook.Services
     {
         private readonly IMapper _mapper;
         private readonly IRepository<Author> _repository;
-        private readonly IHostingEnvironment _hostingEnvironment;
 
         public AuthorService(IRepository<Author> repository,
-            IHostingEnvironment env,
             IMapper mapper)
         {
             _repository = repository;
-            _hostingEnvironment = env;
             _mapper = mapper;
         }
 
@@ -45,7 +41,7 @@ namespace LiBook.Services
             {
                 var cropped = ImageTool.CropMaxSquare(Image.FromStream(file.OpenReadStream()));
                 var resized = ImageTool.Resize(cropped, 500, 500);
-                var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "pics\\Authors");
+                var uploads = Path.Combine("~\\wwwroot", "pics\\Authors");
                 var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
                 var filePath = Path.Combine(uploads, fileName);
                 item.ImagePath = fileName;
@@ -67,7 +63,7 @@ namespace LiBook.Services
                 var cropped = ImageTool.CropMaxSquare(Image.FromStream(file.OpenReadStream()));
                 var resized = ImageTool.Resize(cropped, 500, 500);
 
-                var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "pics\\Authors");
+                var uploads = Path.Combine("~\\wwwroot", "pics\\Authors");
                 if (!string.IsNullOrEmpty(oldImageName))
                 {
                     var oldPath = Path.Combine(uploads, oldImageName);
@@ -99,7 +95,7 @@ namespace LiBook.Services
             var imageName = author.ImagePath;
             if (imageName != null)
             {
-                var uploads = Path.Combine(_hostingEnvironment.WebRootPath ?? "~\\wwwroot", "pics\\Authors");
+                var uploads = Path.Combine("~\\wwwroot", "pics\\Authors");
                 var path = Path.Combine(uploads, imageName);
                 if (File.Exists(path))
                 {
