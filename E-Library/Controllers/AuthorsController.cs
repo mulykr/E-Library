@@ -28,7 +28,7 @@ namespace LiBook.Controllers
         }
 
         // GET: Authors/Details/5
-        public IActionResult Details(int id)
+        public IActionResult Details(string id)
         {
             var author = _service.Get(id);
             if (author == null)
@@ -70,7 +70,7 @@ namespace LiBook.Controllers
         }
 
         // GET: Authors/Edit/5
-        public IActionResult Edit(int id)
+        public IActionResult Edit(string id)
         {
             var author = _service.Get(id);
             if (author == null)
@@ -85,7 +85,7 @@ namespace LiBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,FirstName,LastName,Biography")] AuthorViewModel author, IFormFile file)
+        public IActionResult Edit(string id, [Bind("Id,FirstName,LastName,Biography")] AuthorViewModel author, IFormFile file)
         {
             if (id != author.Id)
             {
@@ -116,7 +116,7 @@ namespace LiBook.Controllers
         }
 
         // GET: Authors/Delete/5
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             var author = _service.Get(id);
             if (author == null)
@@ -130,13 +130,13 @@ namespace LiBook.Controllers
         // POST: Authors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(string id)
         {
             _service.Delete(id);           
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AuthorExists(int id)
+        private bool AuthorExists(string id)
         {
             return _service.Get(id) != null;
         }

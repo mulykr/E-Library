@@ -2,7 +2,7 @@
 {
     public class AuthorBookViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string BookId { get; set; }
 

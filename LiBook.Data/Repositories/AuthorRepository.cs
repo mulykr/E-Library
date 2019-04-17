@@ -23,7 +23,7 @@ namespace LiBook.Data.Repositories
             return _context.Authors;
         }
 
-        public Author Get(int id)
+        public Author Get(string id)
         {
             return _context.Authors
                 .AsNoTracking()
@@ -64,7 +64,7 @@ namespace LiBook.Data.Repositories
             _context.Authors.Update(item);
         }
 
-        public void Delete(int id)
+        public void Delete(string id)
         {
             var author = _context.Authors.Find(id);
             if (author != null)

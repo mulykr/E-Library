@@ -23,7 +23,7 @@ namespace LiBook.Data.Repositories
             return _context.Books;
         }
 
-        public Book Get(int id)
+        public Book Get(string id)
         {
             return _context.Books
                 .AsNoTracking()
@@ -68,7 +68,7 @@ namespace LiBook.Data.Repositories
 
         }
 
-        public void Delete(int id)
+        public void Delete(string id)
         {
             var book = _context.Books.Find(id);
             if (book != null)
