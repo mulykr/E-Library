@@ -38,8 +38,15 @@ namespace LiBook
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            //services.AddDefaultIdentity<IdentityUser>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddDefaultIdentity<UserProfile>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+               // .AddDefaultTokenProviders();
+
+            //services.AddTransient<IUserService, UserService>();
+
 
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IAuthorService, AuthorService>();

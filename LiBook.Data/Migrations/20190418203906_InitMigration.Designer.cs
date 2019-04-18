@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LiBook.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190417144538_InitMigr")]
-    partial class InitMigr
+    [Migration("20190418203906_InitMigration")]
+    partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
