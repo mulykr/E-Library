@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LiBook.Data.Migrations
 {
-    public partial class InvalidObjNameBooks : Migration
+    public partial class InitMigr : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,7 +40,11 @@ namespace LiBook.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    RegistredOn = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -51,8 +55,7 @@ namespace LiBook.Data.Migrations
                 name: "Authors",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<string>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     ImagePath = table.Column<string>(nullable: true),
@@ -67,8 +70,7 @@ namespace LiBook.Data.Migrations
                 name: "Books",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<string>(nullable: false),
                     Title = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     ImagePath = table.Column<string>(nullable: true)
@@ -188,25 +190,22 @@ namespace LiBook.Data.Migrations
                 name: "AuthorBooks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<string>(nullable: false),
                     BookId = table.Column<string>(nullable: true),
-                    AuthorId = table.Column<string>(nullable: true),
-                    BookId1 = table.Column<int>(nullable: true),
-                    AuthorId1 = table.Column<int>(nullable: true)
+                    AuthorId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AuthorBooks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AuthorBooks_Authors_AuthorId1",
-                        column: x => x.AuthorId1,
+                        name: "FK_AuthorBooks_Authors_AuthorId",
+                        column: x => x.AuthorId,
                         principalTable: "Authors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AuthorBooks_Books_BookId1",
-                        column: x => x.BookId1,
+                        name: "FK_AuthorBooks_Books_BookId",
+                        column: x => x.BookId,
                         principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -252,14 +251,14 @@ namespace LiBook.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuthorBooks_AuthorId1",
+                name: "IX_AuthorBooks_AuthorId",
                 table: "AuthorBooks",
-                column: "AuthorId1");
+                column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuthorBooks_BookId1",
+                name: "IX_AuthorBooks_BookId",
                 table: "AuthorBooks",
-                column: "BookId1");
+                column: "BookId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
