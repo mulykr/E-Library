@@ -31,10 +31,10 @@ namespace LiBook.Tests.Servises
         }
 
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
-        public void GetByIdTest(int id)
+        [InlineData("1")]
+        [InlineData("2")]
+        [InlineData("3")]
+        public void GetByIdTest(string id)
         {
             // Arrange
             var svc = SetUpService();
@@ -58,7 +58,7 @@ namespace LiBook.Tests.Servises
             var svc = SetUpService();
 
             // Act
-            var actual = svc.Get(4);
+            var actual = svc.Get("4");
 
             // Assert
             Assert.Null(actual);
@@ -75,7 +75,7 @@ namespace LiBook.Tests.Servises
             var mockFile = new Mock<IFormFile>();
             var expected = new AuthorDto
             {
-                Id = 4,
+                Id = "4",
                 FirstName = "Fname",
                 LastName = "Lname",
                 Biography = "Some biography"
@@ -94,18 +94,26 @@ namespace LiBook.Tests.Servises
         public void UpdateTest()
         {
             // Arrange
-            var repository = new Mock<IRepository<Author>>();
-
-            var mapper = new Mock<IMapper>();
-            var svc = new AuthorService(repository.Object, mapper.Object);
-            var mockFile = new Mock<IFormFile>();
             var expected = new AuthorDto
             {
-                Id = 4,
+                Id = "1",
                 FirstName = "Fname",
                 LastName = "Lname",
                 Biography = "Some biography"
             };
+            var repository = new Mock<IRepository<Author>>();
+            repository.Setup(r => r.Get(expected.Id)).Returns(new Author
+            {
+                Id = "1",
+                FirstName = "Fname",
+                LastName = "Lname",
+                Biography = "Some biography"
+            });
+            var mapper = new Mock<IMapper>();
+            mapper.Setup(m => m.Map<Author, AuthorDto>(It.IsAny<Author>())).Returns(expected);
+            var svc = new AuthorService(repository.Object, mapper.Object);
+            var mockFile = new Mock<IFormFile>();
+            
 
             // Act
             svc.Update(expected, mockFile.Object);
@@ -116,13 +124,45 @@ namespace LiBook.Tests.Servises
             repository.Verify(r => r.Save(), Times.Once());
         }
 
+        [Fact]
+        public void DeleteTest()
+        {
+            // Arrange
+            var expected = new AuthorDto
+            {
+                Id = "1",
+                FirstName = "Fname",
+                LastName = "Lname",
+                Biography = "Some biography"
+            };
+            var repository = new Mock<IRepository<Author>>();
+            repository.Setup(r => r.Get(expected.Id)).Returns(new Author
+            {
+                Id = "1",
+                FirstName = "Fname",
+                LastName = "Lname",
+                Biography = "Some biography"
+            });
+            var mapper = new Mock<IMapper>();
+            mapper.Setup(m => m.Map<Author, AuthorDto>(It.IsAny<Author>())).Returns(expected);
+            var svc = new AuthorService(repository.Object, mapper.Object);
+            
+            // Act
+            svc.Delete(expected.Id);
+
+            // Assert
+            repository.Verify(r => r.Get(It.IsAny<string>()), Times.Once());
+            repository.Verify(r => r.Delete(It.IsAny<string>()), Times.Once());
+            repository.Verify(r => r.Save(), Times.Once());
+        }
+
         private IEnumerable<AuthorDto> GetTestCollectionDto()
         {
             return new[]
             {
                 new AuthorDto
                 {
-                    Id = 1,
+                    Id = "1",
                     FirstName = "Stephen",
                     LastName = "King",
                     Biography = "Some biography",
@@ -130,7 +170,7 @@ namespace LiBook.Tests.Servises
                 },
                 new AuthorDto
                 {
-                    Id = 2,
+                    Id = "2",
                     FirstName = "Joanne",
                     LastName = "Rowling",
                     Biography = "Some biography",
@@ -138,7 +178,7 @@ namespace LiBook.Tests.Servises
                 },
                 new AuthorDto
                 {
-                    Id = 3,
+                    Id = "3",
                     FirstName = "Taras",
                     LastName = "Shevchenko",
                     Biography = "Some biography",
@@ -153,7 +193,7 @@ namespace LiBook.Tests.Servises
             {
                 new Author
                 {
-                    Id = 1,
+                    Id = "1",
                     FirstName = "Stephen",
                     LastName = "King",
                     Biography = "Some biography",
@@ -161,7 +201,7 @@ namespace LiBook.Tests.Servises
                 },
                 new Author
                 {
-                    Id = 2,
+                    Id = "2",
                     FirstName = "Joanne",
                     LastName = "Rowling",
                     Biography = "Some biography",
@@ -169,7 +209,7 @@ namespace LiBook.Tests.Servises
                 },
                 new Author
                 {
-                    Id = 3,
+                    Id = "3",
                     FirstName = "Taras",
                     LastName = "Shevchenko",
                     Biography = "Some biography",

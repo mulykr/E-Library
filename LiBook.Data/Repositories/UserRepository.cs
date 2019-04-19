@@ -5,35 +5,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace LiBook.Data.Repositories
 {
     class UserRepository:IRepository<UserProfile>
     {
         private readonly ApplicationDbContext _context;
-        private DbSet<UserProfile> _users;
 
         public UserRepository(ApplicationDbContext context)
         {
             _context = context;
-            _users = context.UserProfiles;
         }
 
         public IEnumerable<UserProfile> GetList()
         {
-            return _users;
+            return _context.UserProfiles;
         }
 
         public UserProfile Get(string id)
         {
-            return _users.Where(a=>a.Id==id).First();
+            return _context.UserProfiles.First(a => a.Id==id);
         }
 
 
         public IEnumerable<UserProfile> Get(Expression<Func<UserProfile, bool>> filter = null, Func<IQueryable<UserProfile>, IOrderedQueryable<UserProfile>> orderBy = null, string includeProperties = "")
         {
-            IQueryable<UserProfile> query = _users;
+            IQueryable<UserProfile> query = _context.UserProfiles;
             if (filter != null)
             {
                 query = query.Where(filter);
@@ -43,36 +40,26 @@ namespace LiBook.Data.Repositories
             {
                 query = query.Include(includeProperty);
             }
-            if (orderBy != null)
-            {
-                return orderBy(query).ToList();
-            }
-            else
-            {
-                return query.ToList();
-            }
+            return orderBy?.Invoke(query).ToList() ?? query.ToList();
         }
 
         public void Create(UserProfile item)
         {
-            _users.Add(item);
-            _context.SaveChanges();
+            _context.UserProfiles.Add(item);
 
         }
 
         public void Update(UserProfile item)
         {
-            _users.Update(item);
-            _context.SaveChanges();
+            _context.UserProfiles.Update(item);
 
         }
 
         public void Delete(string id)
         {
-            var user = _users.Find(id);
+            var user = _context.UserProfiles.Find(id);
             if (user != null)
-                _users.Remove(user);
-            _context.SaveChanges();
+                _context.UserProfiles.Remove(user);
 
         }
 
@@ -82,11 +69,11 @@ namespace LiBook.Data.Repositories
         }
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        private bool _disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
@@ -96,7 +83,7 @@ namespace LiBook.Data.Repositories
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
                 // TODO: set large fields to null.
 
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 

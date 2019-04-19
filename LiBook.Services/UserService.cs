@@ -1,17 +1,15 @@
 ﻿using LiBook.Data.Entities;
 using LiBook.Data.Interfaces;
 using LiBook.Services.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 using LiBook.Services.Extensions.Identity;
 
 namespace LiBook.Services
 {
-    class UserService:IUserService
+    public class UserService : IUserService
     {
-        private IRepository<UserProfile> _userRepository;
+        private readonly IRepository<UserProfile> _userRepository;
 
         public UserService(IRepository<UserProfile> userRepository)
         {
@@ -42,35 +40,40 @@ namespace LiBook.Services
         {
             user.FirstName = firstName;
             _userRepository.Update(user);
+            _userRepository.Save();
         }
 
         public void ChangeFirstName(ClaimsPrincipal principal, string firstName)
         {
             var user = GetUserProfile(principal);
             ChangeFirstName(user, firstName);
+            _userRepository.Save();
         }
 
         public void ChangeSecondName(UserProfile user, string lastName)
         {
             user.LastName = lastName;
             _userRepository.Update(user);
+            _userRepository.Save();
         }
 
         public void ChangeSecondName(ClaimsPrincipal principal, string secondName)
         {
             var user = GetUserProfile(principal);
             ChangeSecondName(user, secondName);
+            _userRepository.Save();
         }
 
         public void Update(UserProfile user)
         {
             _userRepository.Update(user);
+            _userRepository.Save();
         }
 
         public void Delete(UserProfile user)
         {
-
             _userRepository.Delete(user.Id);
+            _userRepository.Save();
         }
     }
 }
