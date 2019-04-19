@@ -56,7 +56,7 @@ namespace LiBook.Services
 
         public void Update(AuthorDto item, IFormFile file)
         {
-            var oldImageName = Get(item.Id).ImagePath;
+            var oldImageName = Get(item.Id)?.ImagePath;
 
             if (file != null && file.Length > 0)
             {

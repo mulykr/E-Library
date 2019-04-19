@@ -8,7 +8,6 @@ using LiBook.Data.Repositories;
 using LiBook.Services;
 using LiBook.Services.DTO;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
@@ -88,6 +87,32 @@ namespace LiBook.Tests.Servises
             // Assert
             mapper.Verify(m => m.Map<AuthorDto, Author>(It.IsAny<AuthorDto>()), Times.Once());
             repository.Verify(r => r.Create(It.IsAny<Author>()), Times.Once());
+            repository.Verify(r => r.Save(), Times.Once());
+        }
+
+        [Fact]
+        public void UpdateTest()
+        {
+            // Arrange
+            var repository = new Mock<IRepository<Author>>();
+
+            var mapper = new Mock<IMapper>();
+            var svc = new AuthorService(repository.Object, mapper.Object);
+            var mockFile = new Mock<IFormFile>();
+            var expected = new AuthorDto
+            {
+                Id = 4,
+                FirstName = "Fname",
+                LastName = "Lname",
+                Biography = "Some biography"
+            };
+
+            // Act
+            svc.Update(expected, mockFile.Object);
+
+            // Assert
+            mapper.Verify(m => m.Map<AuthorDto, Author>(It.IsAny<AuthorDto>()), Times.Once());
+            repository.Verify(r => r.Update(It.IsAny<Author>()), Times.Once());
             repository.Verify(r => r.Save(), Times.Once());
         }
 
