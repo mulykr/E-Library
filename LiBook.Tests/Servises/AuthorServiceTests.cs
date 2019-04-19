@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using LiBook.Data;
@@ -7,6 +8,7 @@ using LiBook.Data.Interfaces;
 using LiBook.Data.Repositories;
 using LiBook.Services;
 using LiBook.Services.DTO;
+using LiBook.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -16,6 +18,14 @@ namespace LiBook.Tests.Servises
 {
     public class AuthorServiceTests
     {
+        private readonly Mock<IAppConfiguration> _config;
+
+        public AuthorServiceTests()
+        {
+            _config = new Mock<IAppConfiguration>();
+            _config.Setup(c => c.WebRootPath).Returns(String.Empty);
+        }
+
         [Fact]
         public void GetListTest()
         {
@@ -69,9 +79,8 @@ namespace LiBook.Tests.Servises
         {
             // Arrange
             var repository = new Mock<IRepository<Author>>();
-            
             var mapper = new Mock<IMapper>();
-            var svc = new AuthorService(repository.Object, mapper.Object);
+            var svc = new AuthorService(repository.Object, mapper.Object, _config.Object);
             var mockFile = new Mock<IFormFile>();
             var expected = new AuthorDto
             {
@@ -111,7 +120,7 @@ namespace LiBook.Tests.Servises
             });
             var mapper = new Mock<IMapper>();
             mapper.Setup(m => m.Map<Author, AuthorDto>(It.IsAny<Author>())).Returns(expected);
-            var svc = new AuthorService(repository.Object, mapper.Object);
+            var svc = new AuthorService(repository.Object, mapper.Object, _config.Object);
             var mockFile = new Mock<IFormFile>();
             
 
@@ -145,7 +154,7 @@ namespace LiBook.Tests.Servises
             });
             var mapper = new Mock<IMapper>();
             mapper.Setup(m => m.Map<Author, AuthorDto>(It.IsAny<Author>())).Returns(expected);
-            var svc = new AuthorService(repository.Object, mapper.Object);
+            var svc = new AuthorService(repository.Object, mapper.Object, _config.Object);
             
             // Act
             svc.Delete(expected.Id);
@@ -237,7 +246,7 @@ namespace LiBook.Tests.Servises
                 cfg.CreateMap<Author, AuthorDto>();
             });
             var mapper = mapperConfig.CreateMapper();
-            var svc = new AuthorService(repository, mapper);
+            var svc = new AuthorService(repository, mapper, _config.Object);
             return svc;
         }
     }

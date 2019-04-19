@@ -2,8 +2,6 @@
 {
     public class AuthorBook
     {
-        public string Id { get; set; }
-
         public string BookId { get; set; }
 
         public string AuthorId { get; set; }

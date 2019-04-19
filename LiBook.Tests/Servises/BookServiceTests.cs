@@ -9,6 +9,7 @@ using LiBook.Data.Interfaces;
 using LiBook.Data.Repositories;
 using LiBook.Services;
 using LiBook.Services.DTO;
+using LiBook.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -18,6 +19,13 @@ namespace LiBook.Tests.Servises
 {
     public class BookServiceTests
     {
+        private readonly Mock<IAppConfiguration> _config;
+
+        public BookServiceTests()
+        {
+            _config = new Mock<IAppConfiguration>();
+            _config.Setup(c => c.WebRootPath).Returns(string.Empty);
+        }
         [Fact]
         public void GetListTest()
         {
@@ -73,7 +81,7 @@ namespace LiBook.Tests.Servises
             var repository = new Mock<IRepository<Book>>();
 
             var mapper = new Mock<IMapper>();
-            var svc = new BookService(repository.Object, mapper.Object);
+            var svc = new BookService(repository.Object, mapper.Object, _config.Object);
             var mockFile = new Mock<IFormFile>();
             var expected = new BookDto
             {
@@ -110,7 +118,7 @@ namespace LiBook.Tests.Servises
             });
             var mapper = new Mock<IMapper>();
             mapper.Setup(m => m.Map<Book, BookDto>(It.IsAny<Book>())).Returns(expected);
-            var svc = new BookService(repository.Object, mapper.Object);
+            var svc = new BookService(repository.Object, mapper.Object, _config.Object);
             var mockFile = new Mock<IFormFile>();
             
 
@@ -142,7 +150,7 @@ namespace LiBook.Tests.Servises
             });
             var mapper = new Mock<IMapper>();
             mapper.Setup(m => m.Map<Book, BookDto>(It.IsAny<Book>())).Returns(expected);
-            var svc = new BookService(repository.Object, mapper.Object);
+            var svc = new BookService(repository.Object, mapper.Object, _config.Object);
 
             // Act
             svc.Delete(expected.Id);
@@ -228,7 +236,7 @@ namespace LiBook.Tests.Servises
                 cfg.CreateMap<Book, BookDto>();
             });
             var mapper = mapperConfig.CreateMapper();
-            var svc = new BookService(repository, mapper);
+            var svc = new BookService(repository, mapper, _config.Object);
             return svc;
         }
     }

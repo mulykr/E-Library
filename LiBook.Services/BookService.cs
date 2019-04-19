@@ -18,12 +18,15 @@ namespace LiBook.Services
     {
         private readonly IMapper _mapper;
         private readonly IRepository<Book> _repository;
+        private readonly IAppConfiguration _appConfiguration;
 
         public BookService(IRepository<Book> repository,
-            IMapper mapper)
+            IMapper mapper,
+            IAppConfiguration appConfiguration)
         {
             _repository = repository;
             _mapper = mapper;
+            _appConfiguration = appConfiguration;
         }
 
         public IEnumerable<BookDto> GetList()
@@ -42,7 +45,7 @@ namespace LiBook.Services
             {
                 var cropped = ImageTool.CropMaxSquare(Image.FromStream(file.OpenReadStream()));
                 var resized = ImageTool.Resize(cropped, 500, 500);
-                var uploads = Path.Combine("~\\wwwroot", "pics\\Books");
+                var uploads = Path.Combine(_appConfiguration.WebRootPath, "pics\\Books");
                 var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
                 var filePath = Path.Combine(uploads, fileName);
                 item.ImagePath = fileName;
@@ -64,7 +67,7 @@ namespace LiBook.Services
                 var cropped = ImageTool.CropMaxSquare(Image.FromStream(file.OpenReadStream()));
                 var resized = ImageTool.Resize(cropped, 500, 500);
 
-                var uploads = Path.Combine("~\\wwwroot", "pics\\Books");
+                var uploads = Path.Combine(_appConfiguration.WebRootPath, "pics\\Books");
                 if (!string.IsNullOrEmpty(oldImageName))
                 {
                     var oldPath = Path.Combine(uploads, oldImageName);
@@ -97,7 +100,7 @@ namespace LiBook.Services
             var imageName = book.ImagePath;
             if (imageName != null)
             {
-                var uploads = Path.Combine("~\\wwwroot", "pics\\Books");
+                var uploads = Path.Combine(_appConfiguration.WebRootPath, "pics\\Books");
                 var path = Path.Combine(uploads, imageName);
                 if (File.Exists(path))
                 {
