@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace LiBook.Data.Repositories
 {
-    class UserRepository:IRepository<UserProfile>
+    public class UserRepository:IRepository<UserProfile>
     {
         private readonly ApplicationDbContext _context;
 
@@ -24,7 +24,7 @@ namespace LiBook.Data.Repositories
 
         public UserProfile Get(string id)
         {
-            return _context.UserProfiles.First(a => a.Id==id);
+            return _context.UserProfiles.FirstOrDefault(a => a.Id==id);
         }
 
 

@@ -17,6 +17,6 @@ namespace LiBook.Services.Interfaces
         void ChangeSecondName(UserProfile user, string lastName);
         void ChangeSecondName(ClaimsPrincipal principal, string secondName);
         void Update(UserProfile user);
-        void Delete(UserProfile user);
+        void Delete(string user);
     }
 }

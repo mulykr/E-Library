@@ -45,12 +45,15 @@ namespace LiBook
             services.AddDefaultIdentity<UserProfile>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddSingleton<IAppConfiguration, AppConfiguration>(_ => new AppConfiguration(Environment.WebRootPath));
 
             services.AddScoped<IRepository<Book>, BookRepository>();
             services.AddScoped<IRepository<Author>, AuthorRepository>();
+
+            services.AddScoped<IRepository<UserProfile>, UserRepository>();
 
             services.AddAutoMapper();
 
