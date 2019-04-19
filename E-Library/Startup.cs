@@ -45,6 +45,7 @@ namespace LiBook
             services.AddDefaultIdentity<UserProfile>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IWishListService, WishListService>();
@@ -54,6 +55,8 @@ namespace LiBook
             services.AddScoped<IRepository<Author>, AuthorRepository>();
             services.AddScoped<IRepository<UserProfile>, UserRepository>();
             services.AddScoped<IRepository<WishListItem>, WishItemsRepository>();
+
+            services.AddScoped<IRepository<UserProfile>, UserRepository>();
 
             services.AddAutoMapper();
 

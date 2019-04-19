@@ -70,9 +70,9 @@ namespace LiBook.Services
             _userRepository.Save();
         }
 
-        public void Delete(UserProfile user)
+        public void Delete(string id)
         {
-            _userRepository.Delete(user.Id);
+            _userRepository.Delete(id);
             _userRepository.Save();
         }
     }
