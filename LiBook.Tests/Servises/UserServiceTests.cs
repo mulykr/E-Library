@@ -73,6 +73,59 @@ namespace LiBook.Tests.Servises
             Assert.Null(actual);
         }
 
+       
+        [Fact]
+        public void UpdateTest()
+        {
+            // Arrange
+            var expected = new UserProfile
+            {
+                FirstName = "Vova",
+                LastName = "Vermii"
+            };
+            var repository = new Mock<IRepository<UserProfile>>();
+            repository.Setup(r => r.Get(expected.Id)).Returns(new UserProfile
+            {
+                FirstName = "Vova",
+                LastName = "Vermii"
+            });
+            var svc = new UserService(repository.Object);
+
+
+            // Act
+            svc.Update(expected);
+
+            // Assert
+            repository.Verify(r => r.Update(It.IsAny<UserProfile>()), Times.Once());
+            repository.Verify(r => r.Save(), Times.Once());
+        }
+
+        [Fact]
+        public void DeleteTest()
+        {
+            // Arrange
+            var expected = new UserProfile()
+            {
+                Id="1",
+                FirstName = "Vova",
+                LastName = "Vermii"
+            };
+            var repository = new Mock<IRepository<UserProfile>>();
+            repository.Setup(r => r.Get(expected.Id)).Returns(new UserProfile
+            {
+                Id="1",
+                FirstName = "Vova",
+                LastName = "Vermii"
+            });
+            var svc = new UserService(repository.Object);
+
+            // Act
+            svc.Delete(expected.Id);
+
+            // Assert
+            repository.Verify(r => r.Delete(It.IsAny<string>()), Times.Once());
+            repository.Verify(r => r.Save(), Times.Once());
+        }
 
         private IEnumerable<UserProfile> GetTestCollection()
         {
