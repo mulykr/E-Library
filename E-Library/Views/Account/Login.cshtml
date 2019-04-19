@@ -1,0 +1,25 @@
+﻿@using LiBook.Data.Entities
+@using LiBook.Models.Account
+@using Microsoft.AspNetCore.Identity
+@model LoginViewModel
+@inject SignInManager<UserProfile> SignInManager
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<form class="login-form" method="post">
+    <input type="text" placeholder="email" asp-for="Email" />
+    <input type="password" placeholder="password" asp-for="Password" />
+    <button id="signin-btn" type="submit">login</button>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <p class="message">Not registered? @Html.ActionLink("Create an account", "Register", "Account")</p>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script src="/lib/jquery/dist/jquery.backstretch.js"></script>
+<script type="text/javascript" src="/js/auth_page.js"></script>

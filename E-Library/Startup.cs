@@ -39,7 +39,7 @@ namespace LiBook
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<UserProfile>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddScoped<IBookService, BookService>();

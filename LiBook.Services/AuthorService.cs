@@ -30,7 +30,7 @@ namespace LiBook.Services
             return _repository.GetList().Select(item => _mapper.Map<Author, AuthorDto>(item));
         }
 
-        public AuthorDto Get(int id)
+        public AuthorDto Get(string id)
         {
             return _mapper.Map<Author, AuthorDto>(_repository.Get(id));
         }
@@ -89,7 +89,7 @@ namespace LiBook.Services
 
         }
 
-        public void Delete(int id)
+        public void Delete(string id)
         {
             var author = Get(id);
             var imageName = author.ImagePath;

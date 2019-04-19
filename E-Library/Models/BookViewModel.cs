@@ -4,7 +4,7 @@ namespace LiBook.Models
 {
     public class BookViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Title { get; set; }
 

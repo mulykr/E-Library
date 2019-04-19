@@ -1,0 +1,24 @@
+﻿@using LiBook.Models.Account
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<form class="login-form" method="post">
+    <input type="email" placeholder="email address" asp-for="Email" />
+    <span asp-validation-for="Email" class="text-danger message"></span>
+    <input type="password" placeholder="password" asp-for="Password" />
+    <span asp-validation-for="Password" class="text-danger message"></span>
+    <input type="password" placeholder="repeat password" asp-for="ConfirmPassword" />
+    <span asp-validation-for="ConfirmPassword" class="text-danger message"></span>
+    <button type="submit">create</button>
+    <p class="message">Already registered? @Html.ActionLink("Sign In", "Login", "Account")</p>
+</form>
+
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script src="/lib/jquery/dist/jquery.backstretch.js"></script>
+<script type="text/javascript" src="/js/auth_page.js"></script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

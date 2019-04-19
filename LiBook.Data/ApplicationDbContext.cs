@@ -16,7 +16,10 @@ namespace LiBook.Data
         {
 
         }
+
         public virtual DbSet<Author> Authors { get; set; }
+
+        public virtual DbSet<UserProfile> UserProfiles { get; set; }
 
         public virtual DbSet<Book> Books { get; set; }
 

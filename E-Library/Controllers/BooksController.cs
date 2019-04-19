@@ -29,7 +29,7 @@ namespace LiBook.Controllers
         }
 
         // GET: Books/Details/5
-        public IActionResult Details(int id)
+        public IActionResult Details(string id)
         {
             var book = _service.Get(id);
             if (book == null)
@@ -69,7 +69,7 @@ namespace LiBook.Controllers
         }
 
         // GET: Books/Edit/5
-        public IActionResult Edit(int id)
+        public IActionResult Edit(string id)
         {
             var book = _service.Get(id);
             if (book == null)
@@ -82,7 +82,7 @@ namespace LiBook.Controllers
         // POST: Books/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,Title,Description")] BookViewModel book, IFormFile file)
+        public IActionResult Edit(string id, [Bind("Id,Title,Description")] BookViewModel book, IFormFile file)
         {
             if (id != book.Id)
             {
@@ -111,7 +111,7 @@ namespace LiBook.Controllers
         }
 
         // GET: Books/Delete/5
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             var book = _service.Get(id);
             if (book == null)
@@ -125,14 +125,14 @@ namespace LiBook.Controllers
         // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(string id)
         {
             _service.Delete(id);
             
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookExists(int id)
+        private bool BookExists(string id)
         {
             return _service.Get(id) != null;
         }

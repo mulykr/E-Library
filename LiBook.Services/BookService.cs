@@ -34,7 +34,7 @@ namespace LiBook.Services
             return _repository.GetList().Select(item => _mapper.Map<Book, BookDto>(item));
         }
 
-        public BookDto Get(int id)
+        public BookDto Get(string id)
         {
             return _mapper.Map<Book, BookDto>(_repository.Get(id));
         }
@@ -93,7 +93,7 @@ namespace LiBook.Services
 
         }
 
-        public void Delete(int id)
+        public void Delete(string id)
         {
             var book = Get(id);
            

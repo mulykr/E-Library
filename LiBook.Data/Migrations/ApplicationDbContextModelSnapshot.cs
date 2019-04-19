@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LiBook.Data.Migrations
 {
@@ -16,15 +15,14 @@ namespace LiBook.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("LiBook.Data.Entities.Author", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Biography");
 
@@ -41,32 +39,26 @@ namespace LiBook.Data.Migrations
 
             modelBuilder.Entity("LiBook.Data.Entities.AuthorBook", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("AuthorId");
 
-                    b.Property<int?>("AuthorId1");
-
                     b.Property<string>("BookId");
-
-                    b.Property<int?>("BookId1");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId1");
+                    b.HasIndex("AuthorId");
 
-                    b.HasIndex("BookId1");
+                    b.HasIndex("BookId");
 
                     b.ToTable("AuthorBooks");
                 });
 
             modelBuilder.Entity("LiBook.Data.Entities.Book", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
 
@@ -133,6 +125,9 @@ namespace LiBook.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
@@ -172,6 +167,8 @@ namespace LiBook.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -244,15 +241,30 @@ namespace LiBook.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("LiBook.Data.Entities.UserProfile", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<DateTime>("RegistredOn");
+
+                    b.ToTable("UserProfile");
+
+                    b.HasDiscriminator().HasValue("UserProfile");
+                });
+
             modelBuilder.Entity("LiBook.Data.Entities.AuthorBook", b =>
                 {
                     b.HasOne("LiBook.Data.Entities.Author", "Author")
                         .WithMany("AuthorsBooks")
-                        .HasForeignKey("AuthorId1");
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("LiBook.Data.Entities.Book", "Book")
                         .WithMany("AuthorsBooks")
-                        .HasForeignKey("BookId1");
+                        .HasForeignKey("BookId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
