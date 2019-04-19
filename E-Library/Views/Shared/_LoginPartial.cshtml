@@ -1,5 +1,4 @@
 @using Microsoft.AspNetCore.Identity
-@using LiBook.Controllers
 @using LiBook.Data.Entities
 
 @inject SignInManager<UserProfile> SignInManager
@@ -13,7 +12,7 @@
                 <span class="nav-link text-light">Hello, @UserManager.GetUserName(User)</span>
             </li>
             <li class="nav-item">
-                <a href="#"><img src="/images/heart.png" class="img-fluid heart"/></a>
+                <a href="/WishList"><img src="/images/heart.png" class="img-fluid heart"/></a>
             </li>
             <li class="nav-item">
                 <button type="submit" class="nav-link text-light bg-info border-0">Logout</button>

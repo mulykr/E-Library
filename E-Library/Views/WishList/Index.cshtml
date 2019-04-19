@@ -1,0 +1,61 @@
+﻿@using LiBook.Data.Entities
+@using LiBook.Services.DTO
+@model IEnumerable<LiBook.Data.Entities.WishListItem>
+
+@{
+    ViewData["Title"] = "Index";
+    Book book;
+}
+
+<div>
+    <h4>My WishList</h4>
+    <hr />
+    <div class="row">
+        @if (!Model.Any())
+        {
+            <div class="col-md-3 text-justify">
+                <p>Your wish list is empty for now. You can add items from books page :)</p>
+            </div>
+            <div class="col-md-9">
+                <img src="/images/ops.png" class="img-fluid"/>
+            </div>
+        }
+        @foreach (var item in Model)
+        {
+            book = item.Book;
+            <div class="col-md-3">
+                <div class="card">
+                    @if (!string.IsNullOrEmpty(book.ImagePath))
+                    {
+                        <img class="h-50 card-img-top" src="/pics/Books/@book.ImagePath" alt="Card image cap">
+                    }
+                    else
+                    {
+                        <img class="h-50 card-img-top" src="/pics/Books/default.png" alt="Card image cap">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@book.Title</h5>
+                        <p class="card-text text-justify">
+                            @if (string.IsNullOrEmpty(book.Description))
+                            {
+                                <p>There is no description provided for this book.</p>
+                            }
+                            else if (book.Description.Length > 125)
+                            {
+                                @(book.Description.Substring(0, 125) + "...")
+                            }
+
+                            else
+                            {
+                                <p>
+                                    @book.Description
+                                </p>
+                            }
+                        </p>
+                        @Html.ActionLink("Unlike", "RemoveFromWishList", "Books", new {id = book.Id}, new {@class = "btn btn-block btn-danger"})
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

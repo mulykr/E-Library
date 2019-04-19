@@ -14,5 +14,6 @@ namespace LiBook.Services.DTO
 
         public ICollection<AuthorBookDto> AuthorsBooks { get; set; }
 
+        public ICollection<WishListItemDto> WishListItems { get; set; }
     }
 }

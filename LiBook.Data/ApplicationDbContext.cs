@@ -44,10 +44,15 @@ namespace LiBook.Data
                 .HasOne(p => p.Author)
                 .WithMany(p => p.AuthorsBooks)
                 .HasForeignKey(p => p.AuthorId);
-
-            // User & WishListItem one-to-many relationship
+            
+            // WishListItem many-to-many
             modelBuilder.Entity<WishListItem>()
-                .HasKey(x => new {x.UserId, x.BookId});
+                .HasKey(i => new {i.BookId, i.UserId});
+
+            modelBuilder.Entity<WishListItem>()
+                .HasOne(i => i.Book)
+                .WithMany(i => i.WishListItems)
+                .HasForeignKey(i => i.BookId);
 
             modelBuilder.Entity<WishListItem>()
                 .HasOne(p => p.User)

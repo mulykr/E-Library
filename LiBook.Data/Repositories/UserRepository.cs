@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace LiBook.Data.Repositories
 {
-    class UserRepository:IRepository<UserProfile>
+    public class UserRepository : IRepository<UserProfile>
     {
         private readonly ApplicationDbContext _context;
 

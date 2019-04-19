@@ -1,5 +1,9 @@
-﻿@model LiBook.Models.BookViewModel
-
+﻿@using AutoMapper
+@using LiBook.Services.DTO
+@using LiBook.Services.Interfaces
+@model BookViewModel
+@inject IWishListService WishListService
+@inject IMapper Mapper
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -22,6 +26,14 @@
                 <dd>
                     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-info">Edit</a>
                     <a asp-action="Index" class="btn btn-warning">Back to List</a>
+                    @if (!WishListService.IsInWishList(User, Mapper.Map<BookViewModel, BookDto>(Model)))
+                    {
+                        @Html.ActionLink("Like", "AddToWishList", new {id = Model.Id}, new {@class = "btn btn-danger"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Unlike", "RemoveFromWishList", new {id = Model.Id}, new { @class = "btn btn-danger" })
+                    }
                 </dd>
             </dl>
         </div>

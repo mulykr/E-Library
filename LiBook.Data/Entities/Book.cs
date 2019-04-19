@@ -14,5 +14,7 @@ namespace LiBook.Data.Entities
 
         public ICollection<AuthorBook> AuthorsBooks { get; set; }
 
+        public ICollection<WishListItem> WishListItems { get; set; }
+
     }
 }

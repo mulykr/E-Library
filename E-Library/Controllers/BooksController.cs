@@ -7,19 +7,23 @@ using Microsoft.AspNetCore.Http;
 using LiBook.Services.Interfaces;
 using AutoMapper;
 using LiBook.Data.Entities;
+using LiBook.Data.Interfaces;
 using LiBook.Services.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LiBook.Controllers
 {
     public class BooksController : Controller
     {
         private readonly IBookService _service;
+        private readonly IWishListService _wishListService;
         private readonly IMapper _mapper;
 
-        public BooksController(IBookService service, IMapper mapper)
+        public BooksController(IBookService service, IMapper mapper, IWishListService wishList)
         {
             _service = service;
             _mapper = mapper;
+            _wishListService = wishList;
         }
 
         // GET: Books
@@ -120,6 +124,22 @@ namespace LiBook.Controllers
             }
 
             return View(_mapper.Map<BookDto, BookViewModel>(book));
+        }
+
+        [Authorize]
+        public IActionResult AddToWishList(string id)
+        {
+            var bookDto = _service.Get(id);
+            _wishListService.AddToWishList(User, bookDto);
+            return Redirect("/WishList");
+        }
+
+        [Authorize]
+        public IActionResult RemoveFromWishList(string id)
+        {
+            var bookDto = _service.Get(id);
+            _wishListService.DeleteFromWishList(User, bookDto);
+            return Redirect("/WishList");
         }
 
         // POST: Books/Delete/5

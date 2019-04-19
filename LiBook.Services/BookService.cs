@@ -7,10 +7,12 @@ using LiBook.Utilities.Images;
 using System.IO;
 using System.Drawing;
 using System.Linq;
+using System.Security.Claims;
 using AutoMapper;
 using LiBook.Data.Entities;
 using LiBook.Data.Interfaces;
 using LiBook.Services.DTO;
+using LiBook.Services.Extensions.Identity;
 
 namespace LiBook.Services
 {
@@ -112,8 +114,6 @@ namespace LiBook.Services
             _repository.Save();
 
         }
-
-
 
         #region Dispose pattern
 
