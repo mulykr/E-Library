@@ -1,0 +1,57 @@
+﻿@model BookViewModel
+@{
+    ViewData["Title"] = "AddToWishList";
+    var book = Model;
+}
+
+<div class="row">
+    <div class="col-md-9">
+        <h3>Step 1</h3>
+        <hr/>
+        <p>Cool! You like this book and are going to add @Model.Title to your wish list. It would be great experience to let us know why you like it.
+            Descripe it within about 50 symbols, please. Thanks :)</p>
+        <br/>
+        <h3>Step 2</h3>
+        <hr/>
+        <form asp-action="AddToWishListConfirmed">
+            <input type="hidden" asp-for="Id"/>
+            <textarea name="note" id="note" placeholder="Enter your note here" class="input-group-lg" rows="5" style="min-width: 100%;"></textarea>
+            <br/>
+            <input type="submit" value="Go!" class="btn btn-block btn-success"/>
+        </form>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+
+            @if (!string.IsNullOrEmpty(book.ImagePath))
+            {
+                <img class="h-50 card-img-top" src="/pics/Books/@book.ImagePath" alt="Card image cap">
+            }
+            else
+            {
+                <img class="h-50 card-img-top" src="/pics/Books/default.png" alt="Card image cap">
+            }
+            <div class="card-body">
+                <h5 class="card-title">@book.Title</h5>
+                <p class="card-text text-justify">
+                    @if (string.IsNullOrEmpty(book.Description))
+                    {
+                        <p>There is no description provided for this book.</p>
+                    }
+                    else if (book.Description.Length > 125)
+                    {
+                        @(book.Description.Substring(0, 125) + "...")
+                    }
+
+                    else
+                    {
+                        <p>
+                            @book.Description
+                        </p>
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+

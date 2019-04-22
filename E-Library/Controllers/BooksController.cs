@@ -6,24 +6,19 @@ using LiBook.Models;
 using Microsoft.AspNetCore.Http;
 using LiBook.Services.Interfaces;
 using AutoMapper;
-using LiBook.Data.Entities;
-using LiBook.Data.Interfaces;
 using LiBook.Services.DTO;
-using Microsoft.AspNetCore.Authorization;
 
 namespace LiBook.Controllers
 {
     public class BooksController : Controller
     {
         private readonly IBookService _service;
-        private readonly IWishListService _wishListService;
         private readonly IMapper _mapper;
 
-        public BooksController(IBookService service, IMapper mapper, IWishListService wishList)
+        public BooksController(IBookService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
-            _wishListService = wishList;
         }
 
         // GET: Books

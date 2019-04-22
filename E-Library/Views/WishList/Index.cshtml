@@ -15,45 +15,56 @@
                 <p>Your wish list is empty for now. You can add items from books page :)</p>
             </div>
             <div class="col-md-9">
-                <img src="/images/ops.png" class="img-fluid"/>
+                <img src="/images/ops.png" class="img-fluid" />
             </div>
         }
         @foreach (var item in Model)
         {
             book = item.Book;
-            <div class="col-md-3">
+            <div class="col-md-6 mt-4">
                 <div class="card">
-                    @if (!string.IsNullOrEmpty(book.ImagePath))
-                    {
-                        <img class="h-50 card-img-top" src="/pics/Books/@book.ImagePath" alt="Card image cap">
-                    }
-                    else
-                    {
-                        <img class="h-50 card-img-top" src="/pics/Books/default.png" alt="Card image cap">
-                    }
-                    <div class="card-body">
-                        <h5 class="card-title">@book.Title</h5>
-                        <p class="card-text text-justify">
-                            @if (string.IsNullOrEmpty(book.Description))
+                    <div class="row">
+                        <div class="col-md-4">
+                            @if (!string.IsNullOrEmpty(book.ImagePath))
                             {
-                                <p>There is no description provided for this book.</p>
+                                <img class="card-img-top w-100 h-100" src="/pics/Books/@book.ImagePath" alt="Card image cap">
                             }
-                            else if (book.Description.Length > 125)
-                            {
-                                @(book.Description.Substring(0, 125) + "...")
-                            }
-
                             else
                             {
-                                <p>
-                                    @book.Description
-                                </p>
+                                <img class="card-img-top" src="/pics/Books/default.png" alt="Card image cap">
                             }
-                        </p>
-                        @Html.ActionLink("Remove", "RemoveFromWishList", new {id = book.Id}, new {@class = "btn btn-block btn-danger"})
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-block px-3 top">
+                                <h5 class="card-title pt-2">@book.Title</h5>
+                                <p class="card-text text-justify">
+                                    @if (string.IsNullOrEmpty(item.Note))
+                                    {
+                                    <span>There is no note provided for this book.</span>
+                                }
+                                else if (item.Note.Length > 50)
+                                {
+                                    @(item.Note.Substring(0, 50) + "...")
+                                }
+
+                                else
+                                {
+                                    <span>
+                                        @item.Note
+                                    </span>
+                                }
+
+                                <p class="text-right">@item.TimeStamp.ToShortDateString() @item.TimeStamp.ToShortTimeString()</p>
+                                </p>
+                                <div class="text-right mb-2">
+                                    @Html.ActionLink("\tOpen", "Details", "Books", new {id = book.Id}, new {@class = "btn btn-success fa fa-eye"})
+                                    @Html.ActionLink("\tRemove", "RemoveFromWishList", new {id = book.Id}, new {@class = "btn btn-danger fa fa-trash"})
+                                </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
     </div>
 </div>

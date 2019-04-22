@@ -41,22 +41,24 @@ namespace LiBook.Services
                 .Select(i => _mapper.Map<WishListItem, WishListItemDto>(i));
         }
 
-        public void AddToWishList(ClaimsPrincipal principal, BookDto bookDto)
+        public void AddToWishList(WishListItemDto wishListItemDto)
         {
-            _repository.Create(new WishListItem
+            var exists = _repository.Get(i => i.BookId == wishListItemDto.BookId && i.UserId == wishListItemDto.UserId).Any();
+            if (exists)
             {
-                BookId = bookDto.Id,
-                UserId = principal.GetUserId(),
-                TimeStamp = DateTime.Now
-            });
+                return;
+            }
 
+            var item = _mapper.Map<WishListItemDto, WishListItem>(wishListItemDto);
+            item.TimeStamp = DateTime.Now;
+            _repository.Create(item);
             _repository.Save();
         }
 
-        public void DeleteFromWishList(ClaimsPrincipal principal, BookDto bookDto)
+        public void DeleteFromWishList(WishListItemDto wishListItemDto)
         {
             var item = _repository.Get(i =>
-                i.BookId == bookDto.Id && i.UserId == principal.GetUserId())
+                i.BookId == wishListItemDto.BookId && i.UserId == wishListItemDto.UserId)
                 .First();
             if (item != null)
             {

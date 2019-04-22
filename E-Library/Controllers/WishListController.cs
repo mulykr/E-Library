@@ -2,6 +2,7 @@
 using AutoMapper;
 using LiBook.Models;
 using LiBook.Services.DTO;
+using LiBook.Services.Extensions.Identity;
 using LiBook.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,21 @@ namespace LiBook.Controllers
         public IActionResult AddToWishList(string id)
         {
             var bookDto = _bookService.Get(id);
-            _service.AddToWishList(User, bookDto);
+            var book = _mapper.Map<BookDto, BookViewModel>(bookDto);
+            return View(book);
+        }
+
+        [Authorize]
+        public IActionResult AddToWishListConfirmed(string id, string note)
+        {
+            var bookDto = _bookService.Get(id);
+            var wlDto = new WishListItemDto
+            {
+                BookId = bookDto.Id,
+                UserId = User.GetUserId(),
+                Note = note
+            };
+            _service.AddToWishList(wlDto);
             return Redirect("/WishList");
         }
 
@@ -39,8 +54,13 @@ namespace LiBook.Controllers
         public IActionResult RemoveFromWishList(string id)
         {
             var bookDto = _bookService.Get(id);
-            _service.DeleteFromWishList(User, bookDto);
-            return Redirect("/WishList");
+            var wlDto = new WishListItemDto
+            {
+                BookId = bookDto.Id,
+                UserId = User.GetUserId()
+            };
+            _service.DeleteFromWishList(wlDto);
+            return Redirect($"/Books/Details/{id}");
         }
     }
 }

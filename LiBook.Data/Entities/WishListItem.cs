@@ -9,5 +9,6 @@ namespace LiBook.Data.Entities
         public string UserId { get; set; }
         public UserProfile User { get; set; }
         public DateTime TimeStamp { get; set; }
+        public string Note { get; set; }
     }
 }

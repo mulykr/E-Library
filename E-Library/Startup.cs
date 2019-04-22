@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
@@ -41,9 +45,12 @@ namespace LiBook
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddDefaultIdentity<UserProfile>()
+            
+            services.AddIdentity<UserProfile, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            CreateRoles(services.BuildServiceProvider()).Wait();
+                
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBookService, BookService>();
@@ -61,6 +68,47 @@ namespace LiBook
             services.AddAutoMapper();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        }
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<UserProfile>>();
+            var roles = new [] {"Admin"};
+            foreach (var role in roles)
+            {
+                if (!(await roleManager.RoleExistsAsync(role)))
+                {
+                    var idRole = new IdentityRole
+                    {
+                        Name = role
+                    };
+                    var res = await roleManager.CreateAsync(idRole);
+                }
+            }
+
+            var admin = Configuration.GetSection("Admin");
+            var profile = new UserProfile
+            {
+                Email = admin["Email"],
+                UserName = admin["Email"],
+                FirstName = "LiBook",
+                LastName = "Admin"
+            };
+            if (await userManager.FindByEmailAsync(admin["Email"]) == null)
+            {
+                var res = await userManager.CreateAsync(profile, admin["Password"]);
+                if (res.Succeeded)
+                    await userManager.AddToRoleAsync(profile, "Admin");
+            }
+            else
+            {
+                if (!await userManager.IsInRoleAsync(profile, "Admin"))
+                {
+                    await userManager.AddToRoleAsync(profile, "Admin");
+                }
+            }
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,14 +10,14 @@
         <h2>Books</h2>
     </div>
     <div class="col-md-6 text-right">
-        <a asp-action="Create" class="btn btn-success">Create New</a>
+        <a asp-action="Create" class="btn btn-success fa fa-plus-circle"> Create New</a>
     </div>
 </div>
 
 <div class="row card-columns">
     @foreach (var book in Model)
     {
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card">
                 @if (!string.IsNullOrEmpty(book.ImagePath))
                 {
@@ -32,25 +32,27 @@
                     <p class="card-text text-justify">
                         @if (string.IsNullOrEmpty(book.Description))
                         {
-                        <p>There is no description provided for this book.</p>
-                    }
-                    else if (book.Description.Length > 125)
-                    {
-                        @(book.Description.Substring(0, 125) + "...")
-                    }
+                            <p>There is no description provided for this book.</p>
+                        }
+                        else if (book.Description.Length > 125)
+                        {
+                            @(book.Description.Substring(0, 125) + "...")
+                        }
 
-                    else
-                    {
-                        <p>
-                            @book.Description
-                        </p>
-                    }
-                        </p>
+                        else
+                        {
+                            <p>
+                                @book.Description
+                            </p>
+                        }
+                    </p>
+                    <div class="text-right">
                         <a href="/books/details/@book.Id" class="btn btn-success">Open</a>
                         <a href="/books/edit/@book.Id" class="btn btn-info">Edit</a>
                         <a href="/books/delete/@book.Id" class="btn btn-danger">Remove</a>
                     </div>
                 </div>
+            </div>
             </div>
         }
 </div>

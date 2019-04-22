@@ -9,8 +9,8 @@ namespace LiBook.Services.Interfaces
     {
         WishListItemDto Get(string id);
         IEnumerable<WishListItemDto> GetUserWishList(ClaimsPrincipal principal);
-        void AddToWishList(ClaimsPrincipal principal, BookDto bookDto);
-        void DeleteFromWishList(ClaimsPrincipal principal, BookDto bookDto);
+        void AddToWishList(WishListItemDto wishListItemDto);
+        void DeleteFromWishList(WishListItemDto wishListItemDto);
         bool IsInWishList(ClaimsPrincipal principal, BookDto bookDto);
         int GetLikesCount(BookDto book);
     }
