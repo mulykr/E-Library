@@ -93,7 +93,8 @@ namespace LiBook
                 Email = admin["Email"],
                 UserName = admin["Email"],
                 FirstName = "LiBook",
-                LastName = "Admin"
+                LastName = "Admin",
+                EmailConfirmed = true
             };
             if (await userManager.FindByEmailAsync(admin["Email"]) == null)
             {
@@ -103,10 +104,8 @@ namespace LiBook
             }
             else
             {
-                if (!await userManager.IsInRoleAsync(profile, "Admin"))
-                {
-                    await userManager.AddToRoleAsync(profile, "Admin");
-                }
+                var user = userManager.Users.First(item => item.Email == profile.Email);
+                await userManager.AddToRoleAsync(user, "Admin");
             }
             
         }
