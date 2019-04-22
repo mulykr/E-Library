@@ -7,6 +7,7 @@ using LiBook.Services.DTO;
 using Microsoft.AspNetCore.Http;
 using LiBook.Services.Interfaces;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LiBook.Controllers
 {
@@ -39,6 +40,7 @@ namespace LiBook.Controllers
             return View(_mapper.Map<AuthorDto,AuthorViewModel>(author));
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Authors/Create
         public IActionResult Create()
         {
@@ -49,6 +51,7 @@ namespace LiBook.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Id,FirstName,LastName,Biography")] AuthorViewModel author, IFormFile file)
         {
@@ -69,6 +72,7 @@ namespace LiBook.Controllers
             return View(author);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Authors/Edit/5
         public IActionResult Edit(string id)
         {
@@ -80,6 +84,7 @@ namespace LiBook.Controllers
             return View(_mapper.Map<AuthorDto, AuthorViewModel>(author));
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: Authors/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -115,6 +120,7 @@ namespace LiBook.Controllers
             return View(author);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Authors/Delete/5
         public IActionResult Delete(string id)
         {
@@ -130,6 +136,7 @@ namespace LiBook.Controllers
         // POST: Authors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(string id)
         {
             _service.Delete(id);           

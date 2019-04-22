@@ -27,16 +27,14 @@ namespace LiBook.Controllers
             var items = _service.GetUserWishList(User).Select(i => _mapper.Map<WishListItemDto, WishListItemViewModel>(i));
             return View(items);
         }
-
-        [Authorize]
+        
         public IActionResult AddToWishList(string id)
         {
             var bookDto = _bookService.Get(id);
             var book = _mapper.Map<BookDto, BookViewModel>(bookDto);
             return View(book);
         }
-
-        [Authorize]
+        
         public IActionResult AddToWishListConfirmed(string id, string note)
         {
             var bookDto = _bookService.Get(id);
@@ -49,8 +47,7 @@ namespace LiBook.Controllers
             _service.AddToWishList(wlDto);
             return Redirect("/WishList");
         }
-
-        [Authorize]
+        
         public IActionResult RemoveFromWishList(string id)
         {
             var bookDto = _bookService.Get(id);

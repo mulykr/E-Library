@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using LiBook.Services.Interfaces;
 using AutoMapper;
 using LiBook.Services.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LiBook.Controllers
 {
@@ -40,6 +41,7 @@ namespace LiBook.Controllers
         }
 
         // GET: Books/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -48,6 +50,7 @@ namespace LiBook.Controllers
         // POST: Books/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create([Bind("Id,Title,Description")] BookViewModel book, IFormFile file)
         {
             if (ModelState.IsValid)
@@ -68,6 +71,7 @@ namespace LiBook.Controllers
         }
 
         // GET: Books/Edit/5
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(string id)
         {
             var book = _service.Get(id);
@@ -81,6 +85,7 @@ namespace LiBook.Controllers
         // POST: Books/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(string id, [Bind("Id,Title,Description")] BookViewModel book, IFormFile file)
         {
             if (id != book.Id)
@@ -110,6 +115,7 @@ namespace LiBook.Controllers
         }
 
         // GET: Books/Delete/5
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(string id)
         {
             var book = _service.Get(id);
@@ -124,6 +130,7 @@ namespace LiBook.Controllers
         // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(string id)
         {
             _service.Delete(id);
