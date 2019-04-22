@@ -1,10 +1,8 @@
-﻿@using LiBook.Data.Entities
-@using LiBook.Services.DTO
-@model IEnumerable<LiBook.Data.Entities.WishListItem>
+﻿@model IEnumerable<WishListItemViewModel>
 
 @{
     ViewData["Title"] = "Index";
-    Book book;
+    BookViewModel book;
 }
 
 <div>
@@ -52,7 +50,7 @@
                                 </p>
                             }
                         </p>
-                        @Html.ActionLink("Unlike", "RemoveFromWishList", "Books", new {id = book.Id}, new {@class = "btn btn-block btn-danger"})
+                        @Html.ActionLink("Remove", "RemoveFromWishList", new {id = book.Id}, new {@class = "btn btn-block btn-danger"})
                     </div>
                 </div>
             </div>

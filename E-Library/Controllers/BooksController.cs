@@ -125,23 +125,7 @@ namespace LiBook.Controllers
 
             return View(_mapper.Map<BookDto, BookViewModel>(book));
         }
-
-        [Authorize]
-        public IActionResult AddToWishList(string id)
-        {
-            var bookDto = _service.Get(id);
-            _wishListService.AddToWishList(User, bookDto);
-            return Redirect("/WishList");
-        }
-
-        [Authorize]
-        public IActionResult RemoveFromWishList(string id)
-        {
-            var bookDto = _service.Get(id);
-            _wishListService.DeleteFromWishList(User, bookDto);
-            return Redirect("/WishList");
-        }
-
+        
         // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

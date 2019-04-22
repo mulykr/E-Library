@@ -2,69 +2,79 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using LiBook.Data;
+using AutoMapper;
 using LiBook.Data.Entities;
+using LiBook.Data.Interfaces;
 using LiBook.Services.DTO;
 using LiBook.Services.Extensions.Identity;
 using LiBook.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace LiBook.Services
 {
     public class WishListService : IWishListService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<WishListItem> _repository;
+        private readonly IMapper _mapper;
 
-        public WishListService(ApplicationDbContext context)
+        public WishListService(IRepository<WishListItem> repository,
+            IMapper mapper)
         {
-            _context = context;
+            _repository = repository;
+            _mapper = mapper;
         }
 
         public void Dispose()
         {
-            _context.Dispose();
+            _repository.Dispose();
         }
 
 
-        public WishListItem Get(string id)
+        public WishListItemDto Get(string id)
         {
-            return _context.WishListItems.Find(id);
+            return _mapper.Map<WishListItem, WishListItemDto>(_repository.Get(id));
         }
 
-        public IEnumerable<WishListItem> GetUserWishList(ClaimsPrincipal principal)
+        public IEnumerable<WishListItemDto> GetUserWishList(ClaimsPrincipal principal)
         {
-            return _context.WishListItems
-                .Include(i => i.Book)
-                .Where(i => i.UserId == principal.GetUserId());
+            return _repository
+                .Get(i => i.UserId == principal.GetUserId())
+                .Select(i => _mapper.Map<WishListItem, WishListItemDto>(i));
         }
 
         public void AddToWishList(ClaimsPrincipal principal, BookDto bookDto)
         {
-            _context.WishListItems.Add(new WishListItem
+            _repository.Create(new WishListItem
             {
                 BookId = bookDto.Id,
                 UserId = principal.GetUserId(),
                 TimeStamp = DateTime.Now
             });
 
-            _context.SaveChanges();
+            _repository.Save();
         }
 
         public void DeleteFromWishList(ClaimsPrincipal principal, BookDto bookDto)
         {
-            var item = _context.WishListItems.FirstOrDefault(i =>
-                i.BookId == bookDto.Id && i.UserId == principal.GetUserId());
+            var item = _repository.Get(i =>
+                i.BookId == bookDto.Id && i.UserId == principal.GetUserId())
+                .First();
             if (item != null)
             {
-                _context.WishListItems.Remove(item);
-                _context.SaveChanges();
+                _repository.Delete(item.Id);
+                _repository.Save();
             }
         }
 
         public bool IsInWishList(ClaimsPrincipal principal, BookDto bookDto)
         {
-            return _context.WishListItems.FirstOrDefault(i =>
-                       i.BookId == bookDto.Id && i.UserId == principal.GetUserId()) != null;
+            return _repository.Get(i =>
+                       i.BookId == bookDto.Id && i.UserId == principal.GetUserId())
+                       .Any();
+        }
+
+        public int GetLikesCount(BookDto book)
+        {
+            return _repository.Get(i => i.BookId == book.Id).Count();
         }
     }
 }

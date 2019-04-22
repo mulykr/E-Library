@@ -28,11 +28,11 @@
                     <a asp-action="Index" class="btn btn-warning">Back to List</a>
                     @if (!WishListService.IsInWishList(User, Mapper.Map<BookViewModel, BookDto>(Model)))
                     {
-                        @Html.ActionLink("Like", "AddToWishList", new {id = Model.Id}, new {@class = "btn btn-danger"})
+                        @Html.ActionLink("Like", "AddToWishList", "WishList", new {id = Model.Id}, new {@class = "btn btn-danger"})
                     }
                     else
                     {
-                        @Html.ActionLink("Unlike", "RemoveFromWishList", new {id = Model.Id}, new { @class = "btn btn-danger" })
+                        @Html.ActionLink("Unlike", "RemoveFromWishList", "WishList", new {id = Model.Id}, new { @class = "btn btn-danger" })
                     }
                 </dd>
             </dl>

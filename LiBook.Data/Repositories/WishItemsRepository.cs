@@ -24,17 +24,24 @@ namespace LiBook.Data.Repositories
 
         public IEnumerable<WishListItem> GetList()
         {
-            throw new NotImplementedException();
+            return _context.WishListItems
+                .Include(i => i.Book)
+                .Include(i => i.User);
         }
 
         public WishListItem Get(string id)
         {
-            throw new NotImplementedException();
+            return _context.WishListItems
+                .Include(i => i.Book)
+                .Include(i => i.User)
+                .FirstOrDefault(i => i.Id ==id);
         }
 
         public IEnumerable<WishListItem> Get(Expression<Func<WishListItem, bool>> filter = null, Func<IQueryable<WishListItem>, IOrderedQueryable<WishListItem>> orderBy = null, string includeProperties = "")
         {
-            IQueryable<WishListItem> query = _context.WishListItems;
+            IQueryable<WishListItem> query = _context.WishListItems
+                .Include(i => i.Book)
+                .Include(i => i.User);
             if (filter != null)
             {
                 query = query.Where(filter);
@@ -44,7 +51,7 @@ namespace LiBook.Data.Repositories
             {
                 query = query.Include(includeProperty);
             }
-            return orderBy != null ? orderBy(query).ToList() : query.ToList();
+            return orderBy?.Invoke(query).ToList() ?? query.ToList();
         }
 
         public void Create(WishListItem item)
@@ -54,12 +61,16 @@ namespace LiBook.Data.Repositories
 
         public void Update(WishListItem item)
         {
-            throw new NotImplementedException();
+            _context.WishListItems.Update(item);
         }
 
         public void Delete(string id)
         {
-            throw new NotImplementedException();
+            var item = _context.WishListItems.Find(id);
+            if (item != null)
+            {
+                _context.WishListItems.Remove(item);
+            }
         }
 
         public void Save()
