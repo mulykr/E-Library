@@ -1,15 +1,10 @@
 ﻿using AutoMapper;
-using LiBook.Data.Entities;
 using LiBook.Models;
 using LiBook.Services.DTO;
 using LiBook.Services.Extensions.Identity;
 using LiBook.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LiBook.Controllers
 {
@@ -26,10 +21,6 @@ namespace LiBook.Controllers
             _mapper = mapper;
             _bookService = bookService;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
 
         public IActionResult AddComment(string id)
         {
@@ -38,29 +29,27 @@ namespace LiBook.Controllers
             return View(book);
         }
 
-        public IActionResult AddCommentConfirmed(string id, string message)
+        public IActionResult AddCommentConfirmed(string id, string comment)
         {
-            var bookDto = _bookService.Get(id);
             var wlDto = new CommentDto
             {
-                BookId = bookDto.Id,
+                BookId = id,
                 UserId = User.GetUserId(),
-                Message = message
+                Message = comment
             };
             _service.AddComment(wlDto);
-            return Redirect("/");
+            return Redirect($"/Books/Details/{id}");
         }
 
-        public IActionResult RemoveComment(string id)
+        public IActionResult Delete(string id)
         {
-            var bookDto = _bookService.Get(id);
             var wlDto = new CommentDto
             {
-                BookId = bookDto.Id,
-                UserId = User.GetUserId()
+                Id = id
             };
+            var comment = _service.Get(id);
             _service.DeleteComment(wlDto);
-            return Redirect("/");
+            return Redirect($"/Books/Details/{comment.BookId}");
         }
     }
 }

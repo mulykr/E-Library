@@ -56,13 +56,14 @@ namespace LiBook
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IWishListService, WishListService>();
+            services.AddScoped<ICommentService, CommentService>();
             services.AddSingleton<IAppConfiguration, AppConfiguration>(_ => new AppConfiguration(Environment.WebRootPath));
 
             services.AddScoped<IRepository<Book>, BookRepository>();
             services.AddScoped<IRepository<Author>, AuthorRepository>();
             services.AddScoped<IRepository<UserProfile>, UserRepository>();
             services.AddScoped<IRepository<WishListItem>, WishItemsRepository>();
-
+            services.AddScoped<IRepository<Comment>, CommentRepository>();
             services.AddScoped<IRepository<UserProfile>, UserRepository>();
 
             services.AddAutoMapper();

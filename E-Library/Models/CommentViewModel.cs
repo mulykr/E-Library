@@ -1,13 +1,12 @@
 ﻿using LiBook.Data.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LiBook.Models
 {
     public class CommentViewModel
     {
+        public string Id { get; set; }
+
         public string BookId { get; set; }
 
         public Book Book { get; set; }
@@ -18,6 +17,6 @@ namespace LiBook.Models
 
         public string Message { get; set; }
 
-        public DateTime TimaStamp { get; set; }
+        public DateTime TimeStamp { get; set; }
     }
 }

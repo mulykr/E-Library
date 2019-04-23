@@ -5,6 +5,8 @@ namespace LiBook.Services.DTO
 {
     public class CommentDto
     {
+        public string Id { get; set; }
+
         public string BookId { get; set; }
 
         public Book Book { get; set; }
@@ -15,6 +17,6 @@ namespace LiBook.Services.DTO
 
         public string Message { get; set; }
 
-        public DateTime TimaStamp { get; set; }
+        public DateTime TimeStamp { get; set; }
     }
 }

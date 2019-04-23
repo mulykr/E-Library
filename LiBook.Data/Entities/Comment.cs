@@ -16,6 +16,6 @@ namespace LiBook.Data.Entities
 
         public string Message { get; set; }
 
-        public DateTime TimaStamp { get; set; }
+        public DateTime TimeStamp { get; set; }
     }
 }

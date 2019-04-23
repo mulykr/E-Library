@@ -1,0 +1,60 @@
+﻿@model BookViewModel
+@{
+    ViewData["Title"] = "Add comment";
+    var book = Model;
+}
+
+<div class="row">
+    <div class="col-md-9">
+        <h3>Step 1</h3>
+        <hr />
+        <p>
+            Cool! You like this book and are going to leave feedback on "@Model.Title". It would be great experience to let us know what you think.
+            Describe it within about 50-250 symbols, please. Thanks :)
+        </p>
+        <br />
+        <h3>Step 2</h3>
+        <hr />
+        <form asp-action="AddCommentConfirmed">
+            <input type="hidden" asp-for="Id" />
+            <textarea name="comment" id="comment" placeholder="Enter your comment here" class="input-group-lg" rows="5" style="min-width: 100%;" maxlength="250" minlength="50"></textarea>
+            <br />
+            <input type="submit" value="Comment it!" class="btn btn-block btn-success" />
+        </form>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+
+            @if (!string.IsNullOrEmpty(book.ImagePath))
+            {
+                <img class="h-50 card-img-top" src="/pics/Books/@book.ImagePath" alt="Card image cap">
+            }
+            else
+            {
+                <img class="h-50 card-img-top" src="/pics/Books/default.png" alt="Card image cap">
+            }
+            <div class="card-body">
+                <h5 class="card-title">@book.Title</h5>
+                <p class="card-text text-justify">
+                    @if (string.IsNullOrEmpty(book.Description))
+                    {
+                    <p>There is no description provided for this book.</p>
+                }
+                else if (book.Description.Length > 125)
+                {
+                    @(book.Description.Substring(0, 125) + "...")
+                }
+
+                else
+                {
+                    <p>
+                        @book.Description
+                    </p>
+                }
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

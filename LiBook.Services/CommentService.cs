@@ -37,7 +37,7 @@ namespace LiBook.Services
         {
             return _repository
                 .Get(i => i.BookId == book.Id)
-                .OrderBy(i => i.TimaStamp)
+                .OrderBy(i => i.TimeStamp)
                 .Reverse()
                 .Select(i=>_mapper.Map<Comment, CommentDto>(i));
         }
@@ -46,7 +46,7 @@ namespace LiBook.Services
         {
             return _repository.Get(i =>
                     i.UserId == user.GetUserId())
-                .OrderBy(i => i.TimaStamp)
+                .OrderBy(i => i.TimeStamp)
                 .Reverse()
                 .Select(i => _mapper.Map<Comment, CommentDto>(i));
         }
@@ -54,19 +54,18 @@ namespace LiBook.Services
         public void AddComment(CommentDto commentDto)
         {
             var item = _mapper.Map<CommentDto, Comment>(commentDto);
-            item.TimaStamp = DateTime.Now;
+            item.TimeStamp = DateTime.Now;
             _repository.Create(item);
             _repository.Save();
         }
 
         public void DeleteComment(CommentDto commentDto)
         {
-            var item = _repository.Get(i => i.BookId == commentDto.BookId && i.UserId == commentDto.UserId).First();
-            if(item!=null)
+            var item = _repository.Get(commentDto.Id);
+            if (item != null)
             {
                 _repository.Delete(item.Id);
                 _repository.Save();
-
             }
         }
 
