@@ -13,5 +13,7 @@ namespace LiBook.Data.Entities
         public DateTime RegistredOn { get; set; }
 
         public ICollection<WishListItem> WishListItems { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }
     }
 }

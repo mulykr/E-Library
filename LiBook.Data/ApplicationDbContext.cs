@@ -27,6 +27,8 @@ namespace LiBook.Data
 
         public virtual DbSet<WishListItem> WishListItems { get; set; }
 
+        public virtual DbSet<Comment> Comments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -54,6 +56,17 @@ namespace LiBook.Data
             modelBuilder.Entity<WishListItem>()
                 .HasOne(p => p.User)
                 .WithMany(p => p.WishListItems)
+                .HasForeignKey(p => p.UserId);
+
+            //Comment many-to-many
+            modelBuilder.Entity<Comment>()
+                .HasOne(v => v.Book)
+                .WithMany(v => v.Comments)
+                .HasForeignKey(v => v.BookId);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(p => p.User)
+                .WithMany(p => p.Comments)
                 .HasForeignKey(p => p.UserId);
         }
     }
