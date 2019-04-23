@@ -5,5 +5,7 @@
 }
 
 $(document).ready(function () {
+    $("nav").removeClass("bg-info");
     $("nav").css("opacity", 0.9);
+    $("nav").css("background-color", "rgba(0, 0, 0, 0.75)");
 });

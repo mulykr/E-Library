@@ -38,6 +38,8 @@ namespace LiBook.Services
         {
             return _repository
                 .Get(i => i.UserId == principal.GetUserId())
+                .OrderBy(i => i.TimeStamp)
+                .Reverse()
                 .Select(i => _mapper.Map<WishListItem, WishListItemDto>(i));
         }
 
