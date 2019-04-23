@@ -3,6 +3,22 @@
     Layout = null;
 }
 
+<hr/>
+
+@if (!Model.Any())
+{
+    <div class="row">
+        <div class="col-md-9">
+            <p class="text-justify">
+                There are no comments yet. Be the first who comments this book! You should know that comment has to contain from 50 to 250 charachters :)
+            </p>
+        </div>
+        <div class="col-md-3">
+            <img src="/images/cat.gif" class="img-fluid"/>
+        </div>
+    </div>
+}
+
 @foreach (var comment in Model)
 {
     <div class="card">
