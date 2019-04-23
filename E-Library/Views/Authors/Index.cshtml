@@ -47,9 +47,9 @@
                         </p>
                     }
                         </p>
-                        <a href="/authors/details/@author.Id" class="btn btn-success">Open</a>
-                        <a href="/authors/edit/@author.Id" class="btn btn-info">Edit</a>
-                        <a href="/authors/delete/@author.Id" class="btn btn-danger">Remove</a>
+                    <div class="text-right">
+                        @await Component.InvokeAsync("AuthorTabActions", new {model = author})
+                    </div>
                     </div>
                 </div>
             </div>
