@@ -1,11 +1,9 @@
 ﻿using LiBook.Data.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LiBook.Services.DTO
 {
-    public class CommentDTO
+    public class CommentDto
     {
         public string BookId { get; set; }
 

@@ -41,7 +41,7 @@ namespace LiBook.Controllers
         public IActionResult AddCommentConfirmed(string id, string message)
         {
             var bookDto = _bookService.Get(id);
-            var wlDto = new CommentDTO
+            var wlDto = new CommentDto
             {
                 BookId = bookDto.Id,
                 UserId = User.GetUserId(),
@@ -54,7 +54,7 @@ namespace LiBook.Controllers
         public IActionResult RemoveComment(string id)
         {
             var bookDto = _bookService.Get(id);
-            var wlDto = new CommentDTO
+            var wlDto = new CommentDto
             {
                 BookId = bookDto.Id,
                 UserId = User.GetUserId()
