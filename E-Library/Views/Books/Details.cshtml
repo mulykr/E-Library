@@ -19,8 +19,7 @@
                     @Html.DisplayFor(model => model.Description)
                 </dd>
                 <dd class="float-right">
-                    <a asp-action="Index" class="fa fa-arrow-circle-left btn btn-warning text-white"> </a>
-                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-info fa fa-pencil text-white"> </a>
+                    @await Component.InvokeAsync("BookDetailsManagement", new { model = Model })
                     @await Component.InvokeAsync("LikeButton", new { model = Model })
                 </dd>
             </dl>
