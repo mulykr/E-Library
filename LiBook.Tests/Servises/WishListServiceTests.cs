@@ -122,20 +122,20 @@ namespace LiBook.Tests.Servises
                 });
 
             var mapper = new Mock<IMapper>();
-            mapper.Setup(m => m.Map<WishListItem, WishListItemDto>(It.IsAny<WishListItem>())).Returns(expected);
+            mapper.Setup(m => m.Map<WishListItemDto, WishListItem>(It.IsAny<WishListItemDto>())).Returns(new WishListItem());
             var svc = new WishListService(repository.Object, mapper.Object);
 
             svc.AddToWishList(expected);
 
             mapper.Verify(m => m.Map<WishListItemDto, WishListItem>(It.IsAny<WishListItemDto>()), Times.Once());
-            repository.Verify(r => r.Update(It.IsAny<WishListItem>()), Times.Once());
+            repository.Verify(r => r.Create(It.IsAny<WishListItem>()), Times.Once());
             repository.Verify(r => r.Save(), Times.Once());
         }
 
         [Fact]
         public void DeleteFromWishListTest()
         {
-            var expected = new WishListItemDto
+            var item = new WishListItemDto
             {
                 Id = "1",
                 BookId = "1",
@@ -154,34 +154,16 @@ namespace LiBook.Tests.Servises
                 },
                 Note = "Best book ever"
             };
-
+            var list = GetTestCollection();
+            var expected = list.First(i => i.BookId == item.BookId && i.UserId == item.UserId);
             var repository = new Mock<IRepository<WishListItem>>();
-            repository.Setup(r => r.Get(expected.Id))
-                .Returns(new WishListItem
-                {
-                    Id = "1",
-                    BookId = "1",
-                    Book = new Book()
-                    {
-                        Id = "1",
-                        Title = "Stephen",
-                        Description = "King"
-                    },
-                    UserId = "1",
-                    User = new UserProfile()
-                    {
-                        Id = "1",
-                        FirstName = "Oleksii",
-                        LastName = "Rudenko"
-                    },
-                    Note = "Best book ever"
-                });
+            repository.Setup(r => r.Get(i => i.BookId == expected.BookId && i.UserId == expected.UserId, null, "")).Returns(list.Where(l => l.BookId == expected.BookId && l.UserId == expected.UserId));
 
             var mapper = new Mock<IMapper>();
-            mapper.Setup(m => m.Map<WishListItem, WishListItemDto>(It.IsAny<WishListItem>())).Returns(expected);
+            //mapper.Setup(m => m.Map<WishListItemDto, WishListItem>(It.IsAny<WishListItemDto>())).Returns(new WishListItem { UserId = "1", BookId = "1" });
             var svc = new WishListService(repository.Object, mapper.Object);
 
-            svc.DeleteFromWishList(expected);
+            svc.DeleteFromWishList(item);
 
             repository.Verify(r => r.Get(It.IsAny<string>()), Times.Once());
             repository.Verify(r => r.Delete(It.IsAny<string>()), Times.Once());

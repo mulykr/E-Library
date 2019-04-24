@@ -123,7 +123,7 @@ namespace LiBook.Tests.Servises
                 Message = "Best book ever",
                 TimeStamp = DateTime.Now
             };
-
+            
             var repository = new Mock<IRepository<Comment>>();
             repository.Setup(r => r.Get(expected.Id)).Returns(new Comment
                 {
@@ -148,12 +148,13 @@ namespace LiBook.Tests.Servises
 
             var mapper = new Mock<IMapper>();
             mapper.Setup(m => m.Map<Comment, CommentDto>(It.IsAny<Comment>())).Returns(expected);
+            mapper.Setup(m => m.Map<CommentDto, Comment>(It.IsAny<CommentDto>())).Returns(new Comment());
             var svc = new CommentService(repository.Object, mapper.Object);
 
             svc.AddComment(expected);
 
             mapper.Verify(m => m.Map<CommentDto, Comment>(It.IsAny<CommentDto>()), Times.Once());
-            repository.Verify(r => r.Update(It.IsAny<Comment>()), Times.Once());
+            repository.Verify(r => r.Create(It.IsAny<Comment>()), Times.Once());
             repository.Verify(r => r.Save(), Times.Once());
 
         }
