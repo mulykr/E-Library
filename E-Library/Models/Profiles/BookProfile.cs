@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LiBook.Data.Entities;
 using LiBook.Services.DTO;
 
 namespace LiBook.Models.Profiles
@@ -9,6 +10,8 @@ namespace LiBook.Models.Profiles
         {
             CreateMap<BookDto, BookViewModel>();
             CreateMap<BookViewModel, BookDto>();
+            CreateMap<BookDto, Book>();
+            CreateMap<Book, BookDto>();
         }
     }
 }
