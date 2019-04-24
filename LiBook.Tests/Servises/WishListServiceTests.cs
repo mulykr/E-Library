@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
-using System.Text;
 using AutoMapper;
 using LiBook.Data;
 using LiBook.Data.Entities;
@@ -12,7 +11,6 @@ using LiBook.Data.Repositories;
 using LiBook.Services;
 using LiBook.Services.DTO;
 using LiBook.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
@@ -55,6 +53,7 @@ namespace LiBook.Tests.Servises
         [Fact]
         public void GetUserWishListTest()
         {
+            // Arrange
             var user = new UserProfile
             {
                 Id = "1"
@@ -71,14 +70,17 @@ namespace LiBook.Tests.Servises
             var mapper = new Mock<IMapper>();
             var svc = new WishListService(repository.Object, mapper.Object);
 
+            // Act
             svc.GetUserWishList(principal.Object);
 
+            // Assert
             repository.Verify(r => r.Get(It.IsAny<Expression<Func<WishListItem, bool>>>(), null, ""), Times.Once());
         }
 
         [Fact]
         public void AddToWishListTest()
         {
+            // Arrange
             var expected = new WishListItemDto
             {
                 Id = "1",
@@ -125,8 +127,10 @@ namespace LiBook.Tests.Servises
             mapper.Setup(m => m.Map<WishListItemDto, WishListItem>(It.IsAny<WishListItemDto>())).Returns(new WishListItem());
             var svc = new WishListService(repository.Object, mapper.Object);
 
+            // Act
             svc.AddToWishList(expected);
 
+            // Assert
             mapper.Verify(m => m.Map<WishListItemDto, WishListItem>(It.IsAny<WishListItemDto>()), Times.Once());
             repository.Verify(r => r.Create(It.IsAny<WishListItem>()), Times.Once());
             repository.Verify(r => r.Save(), Times.Once());
@@ -135,37 +139,23 @@ namespace LiBook.Tests.Servises
         [Fact]
         public void DeleteFromWishListTest()
         {
-            var item = new WishListItemDto
-            {
-                Id = "1",
-                BookId = "1",
-                Book = new Book()
-                {
-                    Id = "1",
-                    Title = "Stephen",
-                    Description = "King"
-                },
-                UserId = "1",
-                User = new UserProfile()
-                {
-                    Id = "1",
-                    FirstName = "Oleksii",
-                    LastName = "Rudenko"
-                },
-                Note = "Best book ever"
-            };
-            var list = GetTestCollection();
-            var expected = list.First(i => i.BookId == item.BookId && i.UserId == item.UserId);
+            // Arrange
+            var item = GetTestCollectionDto().First(i => i.BookId == "1" && i.UserId == "1");
+            var expected = GetTestCollection().First(i => i.BookId == item.BookId && i.UserId == item.UserId);
             var repository = new Mock<IRepository<WishListItem>>();
-            repository.Setup(r => r.Get(i => i.BookId == expected.BookId && i.UserId == expected.UserId, null, "")).Returns(list.Where(l => l.BookId == expected.BookId && l.UserId == expected.UserId));
+
+            repository.Setup(r => r.Get(It.IsAny<Expression<Func<WishListItem, bool>>>(), null, ""))
+                .Returns(new List<WishListItem> {expected});
 
             var mapper = new Mock<IMapper>();
-            //mapper.Setup(m => m.Map<WishListItemDto, WishListItem>(It.IsAny<WishListItemDto>())).Returns(new WishListItem { UserId = "1", BookId = "1" });
             var svc = new WishListService(repository.Object, mapper.Object);
 
+            // Act
             svc.DeleteFromWishList(item);
 
-            repository.Verify(r => r.Get(It.IsAny<string>()), Times.Once());
+
+            // Assert
+            repository.Verify(r => r.Get(It.IsAny<Expression<Func<WishListItem, bool>>>(), null, string.Empty), Times.Once());
             repository.Verify(r => r.Delete(It.IsAny<string>()), Times.Once());
             repository.Verify(r => r.Save(), Times.Once());
         }

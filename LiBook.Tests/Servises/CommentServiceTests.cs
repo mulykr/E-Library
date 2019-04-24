@@ -11,12 +11,10 @@ using LiBook.Data.Repositories;
 using LiBook.Services;
 using LiBook.Services.DTO;
 using LiBook.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 using System.Security.Claims;
-using LiBook.Services.Extensions.Identity;
 
 namespace LiBook.Tests.Servises
 {
@@ -52,6 +50,7 @@ namespace LiBook.Tests.Servises
         [Fact]
         public void GetByBookTest()
         {
+            // Arrange
             var bookDto = new BookDto
             {
                 Id = "1",
@@ -60,23 +59,22 @@ namespace LiBook.Tests.Servises
             };
             var list = GetTestCollection();
             var expected = list.First(i => i.BookId == bookDto.Id);
-          
-            var listdto = GetTestCollectionDto();
-            var expecteddto = listdto.First(i => i.BookId == bookDto.Id);
-
             var repository = new Mock<IRepository<Comment>>();
             repository.Setup(r => r.Get(i => i.BookId == expected.Id, null, "")).Returns(list.Where(l => l.BookId == expected.Id));
             var mapper = new Mock<IMapper>();
             var svc = new CommentService(repository.Object, mapper.Object);
 
+            // Act
             svc.GetByBook(bookDto);
 
+            // Assert
             repository.Verify(r => r.Get(It.IsAny<Expression<Func<Comment, bool>>>(), null, ""), Times.Once());
         }
 
         [Fact]
         public void GetByUserTest()
         {
+            // Arrange
             var user = new UserProfile
             {
                 Id = "1"
@@ -93,16 +91,18 @@ namespace LiBook.Tests.Servises
             var mapper = new Mock<IMapper>();
             var svc = new CommentService(repository.Object, mapper.Object);
 
+            // Act
             svc.GetByUser(principal.Object);
 
+            // Assert
             repository.Verify(r => r.Get(It.IsAny<Expression<Func<Comment, bool>>>(), null, ""), Times.Once());
-            //mapper.Verify(m => m.Map<CommentDto, Comment>(It.IsAny<CommentDto>()), Times.Once());
         }
 
         //Roman please check that test!
         [Fact]
         public void AddCommentTest()
         {
+            // Arrange
             var expected = new CommentDto
             {
                 Id = "1",
@@ -123,7 +123,6 @@ namespace LiBook.Tests.Servises
                 Message = "Best book ever",
                 TimeStamp = DateTime.Now
             };
-            
             var repository = new Mock<IRepository<Comment>>();
             repository.Setup(r => r.Get(expected.Id)).Returns(new Comment
                 {
@@ -145,14 +144,15 @@ namespace LiBook.Tests.Servises
                     Message = "Best book ever",
                     TimeStamp = DateTime.Now
             });
-
             var mapper = new Mock<IMapper>();
             mapper.Setup(m => m.Map<Comment, CommentDto>(It.IsAny<Comment>())).Returns(expected);
             mapper.Setup(m => m.Map<CommentDto, Comment>(It.IsAny<CommentDto>())).Returns(new Comment());
             var svc = new CommentService(repository.Object, mapper.Object);
 
+            // Act
             svc.AddComment(expected);
 
+            // Assert
             mapper.Verify(m => m.Map<CommentDto, Comment>(It.IsAny<CommentDto>()), Times.Once());
             repository.Verify(r => r.Create(It.IsAny<Comment>()), Times.Once());
             repository.Verify(r => r.Save(), Times.Once());
@@ -161,6 +161,7 @@ namespace LiBook.Tests.Servises
         [Fact]
         public void DeleteCommentTest()
         {
+            // Arrange
             var expected = new CommentDto
             {
                 Id = "1",
@@ -208,8 +209,10 @@ namespace LiBook.Tests.Servises
             mapper.Setup(m => m.Map<Comment, CommentDto>(It.IsAny<Comment>())).Returns(expected);
             var svc = new CommentService(repository.Object, mapper.Object);
 
+            // Act
             svc.DeleteComment(expected);
 
+            // Assert
             repository.Verify(r => r.Get(It.IsAny<string>()), Times.Once());
             repository.Verify(r => r.Delete(It.IsAny<string>()), Times.Once());
             repository.Verify(r => r.Save(), Times.Once());
@@ -279,7 +282,6 @@ namespace LiBook.Tests.Servises
                 }
             };
         }
-
         private IEnumerable<CommentDto> GetTestCollectionDto()
         {
             return new[]
