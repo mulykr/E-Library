@@ -14,3 +14,7 @@ function readURL(input, targetId) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+$(document).ready(function () {
+    $("nav").css("padding", "0");
+})
