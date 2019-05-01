@@ -13,12 +13,12 @@ namespace LiBook.Components
             if (isAdmin)
             {
                 return new HtmlContentViewComponentResult(
-                    new HtmlString($"<a href=\"/books/Index/{model.Id}\" class=\"btn btn-info\">Back To List</a> " +
-                    $"<a href=\"/books/Edit/{model.Id}\" class=\"btn btn-info\">Edit</a> "));
+                    new HtmlString($"<a href=\"/books/Index/{model.Id}\" class=\"btn btn-info fa fa-arrow-left\"> </a> " +
+                    $"<a href=\"/books/Edit/{model.Id}\" class=\"btn btn-success fa fa-pencil\"> </a> "));
             }
 
             return new HtmlContentViewComponentResult(
-                new HtmlString($"<a href=\"/books/Index/{model.Id}\" class=\"btn btn-success\">Back To List</a>"));
+                new HtmlString($"<a href=\"/books/Index/{model.Id}\" class=\"btn btn-success fa fa-arrow-left\"> </a>"));
         }
     }
 }
