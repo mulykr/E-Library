@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using LiBook.Data.Entities;
 using LiBook.Models.Account;
 using LiBook.Services.Interfaces;
@@ -20,19 +21,61 @@ namespace LiBook.Controllers
         private readonly UserManager<UserProfile> _userManager;
         private readonly SignInManager<UserProfile> _signInManager;
         private readonly ILogger _logger;
+        private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
         public AccountController(
             UserManager<UserProfile> userManager,
             SignInManager<UserProfile> signInManager,
-            ILogger<AccountController> logger)
+            IUserService userService,
+            ILogger<AccountController> logger,
+            IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _userService = userService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [TempData]
         public string ErrorMessage { get; set; }
+
+        #region Profile
+
+        [Authorize]
+        public IActionResult Index()
+        {
+            var user = _userService.GetUserProfile(User);
+            var model = _mapper.Map<UserProfile, UserProfileViewModel>(user);
+            return View(model);
+        }
+
+        [Authorize]
+        public IActionResult Edit()
+        {
+            var user = _userService.GetUserProfile(User);
+            var model = _mapper.Map<UserProfile, UserProfileViewModel>(user);
+            return View(model);
+        }
+
+        [Authorize]
+        public IActionResult EditConfirmed([Bind("Id,FirstName,LastName")]UserProfileViewModel profile)
+        {
+            var model = _mapper.Map<UserProfileViewModel, UserProfile>(profile);
+            _userService.Update(model);
+            return RedirectToAction("Index");
+        }
+
+        [Authorize]
+        public IActionResult Comments()
+        {
+            var user = _userService.GetUserProfile(User);
+            var model = _mapper.Map<UserProfile, UserProfileViewModel>(user);
+            return View(model.Comments.AsEnumerable());
+        }
+
+        #endregion
 
         #region Login
 

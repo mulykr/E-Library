@@ -1,0 +1,45 @@
+﻿@model LiBook.Models.Account.UserProfileViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Welcome, @Model.FirstName @Model.LastName</h2>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <img class="card-img-top" src="/images/pencils.webp" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Edit profile</h5>
+                <p class="card-text text-justify">
+                    Here you can edit your personal data as First and Last Name which are shown to other users. Also you can change your password here.
+                </p>
+                <a href="/Account/Edit" class="btn btn-success">Edit profile</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <img class="card-img-top" src="/images/likes.jpg" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Books you likes</h5>
+                <p class="card-text text-justify">
+                    Each user in the system has the own wish list that contains books liked by him/her.
+                </p>
+                <a href="/WishList" class="btn btn-primary">My favourites</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <img class="card-img-top" src="/images/comments.jpg" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Comments</h5>
+                <p class="card-text text-justify">
+                    Here you can see books that you have commented and follow them.
+                </p>
+                <a href="/Account/Comments" class="btn btn-warning">My comments</a>
+            </div>
+        </div>
+    </div>
+</div>

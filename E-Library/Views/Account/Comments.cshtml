@@ -1,0 +1,33 @@
+﻿@using LiBook.Services.Interfaces
+@model IEnumerable<CommentViewModel>
+@{
+    ViewData["Title"] = "Comments";
+}
+@inject IBookService BookService
+<h2>My comments (@Model.Count())</h2>
+<br/>
+<div class="row">
+    @foreach (var comment in Model)
+    {
+        <div class="card col-md-6">
+            <div class="card-body">
+                <h6>
+                    <b>
+                        @{
+                            var from = comment.User.FirstName + " " + comment.User.LastName != " " ? comment.User.FirstName + " " + comment.User.LastName : "Funny Cat";
+                        }
+                        @from at @comment.TimeStamp.ToShortDateString() @comment.TimeStamp.ToShortTimeString()
+                    </b>
+                </h6>
+                <b>Book: @Html.ActionLink(BookService.Get(comment.BookId).Title, "Details", "Books", new { id = comment.BookId})</b>
+                <hr/>
+                <p class="text-justify">
+                    @comment.Message
+                </p>
+                <div class="text-right">
+                    @await Component.InvokeAsync("CommentManagePanel", new { model = comment })
+                </div>
+            </div>
+        </div>
+    }
+</div>

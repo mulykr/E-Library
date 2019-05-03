@@ -19,18 +19,25 @@ namespace LiBook.Data.Repositories
 
         public IEnumerable<UserProfile> GetList()
         {
-            return _context.UserProfiles;
+            return _context.UserProfiles
+                .Include(i => i.Comments)
+                .Include(i => i.WishListItems);
         }
 
         public UserProfile Get(string id)
         {
-            return _context.UserProfiles.FirstOrDefault(a => a.Id==id);
+            return _context.UserProfiles
+                .Include(i => i.Comments)
+                .Include(i => i.WishListItems)
+                .FirstOrDefault(a => a.Id==id);
         }
 
 
         public IEnumerable<UserProfile> Get(Expression<Func<UserProfile, bool>> filter = null, Func<IQueryable<UserProfile>, IOrderedQueryable<UserProfile>> orderBy = null, string includeProperties = "")
         {
-            IQueryable<UserProfile> query = _context.UserProfiles;
+            IQueryable<UserProfile> query = _context.UserProfiles
+                .Include(i => i.Comments)
+                .Include(i => i.WishListItems);
             if (filter != null)
             {
                 query = query.Where(filter);
@@ -51,8 +58,10 @@ namespace LiBook.Data.Repositories
 
         public void Update(UserProfile item)
         {
-            _context.UserProfiles.Update(item);
-
+            var user = _context.UserProfiles.Find(item.Id);
+            user.FirstName = item.FirstName;
+            user.LastName = item.LastName;
+            _context.UserProfiles.Update(user);
         }
 
         public void Delete(string id)

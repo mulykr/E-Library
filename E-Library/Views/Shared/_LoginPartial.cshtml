@@ -9,7 +9,7 @@
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav justify-content-start">
             <li class="nav-item">
-                <span class="nav-link text-light">Hello, @UserManager.GetUserName(User)</span>
+                <span class="nav-link text-light"><a href="/Account/Index" class="text-light">Hello, @UserManager.GetUserName(User)</a></span>
             </li>
             <li class="nav-item">
                 <a href="/WishList"><img src="/images/heart.png" class="img-fluid heart"/></a>

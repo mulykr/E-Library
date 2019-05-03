@@ -31,7 +31,9 @@ namespace LiBook.Data.Repositories
 
         public IEnumerable<Comment> GetListByBook(Book book)
         {
-            _context.Comments.Where(i => i.BookId == book.Id);
+            _context.Comments
+                .Include(i => i.Book)
+                .Where(i => i.BookId == book.Id);
             return book.Comments;
         }
 

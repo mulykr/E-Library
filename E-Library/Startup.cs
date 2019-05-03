@@ -57,6 +57,7 @@ namespace LiBook
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IWishListService, WishListService>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddSingleton<IAppConfiguration, AppConfiguration>(_ => new AppConfiguration(Environment.WebRootPath));
 
             services.AddScoped<IRepository<Book>, BookRepository>();
