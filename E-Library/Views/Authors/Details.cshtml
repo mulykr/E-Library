@@ -19,7 +19,7 @@
                 <dd>
                     @Html.DisplayFor(model => model.Biography)
                 </dd>
-                <dd>
+                <dd class="text-right">
                     @await Component.InvokeAsync("AuthorDetailsManagement", new { model = Model})
                 </dd>
             </dl>

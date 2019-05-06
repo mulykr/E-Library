@@ -10,7 +10,10 @@
         <h2>Authors</h2>
     </div>
     <div class="col-md-6 text-right">
-        <a asp-action="Create" class="btn btn-success">Create New</a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-success fa fa-plus"></a>
+        }
     </div>
 </div>
 
