@@ -3,6 +3,19 @@
 }
 
 <div class="row">
+    <div class="col-12">
+        <h2>Welcome to LiBook</h2>
+        <hr/>
+        <div class="md-form mt-0">
+            <input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search">
+        </div>
+        <br/>
+        <p>
+            Modern, user-friendly and easy to use. Figure out the most interesting and useful information about books and authors.
+            Huge collection of books and authors are available here. You need not to walk through a lot of other websites to find the coolest
+            informations about authors and the plot of books - do it here! Leave your own feedback on books and share your thoughts!
+        </p>
+    </div>
     <div class="col-md-4">
         <div class="card">
             <img class="card-img-top" src="https://staticfilesbs.blob.core.windows.net/statics/books.jpg" alt="Card image cap">
@@ -22,6 +35,7 @@
                 <h5 class="card-title">Authors</h5>
                 <p class="card-text text-justify">
                     Through here you can find all authors available in the BooksStore. Also you can see which books belong to specific author.
+                    Authors and books are related in the way "many-to-many", so one book can have a lot of authors and one author can have a lot of books.
                 </p>
                 <a href="/authors" class="btn btn-primary">Authors</a>
             </div>
@@ -33,7 +47,8 @@
             <div class="card-body">
                 <h5 class="card-title">Likes</h5>
                 <p class="card-text text-justify">
-                    Wish list allows you to store books that you like.
+                    Wish list allows you to store books that you like. You can also add short comment why the book is stored in your wish list to prevent
+                    you to forget the reason of adding it to your favourites.
                 </p>
                 <a href="/WishList" class="btn btn-warning">Wish list</a>
             </div>
