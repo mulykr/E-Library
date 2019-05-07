@@ -20,7 +20,9 @@ namespace LiBook.Data.Repositories
 
         public IEnumerable<Book> GetList()
         {
-            return _context.Books;
+            return _context.Books
+                .Include(i => i.AuthorsBooks)
+                .ThenInclude(i => i.Author);
         }
 
         public Book Get(string id)
@@ -34,7 +36,8 @@ namespace LiBook.Data.Repositories
 
         public IEnumerable<Book> Get(Expression<Func<Book, bool>> filter = null, Func<IQueryable<Book>, IOrderedQueryable<Book>> orderBy = null, string includeProperties = "")
         {
-            IQueryable<Book> query = _context.Books;
+            IQueryable<Book> query = _context.Books
+                .Include(i => i.AuthorsBooks);
             if (filter != null)
             {
                 query = query.Where(filter);

@@ -42,7 +42,39 @@
             @await Component.InvokeAsync("BookComments", new {model = Model})
         </div>
         <div class="col-md-4">
-            <h5>Authors</h5>
+            <div class="row">
+                <div class="col-md-8">
+                    <h5>Authors</h5>
+                </div>
+                <div class="col-md-4 text-right">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="AssignAuthors" asp-route-id="@Model.Id" class="btn btn-info fa fa-plus"></a>
+                    }
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                @foreach (var authorBookViewModel in Model.AuthorsBooks)
+                {
+                    var author = authorBookViewModel.Author;
+                    <div class="col-md-6">
+                        <div class="card">
+                            @if (!string.IsNullOrEmpty(author.ImagePath))
+                            {
+                                <img class="h-50 card-img-top" src="/pics/Authors/@author.ImagePath" alt="Card image cap">
+                            }
+                            else
+                            {
+                                <img class="h-50 card-img-top" src="/pics/Authors/default.png" alt="Card image cap">
+                            }
+                            <div class="card-body text-center">
+                                <h6 class="card-title"><a asp-action="Details" asp-controller="Authors" asp-route-id="@author.Id" class="text-info">@author.LastName @author.FirstName</a></h6>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>

@@ -14,11 +14,15 @@ namespace LiBook.Controllers
     public class BooksController : Controller
     {
         private readonly IBookService _service;
+        private readonly IAuthorService _authorService;
         private readonly IMapper _mapper;
 
-        public BooksController(IBookService service, IMapper mapper)
+        public BooksController(IBookService service,
+            IAuthorService authorService,
+            IMapper mapper)
         {
             _service = service;
+            _authorService = authorService;
             _mapper = mapper;
         }
 
@@ -112,6 +116,27 @@ namespace LiBook.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult AssignAuthors(string id)
+        {
+            var book = _service.Get(id);
+            var bookViewModel = _mapper.Map<BookDto, BookViewModel>(book);
+            return View(bookViewModel);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult AssignAuthors(string id, string[] authors)
+        {
+            _service.RemoveAuthors(id);
+            foreach (var authorId in authors)
+            {
+                _service.AssignAuthor(id, authorId);
+            }
+
+            return RedirectToAction("Details", new {id = id});
         }
 
         // GET: Books/Delete/5

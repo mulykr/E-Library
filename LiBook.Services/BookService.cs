@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using LiBook.Services.Interfaces;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using LiBook.Utilities.Images;
 using System.IO;
 using System.Drawing;
 using System.Linq;
-using System.Security.Claims;
 using AutoMapper;
 using LiBook.Data.Entities;
 using LiBook.Data.Interfaces;
 using LiBook.Services.DTO;
-using LiBook.Services.Extensions.Identity;
 
 namespace LiBook.Services
 {
@@ -57,6 +54,34 @@ namespace LiBook.Services
             var book = _mapper.Map<BookDto, Book>(item);
             _repository.Create(book);
             _repository.Save();
+        }
+
+        public void AssignAuthor(string bookId, string authorId)
+        {
+            var book = _repository.Get(i => i.Id == bookId).First();
+            if (!book.AuthorsBooks.Any(i => i.AuthorId == authorId && i.BookId == bookId))
+            {
+                book.AuthorsBooks.Add(new AuthorBook
+                {
+                    BookId = bookId,
+                    AuthorId = authorId
+                });
+
+                _repository.Update(book);
+                _repository.Save();
+            }
+        }
+
+        public void RemoveAuthors(string bookId)
+        {
+            var book = _repository.Get(i => i.Id == bookId).First();
+            if (book.AuthorsBooks.Any())
+            {
+                book.AuthorsBooks.Clear();
+
+                _repository.Update(book);
+                _repository.Save();
+            }
         }
 
         public void Update(BookDto item, IFormFile file)

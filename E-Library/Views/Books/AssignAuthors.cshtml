@@ -1,0 +1,154 @@
+﻿@using LiBook.Services.DTO
+@using LiBook.Services.Interfaces
+@model BookViewModel
+@inject IAuthorService AuthorService
+@{
+    ViewData["Title"] = "AssignAuthors";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var allAuthors = AuthorService.GetList().ToArray();
+
+    int part1Count = 0, part2Count = 0, part3Count = 0;
+
+    if (allAuthors.Length >= 3)
+    {
+        var step = allAuthors.Length / 3;
+        var left = allAuthors.Length % 3;
+        part1Count = part2Count = part3Count = step;
+        if (left >= 1)
+        {
+            part1Count++;
+        }
+        if (left == 2)
+        {
+            part2Count++;
+        }
+    }
+    else
+    {
+        if (allAuthors.Length == 0)
+        {
+            part1Count = part2Count = part3Count = 0;
+        }
+        else if (allAuthors.Length == 1)
+        {
+            part1Count = 1;
+        }
+        else if (allAuthors.Length == 2)
+        {
+            part1Count = part2Count = 1;
+        }
+    }
+    var collection1 = new AuthorDto[part1Count];
+    var collection2 = new AuthorDto[part2Count];
+    var collection3 = new AuthorDto[part3Count];
+    for (var i = 0; i < part1Count; i++)
+    {
+        collection1[i] = allAuthors[i];
+    }
+    for (var i = 0; i < part2Count; i++)
+    {
+        collection2[i] = allAuthors[i+part1Count];
+    }
+    for (var i = 0; i < part3Count; i++)
+    {
+        collection3[i] = allAuthors[i+part1Count+part2Count];
+    }
+
+}
+
+<h2>Assign authors</h2>
+
+<hr/>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <img class="h-50 card-img-top" src="/pics/Books/@Model.ImagePath" alt="Card image cap">
+            }
+            else
+            {
+                <img class="h-50 card-img-top" src="/pics/Books/default.png" alt="Card image cap">
+            }
+            <div class="card-body text-center">
+                <h5 class="card-title"><a asp-action="Details" asp-route-id="@Model.Id">@Model.Title</a></h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
+        <form asp-action="AssignAuthors" method="post">
+            <input type="submit" class="btn btn-block btn-success" value="Save"/>
+            <input type="hidden" value="@Model.Id" name="id" id="id"/>
+            <br/>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="list-group">
+                        @foreach (var author in collection1)
+                        {
+                        <li class="list-group-item author bg-white">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <input type="checkbox" class="custom-checkbox" name="authors" value="@author.Id" @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked=''" : "") />
+                                    </div>
+                                </div>
+                                <label class="form-control text-info">@author.FirstName @author.LastName</label>
+                            </div>
+                        </li>
+                        }
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-group">
+                        @foreach (var author in collection2)
+                        {
+                            <li class="list-group-item author bg-white">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <input type="checkbox" class="custom-checkbox" name="authors" value="@author.Id" @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked=''" : "") />
+                                        </div>
+                                    </div>
+                                    <label class="form-control text-info">@author.FirstName @author.LastName</label>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-group">
+                        @foreach (var author in collection3)
+                        {
+                        <li class="list-group-item author bg-white">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <input type="checkbox" class="custom-checkbox" name="authors" value="@author.Id" @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked=''" : "") />
+                                    </div>
+                                </div>
+                                <label class="form-control text-info">@author.FirstName @author.LastName</label>
+                            </div>
+                        </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script type="text/javascript">
+    $("#search").keyup(function() {
+        var txt = $('#search').val();
+        $('.author').each(function () {
+            $(this).hide();
+            if($(this).text().toUpperCase().indexOf(txt.toUpperCase()) != -1){
+                $(this).show();
+            }
+        });
+    });    
+</script>
