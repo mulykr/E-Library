@@ -1,9 +1,13 @@
 ﻿@model IEnumerable<LiBook.Models.BookViewModel>
+@using LiBook.Services.DTO
+@using LiBook.Services.Interfaces
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
 
 <div class="row">
     <div class="col-md-6">
@@ -16,11 +20,13 @@
         }
     </div>
 </div>
+<input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
 
+<br />
 <div class="row card-columns">
     @foreach (var book in Model)
     {
-        <div class="col-md-3">
+        <div class="col-md-3 book">
             <div class="card">
                 @if (!string.IsNullOrEmpty(book.ImagePath))
                 {
@@ -35,25 +41,40 @@
                     <p class="card-text text-justify">
                         @if (string.IsNullOrEmpty(book.Description))
                         {
-                            <p>There is no description provided for this book.</p>
-                        }
-                        else if (book.Description.Length > 125)
-                        {
-                            @(book.Description.Substring(0, 125) + "...")
-                        }
+                        <p>There is no description provided for this book.</p>
+                    }
+                    else if (book.Description.Length > 125)
+                    {
+                        @(book.Description.Substring(0, 125) + "...")
+                    }
 
-                        else
-                        {
-                            <p>
-                                @book.Description
-                            </p>
-                        }
-                    </p>
-                    <div class="text-right">
-                        @await Component.InvokeAsync("BookTabActions", new {model = book})
+                    else
+                    {
+                        <p>
+                            @book.Description
+                        </p>
+                    }
+                        </p>
+                        <div class="text-right">
+                            @await Component.InvokeAsync("BookTabActions", new { model = book })
+                        </div>
                     </div>
                 </div>
             </div>
-            </div>
         }
 </div>
+
+
+
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script type="text/javascript">
+    $("#search").keyup(function () {
+        var txt = $('#search').val();
+        $('.book').each(function () {
+            $(this).hide();
+            if ($(this).text().toUpperCase().indexOf(txt.toUpperCase()) != -1) {
+                $(this).show();
+            }
+        });
+    });
+</script>
