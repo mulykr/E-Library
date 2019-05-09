@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using LiBook.Models;
+using System;
 
 namespace LiBook.Controllers
 {
@@ -13,7 +14,18 @@ namespace LiBook.Controllers
 
         public IActionResult Search(string key)
         {
-            return View("Search", key.ToLower());
+            try
+            {
+                return View("Search", key.ToLower());
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         public IActionResult Privacy()

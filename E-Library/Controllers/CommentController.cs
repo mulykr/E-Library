@@ -5,6 +5,7 @@ using LiBook.Services.Extensions.Identity;
 using LiBook.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace LiBook.Controllers
 {
@@ -24,32 +25,67 @@ namespace LiBook.Controllers
 
         public IActionResult AddComment(string id)
         {
-            var bookDto = _bookService.Get(id);
-            var book = _mapper.Map<BookDto, BookViewModel>(bookDto);
-            return View(book);
+            try
+            {
+                var bookDto = _bookService.Get(id);
+                var book = _mapper.Map<BookDto, BookViewModel>(bookDto);
+                return View(book);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         public IActionResult AddCommentConfirmed(string id, string comment)
         {
-            var wlDto = new CommentDto
+            
+            try
             {
-                BookId = id,
-                UserId = User.GetUserId(),
-                Message = comment
-            };
-            _service.AddComment(wlDto);
-            return Redirect($"/Books/Details/{id}");
+                var wlDto = new CommentDto
+                {
+                    BookId = id,
+                    UserId = User.GetUserId(),
+                    Message = comment
+                };
+                _service.AddComment(wlDto);
+                return Redirect($"/Books/Details/{id}");
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         public IActionResult Delete(string id)
         {
-            var wlDto = new CommentDto
+            
+            try
             {
-                Id = id
-            };
-            var comment = _service.Get(id);
-            _service.DeleteComment(wlDto);
-            return Redirect($"/Books/Details/{comment.BookId}");
+                var wlDto = new CommentDto
+                {
+                    Id = id
+                };
+                var comment = _service.Get(id);
+                _service.DeleteComment(wlDto);
+                return Redirect($"/Books/Details/{comment.BookId}");
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using LiBook.Models;
 using LiBook.Services.DTO;
@@ -24,40 +25,84 @@ namespace LiBook.Controllers
         }
         public IActionResult Index()
         {
-            var items = _service.GetUserWishList(User).Select(i => _mapper.Map<WishListItemDto, WishListItemViewModel>(i));
-            return View(items);
+            try
+            {
+                var items = _service.GetUserWishList(User).Select(i => _mapper.Map<WishListItemDto, WishListItemViewModel>(i));
+                return View(items);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
         
         public IActionResult AddToWishList(string id)
         {
-            var bookDto = _bookService.Get(id);
-            var book = _mapper.Map<BookDto, BookViewModel>(bookDto);
-            return View(book);
+            try
+            {
+                var bookDto = _bookService.Get(id);
+                var book = _mapper.Map<BookDto, BookViewModel>(bookDto);
+                return View(book);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
         
         public IActionResult AddToWishListConfirmed(string id, string note)
         {
-            var bookDto = _bookService.Get(id);
-            var wlDto = new WishListItemDto
+            try
             {
-                BookId = bookDto.Id,
-                UserId = User.GetUserId(),
-                Note = note
-            };
-            _service.AddToWishList(wlDto);
-            return Redirect("/WishList");
+                var bookDto = _bookService.Get(id);
+                var wlDto = new WishListItemDto
+                {
+                    BookId = bookDto.Id,
+                    UserId = User.GetUserId(),
+                    Note = note
+                };
+                _service.AddToWishList(wlDto);
+                return Redirect("/WishList");
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
         
         public IActionResult RemoveFromWishList(string id)
         {
-            var bookDto = _bookService.Get(id);
-            var wlDto = new WishListItemDto
+            try
             {
-                BookId = bookDto.Id,
-                UserId = User.GetUserId()
-            };
-            _service.DeleteFromWishList(wlDto);
-            return Redirect($"/Books/Details/{id}");
+                var bookDto = _bookService.Get(id);
+                var wlDto = new WishListItemDto
+                {
+                    BookId = bookDto.Id,
+                    UserId = User.GetUserId()
+                };
+                _service.DeleteFromWishList(wlDto);
+                return Redirect($"/Books/Details/{id}");
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
     }
 }

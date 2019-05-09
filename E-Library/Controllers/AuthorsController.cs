@@ -25,19 +25,42 @@ namespace LiBook.Controllers
         // GET: Authors
         public IActionResult Index()
         {
-            return View(_service.GetList().Select(item => _mapper.Map<AuthorDto, AuthorViewModel>(item)));
+            try
+            {
+                return View(_service.GetList().Select(item => _mapper.Map<AuthorDto, AuthorViewModel>(item)));
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         // GET: Authors/Details/5
         public IActionResult Details(string id)
         {
-            var author = _service.Get(id);
-            if (author == null)
+            
+            try
             {
-                return NotFound();
-            }
+                var author = _service.Get(id);
+                if (author == null)
+                {
+                    return NotFound();
+                }
 
-            return View(_mapper.Map<AuthorDto,AuthorViewModel>(author));
+                return View(_mapper.Map<AuthorDto, AuthorViewModel>(author));
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         [Authorize(Roles = "Admin")]
@@ -64,7 +87,11 @@ namespace LiBook.Controllers
                 }
                 catch (Exception e)
                 {
-                    return View(e.Message);
+                    return View("Error", new ErrorViewModel
+                    {
+                        RequestId = Request.HttpContext.TraceIdentifier,
+                        Exception = e
+                    });
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -76,12 +103,25 @@ namespace LiBook.Controllers
         // GET: Authors/Edit/5
         public IActionResult Edit(string id)
         {
-            var author = _service.Get(id);
-            if (author == null)
+           
+            try
             {
-                return NotFound();
-            }
+                var author = _service.Get(id);
+                if (author == null)
+                {
+                    return NotFound();
+                }
+
             return View(_mapper.Map<AuthorDto, AuthorViewModel>(author));
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         [Authorize(Roles = "Admin")]
@@ -110,10 +150,16 @@ namespace LiBook.Controllers
                     {
                         return NotFound();
                     }
-                    else
+                    throw;
+                    
+                }
+                catch (Exception e)
+                {
+                    return View("Error", new ErrorViewModel
                     {
-                        throw;
-                    }
+                        RequestId = Request.HttpContext.TraceIdentifier,
+                        Exception = e
+                    });
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -124,13 +170,24 @@ namespace LiBook.Controllers
         // GET: Authors/Delete/5
         public IActionResult Delete(string id)
         {
-            var author = _service.Get(id);
-            if (author == null)
+            try
             {
-                return NotFound();
-            }
+                var author = _service.Get(id);
+                if (author == null)
+                {
+                    return NotFound();
+                }
 
-            return View(_mapper.Map<AuthorDto, AuthorViewModel>(author));
+                return View(_mapper.Map<AuthorDto, AuthorViewModel>(author));
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         // POST: Authors/Delete/5
@@ -139,8 +196,21 @@ namespace LiBook.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(string id)
         {
-            _service.Delete(id);           
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                _service.Delete(id);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
+
         }
 
         private bool AuthorExists(string id)

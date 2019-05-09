@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using LiBook.Data.Entities;
+using LiBook.Models;
 using LiBook.Models.Account;
 using LiBook.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
@@ -46,33 +47,79 @@ namespace LiBook.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            var user = _userService.GetUserProfile(User);
-            var model = _mapper.Map<UserProfile, UserProfileViewModel>(user);
-            return View(model);
+            try
+            {
+                var user = _userService.GetUserProfile(User);
+                var model = _mapper.Map<UserProfile, UserProfileViewModel>(user);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         [Authorize]
         public IActionResult Edit()
         {
-            var user = _userService.GetUserProfile(User);
-            var model = _mapper.Map<UserProfile, UserProfileViewModel>(user);
-            return View(model);
+            try
+            {
+                var user = _userService.GetUserProfile(User);
+                var model = _mapper.Map<UserProfile, UserProfileViewModel>(user);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         [Authorize]
         public IActionResult EditConfirmed([Bind("Id,FirstName,LastName")]UserProfileViewModel profile)
         {
-            var model = _mapper.Map<UserProfileViewModel, UserProfile>(profile);
-            _userService.Update(model);
-            return RedirectToAction("Index");
+            try
+            {
+                var model = _mapper.Map<UserProfileViewModel, UserProfile>(profile);
+                _userService.Update(model);
+                return RedirectToAction("Index");
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
+
         }
 
         [Authorize]
         public IActionResult Comments()
         {
-            var user = _userService.GetUserProfile(User);
-            var model = _mapper.Map<UserProfile, UserProfileViewModel>(user);
-            return View(model.Comments.AsEnumerable());
+            try
+            {
+                var user = _userService.GetUserProfile(User);
+                var model = _mapper.Map<UserProfile, UserProfileViewModel>(user);
+                return View(model.Comments.AsEnumerable());
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
+
         }
 
         #endregion
@@ -83,10 +130,20 @@ namespace LiBook.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-            
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
+            try
+            {
+                await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+                ViewData["ReturnUrl"] = returnUrl;
+                return View();
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         [HttpPost]
@@ -97,17 +154,29 @@ namespace LiBook.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
+                try
                 {
-                    _logger.LogInformation("User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    // This doesn't count login failures towards account lockout
+                    // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                    var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("User logged in.");
+                        return RedirectToLocal(returnUrl);
+                    }
+
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View(model);
+                }
+                catch (Exception e)
+                {
+                    return View("Error", new ErrorViewModel
+                    {
+                        RequestId = Request.HttpContext.TraceIdentifier,
+                        Exception = e
+                    });
                 }
 
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return View(model);
             }
 
             // If we got this far, something failed, redisplay form
@@ -134,23 +203,35 @@ namespace LiBook.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new UserProfile { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                try
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    var user = new UserProfile { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
+                    var result = await _userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("User created a new account with password.");
 
-                    // var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    // var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    // await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                        // var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        // var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                        // await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
-                   // await _userManager.AddToRoleAsync(user, Roles.User.ToString());
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                        // await _userManager.AddToRoleAsync(user, Roles.User.ToString());
+                        await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    _logger.LogInformation("User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                        _logger.LogInformation("User created a new account with password.");
+                        return RedirectToLocal(returnUrl);
+                    }
+                    AddErrors(result);
                 }
-                AddErrors(result);
+                catch (Exception e)
+                {
+                    return View("Error", new ErrorViewModel
+                    {
+                        RequestId = Request.HttpContext.TraceIdentifier,
+                        Exception = e
+                    });
+                }
+
             }
 
             // If we got this far, something failed, redisplay form
@@ -163,9 +244,21 @@ namespace LiBook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            try
+            {
+                await _signInManager.SignOutAsync();
+                _logger.LogInformation("User logged out.");
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
+
         }
 
         [HttpGet]
