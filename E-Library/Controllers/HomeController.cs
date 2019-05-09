@@ -11,18 +11,9 @@ namespace LiBook.Controllers
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult Search(string key)
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
+            return View("Search",key);
         }
 
         public IActionResult Privacy()
