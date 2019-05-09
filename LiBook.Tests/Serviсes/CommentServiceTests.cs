@@ -16,7 +16,7 @@ using Moq;
 using Xunit;
 using System.Security.Claims;
 
-namespace LiBook.Tests.Servises
+namespace LiBook.Tests.Serviсes
 {
     public class CommentServiceTests
     {

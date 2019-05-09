@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using LiBook.Data;
@@ -14,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
-namespace LiBook.Tests.Servises
+namespace LiBook.Tests.Serviсes
 {
     public class UserServiceTests
     {
@@ -39,40 +40,40 @@ namespace LiBook.Tests.Servises
             Assert.Equal(actual.Count(), list.Count());
         }
 
-        [Theory]
-        [InlineData("1")]
-        [InlineData("2")]
-        [InlineData("3")]
-        public void GetUserProfileByIdTest(string id)
-        {
-            // Arrange
-            var svc = SetUpService();
-            var dtos = GetTestCollection();
-            var expected = dtos.First(i => i.Id == id);
-
-            // Act
-            var actual = svc.GetUserProfile(id);
-            
-            // Assert
-            Assert.Equal(expected.Id, actual.Id);
-            Assert.Equal(expected.FirstName, actual.FirstName);
-            Assert.Equal(expected.LastName, actual.LastName);
-        }
-
         [Fact]
-        public void GetUserProfileByIdNotExistingTest()
+        public void GetUserProfileTest()
         {
             // Arrange
-            var svc = SetUpService();
+            var claims = new Mock<ClaimsPrincipal>();
+            var identity = new Mock<ClaimsIdentity>();
+            identity.Setup(i => i.IsAuthenticated)
+                .Returns(true);
+            claims.Setup(i => i.Identity)
+                .Returns(identity.Object);
+            claims.Setup(i => i.FindFirst(It.IsAny<string>()))
+                .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
+            var list = GetTestCollection().AsQueryable();
+            var mockSet = new Mock<DbSet<UserProfile>>();
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Provider).Returns(list.Provider);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Expression).Returns(list.Expression);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.ElementType).Returns(list.ElementType);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.GetEnumerator()).Returns(list.GetEnumerator);
+
+            var mockCtx = new Mock<ApplicationDbContext>();
+            mockCtx.Setup(p => p.UserProfiles).Returns(mockSet.Object);
+
+            var repo = new Mock<IRepository<UserProfile>>();
+            repo.Setup(r => r.Get(It.IsAny<string>()))
+                .Returns(list.First(i => i.Id == "1"));
+            var svc = new UserService(repo.Object);
 
             // Act
-            var actual = svc.GetUserProfile("15");
+            var user = svc.GetUserProfile(claims.Object);
 
             // Assert
-            Assert.Null(actual);
+            Assert.Equal("Vova", user.FirstName);
         }
 
-       
         [Fact]
         public void UpdateTest()
         {

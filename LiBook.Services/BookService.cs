@@ -59,29 +59,26 @@ namespace LiBook.Services
         public void AssignAuthor(string bookId, string authorId)
         {
             var book = _repository.Get(i => i.Id == bookId).First();
-            if (!book.AuthorsBooks.Any(i => i.AuthorId == authorId && i.BookId == bookId))
+            if (book.AuthorsBooks.Any(i => i.AuthorId == authorId && i.BookId == bookId)) return;
+            book.AuthorsBooks.Add(new AuthorBook
             {
-                book.AuthorsBooks.Add(new AuthorBook
-                {
-                    BookId = bookId,
-                    AuthorId = authorId
-                });
+                BookId = bookId,
+                AuthorId = authorId
+            });
 
-                _repository.Update(book);
-                _repository.Save();
-            }
+            _repository.Update(book);
+            _repository.Save();
         }
 
         public void RemoveAuthors(string bookId)
         {
             var book = _repository.Get(i => i.Id == bookId).First();
-            if (book.AuthorsBooks.Any())
-            {
-                book.AuthorsBooks.Clear();
+            if (!book.AuthorsBooks.Any()) return;
 
-                _repository.Update(book);
-                _repository.Save();
-            }
+            book.AuthorsBooks.Clear();
+
+            _repository.Update(book);
+            _repository.Save();
         }
 
         public string UploadPdf(BookDto bookDto, IFormFile file)
