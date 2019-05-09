@@ -2,12 +2,23 @@
     ViewData["Title"] = "Home Page";
 }
 
+@*<div>
+    <input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
+    <a asp-action="Search" asp-controller="Home" asp-route-key=>Пошук</a>
+</div>*@
+@using (Html.BeginForm("Search", "Home"))
+{
+    <input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" name="key" placeholder="Search" aria-label="Search" id="search" />
+    <input type="submit" />
+}
+
+
 <div class="row">
     <div class="col-12">
-        <form class="md-form mt-0">
+        @*<form class="md-form mt-0">
             <input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search">
-        </form>
-        <br/>
+        </form>*@
+        <br />
     </div>
     <div class="col-md-4">
         <div class="card">
