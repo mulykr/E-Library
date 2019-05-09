@@ -12,6 +12,8 @@ namespace LiBook.Data.Entities
 
         public string ImagePath { get; set; }
 
+        public string PdfFilePath { get; set; }
+
         public ICollection<AuthorBook> AuthorsBooks { get; set; }
 
         public ICollection<WishListItem> WishListItems { get; set; }

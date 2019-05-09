@@ -14,34 +14,53 @@ namespace LiBook.Controllers
     public class BooksController : Controller
     {
         private readonly IBookService _service;
-        private readonly IAuthorService _authorService;
         private readonly IMapper _mapper;
 
         public BooksController(IBookService service,
-            IAuthorService authorService,
             IMapper mapper)
         {
             _service = service;
-            _authorService = authorService;
             _mapper = mapper;
         }
 
         // GET: Books
         public IActionResult Index()
         {
-            return View(_service.GetList().Select(item => _mapper.Map<BookDto, BookViewModel>(item)));
+            try
+            {
+                return View(_service.GetList().Select(item => _mapper.Map<BookDto, BookViewModel>(item)));
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         // GET: Books/Details/5
         public IActionResult Details(string id)
         {
-            var book = _service.Get(id);
-            if (book == null)
+            try
             {
-                return NotFound();
-            }
+                var book = _service.Get(id);
+                if (book == null)
+                {
+                    return NotFound();
+                }
 
-            return View(_mapper.Map<BookDto, BookViewModel>(book));
+                return View(_mapper.Map<BookDto, BookViewModel>(book));
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         // GET: Books/Create
@@ -55,18 +74,23 @@ namespace LiBook.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public IActionResult Create([Bind("Id,Title,Description")] BookViewModel book, IFormFile file)
+        public IActionResult Create([Bind("Id,Title,Description")] BookViewModel book, IFormFile file, IFormFile pdf)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
                     var newBook = _mapper.Map<BookViewModel, BookDto>(book);
+                    newBook.PdfFilePath = _service.UploadPdf(newBook, pdf);
                     _service.Create(newBook, file);
                 }
                 catch (Exception e)
                 {
-                    return View(e.Message);
+                    return View("Error", new ErrorViewModel
+                    {
+                        RequestId = Request.HttpContext.TraceIdentifier,
+                        Exception = e
+                    });
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -78,19 +102,31 @@ namespace LiBook.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Edit(string id)
         {
-            var book = _service.Get(id);
-            if (book == null)
+            try
             {
-                return NotFound();
+                var book = _service.Get(id);
+                if (book == null)
+                {
+                    return NotFound();
+                }
+
+                return View(_mapper.Map<BookDto, BookViewModel>(book));
             }
-            return View(_mapper.Map<BookDto, BookViewModel>(book));
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         // POST: Books/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public IActionResult Edit(string id, [Bind("Id,Title,Description")] BookViewModel book, IFormFile file)
+        public IActionResult Edit(string id, [Bind("Id,Title,Description")] BookViewModel book, IFormFile file, IFormFile pdf)
         {
             if (id != book.Id)
             {
@@ -102,7 +138,8 @@ namespace LiBook.Controllers
                 try
                 {
                     var updatedBook = _mapper.Map<BookViewModel, BookDto>(book);
-                    _service.Update(updatedBook,file);
+                    updatedBook.PdfFilePath = _service.UploadPdf(_mapper.Map<BookViewModel, BookDto>(book), pdf);
+                    _service.Update(updatedBook, file);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -113,6 +150,15 @@ namespace LiBook.Controllers
 
                     throw;
                 }
+                catch (Exception e)
+                {
+                    return View("Error", new ErrorViewModel
+                    {
+                        RequestId = Request.HttpContext.TraceIdentifier,
+                        Exception = e
+                    });
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
@@ -121,35 +167,68 @@ namespace LiBook.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AssignAuthors(string id)
         {
-            var book = _service.Get(id);
-            var bookViewModel = _mapper.Map<BookDto, BookViewModel>(book);
-            return View(bookViewModel);
+            try
+            {
+                var book = _service.Get(id);
+                var bookViewModel = _mapper.Map<BookDto, BookViewModel>(book);
+                return View(bookViewModel);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult AssignAuthors(string id, string[] authors)
         {
-            _service.RemoveAuthors(id);
-            foreach (var authorId in authors)
+            try
             {
-                _service.AssignAuthor(id, authorId);
-            }
+                _service.RemoveAuthors(id);
+                foreach (var authorId in authors)
+                {
+                    _service.AssignAuthor(id, authorId);
+                }
 
-            return RedirectToAction("Details", new {id = id});
+                return RedirectToAction("Details", new { id = id });
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         // GET: Books/Delete/5
         [Authorize(Roles = "Admin")]
         public IActionResult Delete(string id)
         {
-            var book = _service.Get(id);
-            if (book == null)
+            try
             {
-                return NotFound();
-            }
+                var book = _service.Get(id);
+                if (book == null)
+                {
+                    return NotFound();
+                }
 
-            return View(_mapper.Map<BookDto, BookViewModel>(book));
+                return View(_mapper.Map<BookDto, BookViewModel>(book));
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
         
         // POST: Books/Delete/5
@@ -158,9 +237,20 @@ namespace LiBook.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(string id)
         {
-            _service.Delete(id);
-            
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                _service.Delete(id);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
         }
 
         private bool BookExists(string id)

@@ -59,29 +59,54 @@ namespace LiBook.Services
         public void AssignAuthor(string bookId, string authorId)
         {
             var book = _repository.Get(i => i.Id == bookId).First();
-            if (!book.AuthorsBooks.Any(i => i.AuthorId == authorId && i.BookId == bookId))
+            if (book.AuthorsBooks.Any(i => i.AuthorId == authorId && i.BookId == bookId)) return;
+            book.AuthorsBooks.Add(new AuthorBook
             {
-                book.AuthorsBooks.Add(new AuthorBook
-                {
-                    BookId = bookId,
-                    AuthorId = authorId
-                });
+                BookId = bookId,
+                AuthorId = authorId
+            });
 
-                _repository.Update(book);
-                _repository.Save();
-            }
+            _repository.Update(book);
+            _repository.Save();
         }
 
         public void RemoveAuthors(string bookId)
         {
             var book = _repository.Get(i => i.Id == bookId).First();
-            if (book.AuthorsBooks.Any())
-            {
-                book.AuthorsBooks.Clear();
+            if (!book.AuthorsBooks.Any()) return;
 
-                _repository.Update(book);
-                _repository.Save();
+            book.AuthorsBooks.Clear();
+
+            _repository.Update(book);
+            _repository.Save();
+        }
+
+        public string UploadPdf(BookDto bookDto, IFormFile file)
+        {
+            if (file != null)
+            {
+                var uploadFolder = Path.Combine(_appConfiguration.WebRootPath, "pdf");
+                var fileExists = bookDto.PdfFilePath != null && 
+                                 File.Exists(Path.Combine(uploadFolder, bookDto.PdfFilePath));
+                var extension = Path.GetExtension(file.FileName);
+                if (!_appConfiguration.AllowedFileExtensions.Contains(extension.ToLower()))
+                {
+                    throw new ArgumentException("Wrong file extension");
+                }
+
+                var newFileName = Guid.NewGuid() + extension;
+                var stream = new FileStream(Path.Combine(uploadFolder, newFileName), FileMode.OpenOrCreate);
+                file.CopyTo(stream);
+                stream.Dispose();
+                if (fileExists)
+                {
+                    File.Delete(Path.Combine(uploadFolder, bookDto.PdfFilePath));
+                }
+                
+                return newFileName;
             }
+
+            throw new ArgumentNullException(nameof(file));
         }
 
         public void Update(BookDto item, IFormFile file)

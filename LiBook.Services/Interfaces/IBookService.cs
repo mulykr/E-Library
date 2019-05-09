@@ -1,4 +1,5 @@
 ﻿using LiBook.Services.DTO;
+using Microsoft.AspNetCore.Http;
 
 namespace LiBook.Services.Interfaces
 {
@@ -7,5 +8,7 @@ namespace LiBook.Services.Interfaces
         void AssignAuthor(string bookId, string authorId);
 
         void RemoveAuthors(string bookId);
+
+        string UploadPdf(BookDto book, IFormFile file);
     }
 }

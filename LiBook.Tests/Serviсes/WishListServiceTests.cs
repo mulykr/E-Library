@@ -16,7 +16,7 @@ using Moq;
 using Xunit;
 
 
-namespace LiBook.Tests.Servises
+namespace LiBook.Tests.Serviсes
 {
     public class WishListServiceTests
     {

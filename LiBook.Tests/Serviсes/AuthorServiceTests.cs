@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
-namespace LiBook.Tests.Servises
+namespace LiBook.Tests.Serviсes
 {
     public class AuthorServiceTests
     {
@@ -23,7 +23,7 @@ namespace LiBook.Tests.Servises
         public AuthorServiceTests()
         {
             _config = new Mock<IAppConfiguration>();
-            _config.Setup(c => c.WebRootPath).Returns(String.Empty);
+            _config.Setup(c => c.WebRootPath).Returns(string.Empty);
         }
 
         [Fact]
@@ -163,6 +163,18 @@ namespace LiBook.Tests.Servises
             repository.Verify(r => r.Get(It.IsAny<string>()), Times.Once());
             repository.Verify(r => r.Delete(It.IsAny<string>()), Times.Once());
             repository.Verify(r => r.Save(), Times.Once());
+        }
+
+        [Fact]
+        public void DisposeTest()
+        {
+            // Arrange
+            var svc = SetUpService();
+
+            // Act
+            svc.Dispose();
+
+            // Assert
         }
 
         private IEnumerable<AuthorDto> GetTestCollectionDto()

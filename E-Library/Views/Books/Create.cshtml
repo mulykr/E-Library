@@ -16,11 +16,18 @@
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <label>Choose a file</label>
+            <label>Choose files</label>
             <div class="custom-file" id="customFile">
                 <input type="file" class="custom-file-input" id="file" name="file" aria-describedby="fileHelp" onchange="readURL(this, 'selectedImg')">
                 <label class="custom-file-label" for="file">
                     Select image...
+                </label>
+            </div>
+
+            <div class="custom-file" id="customFile">
+                <input type="file" class="custom-file-input" id="pdf" name="pdf" aria-describedby="fileHelp">
+                <label class="custom-file-label" for="file">
+                    Select pdf...
                 </label>
             </div>
         </div>

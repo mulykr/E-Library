@@ -12,6 +12,8 @@ namespace LiBook.Services.DTO
 
         public string ImagePath { get; set; }
 
+        public string PdfFilePath { get; set; }
+
         public ICollection<AuthorBookDto> AuthorsBooks { get; set; }
 
         public ICollection<WishListItemDto> WishListItems { get; set; }

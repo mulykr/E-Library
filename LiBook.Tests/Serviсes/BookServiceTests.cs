@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Linq.Expressions;
 using AutoMapper;
 using LiBook.Data;
 using LiBook.Data.Entities;
@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
-namespace LiBook.Tests.Servises
+namespace LiBook.Tests.Serviсes
 {
     public class BookServiceTests
     {
@@ -160,6 +160,168 @@ namespace LiBook.Tests.Servises
             repository.Verify(r => r.Delete(It.IsAny<string>()), Times.Once());
             repository.Verify(r => r.Save(), Times.Once());
         }
+
+        [Fact]
+        public void DisposeTest()
+        {
+            // Arrange
+            var svc = SetUpService();
+
+            // Act
+            svc.Dispose();
+
+            // Assert
+        }
+
+        [Fact]
+        public void AssignAuthorTest()
+        {
+            // Arrange
+            var expected = new BookDto()
+            {
+                Id = "1",
+                Title = "Fname",
+                Description = "Lname"
+            };
+            var repository = new Mock<IRepository<Book>>();
+            repository.Setup(r => r.Get(It.IsAny<Expression<Func<Book, bool>>>(), null, ""))
+                .Returns(new [] {
+                    new Book
+                {
+                    Id = "1",
+                    Title = "Fname",
+                    Description = "Lname",
+                    AuthorsBooks = new List<AuthorBook>()
+                }
+            });
+            var mapper = new Mock<IMapper>();
+            mapper.Setup(m => m.Map<Book, BookDto>(It.IsAny<Book>())).Returns(expected);
+            var svc = new BookService(repository.Object, mapper.Object, _config.Object);
+            
+            // Act
+            svc.AssignAuthor("1", "1");
+
+            // Assert
+            repository.Verify(i => i.Update(It.IsAny<Book>()), Times.Once());
+            repository.Verify(i => i.Save(), Times.Once());
+        }
+
+        [Fact]
+        public void AssignExistingAuthorTest()
+        {
+            // Arrange
+            var expected = new BookDto()
+            {
+                Id = "1",
+                Title = "Fname",
+                Description = "Lname"
+            };
+            var repository = new Mock<IRepository<Book>>();
+            repository.Setup(r => r.Get(It.IsAny<Expression<Func<Book, bool>>>(), null, ""))
+                .Returns(new[] {
+                    new Book
+                    {
+                        Id = "1",
+                        Title = "Fname",
+                        Description = "Lname",
+                        AuthorsBooks = new List<AuthorBook>()
+                        {
+                            new AuthorBook()
+                            {
+                                BookId = "1",
+                                AuthorId = "1"
+                            }
+                        }
+                    }
+                });
+            var mapper = new Mock<IMapper>();
+            mapper.Setup(m => m.Map<Book, BookDto>(It.IsAny<Book>())).Returns(expected);
+            var svc = new BookService(repository.Object, mapper.Object, _config.Object);
+
+            // Act
+            svc.AssignAuthor("1", "1");
+
+            // Assert
+            repository.Verify(i => i.Update(It.IsAny<Book>()), Times.Never());
+            repository.Verify(i => i.Save(), Times.Never());
+        }
+
+        [Fact]
+        public void RemoveAuthorsTest()
+        {
+            // Arrange
+            var expected = new BookDto()
+            {
+                Id = "1",
+                Title = "Fname",
+                Description = "Lname"
+            };
+            var repository = new Mock<IRepository<Book>>();
+            repository.Setup(r => r.Get(It.IsAny<Expression<Func<Book, bool>>>(), null, ""))
+                .Returns(new[] {
+                    new Book
+                    {
+                        Id = "1",
+                        Title = "Fname",
+                        Description = "Lname",
+                        AuthorsBooks = new List<AuthorBook>()
+                        {
+                            new AuthorBook()
+                            {
+                                BookId = "1",
+                                AuthorId = "1"
+                            }
+                        }
+                    }
+                });
+            var mapper = new Mock<IMapper>();
+            mapper.Setup(m => m.Map<Book, BookDto>(It.IsAny<Book>())).Returns(expected);
+            var svc = new BookService(repository.Object, mapper.Object, _config.Object);
+
+            // Act
+            svc.RemoveAuthors("1");
+
+            // Assert
+            repository.Verify(i => i.Update(It.IsAny<Book>()), Times.Once());
+            repository.Verify(i => i.Save(), Times.Once());
+        }
+
+        [Fact]
+        public void RemoveNoneAuthorsTest()
+        {
+            // Arrange
+            var expected = new BookDto()
+            {
+                Id = "1",
+                Title = "Fname",
+                Description = "Lname"
+            };
+            var repository = new Mock<IRepository<Book>>();
+            repository.Setup(r => r.Get(It.IsAny<Expression<Func<Book, bool>>>(), null, ""))
+                .Returns(new[] {
+                    new Book
+                    {
+                        Id = "1",
+                        Title = "Fname",
+                        Description = "Lname",
+                        AuthorsBooks = new List<AuthorBook>()
+                        {
+                            
+                        }
+                    }
+                });
+            var mapper = new Mock<IMapper>();
+            mapper.Setup(m => m.Map<Book, BookDto>(It.IsAny<Book>())).Returns(expected);
+            var svc = new BookService(repository.Object, mapper.Object, _config.Object);
+
+            // Act
+            svc.RemoveAuthors("1");
+
+            // Assert
+            repository.Verify(i => i.Update(It.IsAny<Book>()), Times.Never());
+            repository.Verify(i => i.Save(), Times.Never());
+        }
+
 
         private IEnumerable<BookDto> GetTestCollectionDto()
         {

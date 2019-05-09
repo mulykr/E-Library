@@ -21,6 +21,7 @@
                 <dd class="float-right">
                     @await Component.InvokeAsync("BookDetailsManagement", new { model = Model })
                     @await Component.InvokeAsync("LikeButton", new { model = Model })
+                    @await Component.InvokeAsync("DownloadBook", new { model = Model })
                 </dd>
             </dl>
         </div>
@@ -62,11 +63,11 @@
                         <div class="card">
                             @if (!string.IsNullOrEmpty(author.ImagePath))
                             {
-                                <img class="h-50 card-img-top" src="/pics/Authors/@author.ImagePath" alt="Card image cap">
+                                <img class="card-img-top" src="/pics/Authors/@author.ImagePath" alt="Card image cap">
                             }
                             else
                             {
-                                <img class="h-50 card-img-top" src="/pics/Authors/default.png" alt="Card image cap">
+                                <img class="card-img-top" src="/pics/Authors/default.png" alt="Card image cap">
                             }
                             <div class="card-body text-center">
                                 <h6 class="card-title"><a asp-action="Details" asp-controller="Authors" asp-route-id="@author.Id" class="text-info">@author.LastName @author.FirstName</a></h6>
