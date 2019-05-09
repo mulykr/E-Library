@@ -16,11 +16,12 @@
         }
     </div>
 </div>
-
+<input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
+<br />
 <div class="row card-columns">
     @foreach (var author in Model)
     {
-        <div class="col-md-3">
+        <div class="col-md-3 author">
             <div class="card">
                 @if (!string.IsNullOrEmpty(author.ImagePath))
                 {
@@ -50,11 +51,24 @@
                         </p>
                     }
                         </p>
-                    <div class="text-right">
-                        @await Component.InvokeAsync("AuthorTabActions", new {model = author})
-                    </div>
+                        <div class="text-right">
+                            @await Component.InvokeAsync("AuthorTabActions", new { model = author })
+                        </div>
                     </div>
                 </div>
             </div>
         }
 </div>
+
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script type="text/javascript">
+    $("#search").keyup(function () {
+        var txt = $('#search').val();
+        $('.author').each(function () {
+            $(this).hide();
+            if ($(this).text().toUpperCase().indexOf(txt.toUpperCase()) != -1) {
+                $(this).show();
+            }
+        });
+    });
+</script>

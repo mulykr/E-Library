@@ -1,0 +1,41 @@
+﻿@model IEnumerable<AuthorViewModel>
+
+@foreach (var author in Model)
+{
+    <div class="col-md-6">
+        <div class="card">
+            @if (!string.IsNullOrEmpty(author.ImagePath))
+            {
+                <img class="card-img-top" src="/pics/Authors/@author.ImagePath" alt="Card image cap">
+            }
+            else
+            {
+                <img class="card-img-top" src="/pics/Authors/default.png" alt="Card image cap">
+            }
+            <div class="card-body">
+                <h5 class="card-title">@author.LastName @author.FirstName</h5>
+
+                <p class="card-text text-justify">
+                    @if (string.IsNullOrEmpty(author.Biography))
+                    {
+                    <p>There is no boigraphy provided for this author.</p>
+                }
+                else if (author.Biography.Length > 125)
+                {
+                    @(author.Biography.Substring(0, 125) + "...")
+                }
+
+                else
+                {
+                    <p>
+                        @author.Biography
+                    </p>
+                }
+                    </p>
+                    <div class="text-right">
+                        @await Component.InvokeAsync("AuthorTabActions", new { model = author })
+                    </div>
+                </div>
+            </div>
+        </div>
+    }

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<BookViewModel>
+
+@foreach (var book in Model)
+{
+    <div class="col-md-6">
+        <div class="card">
+            @if (!string.IsNullOrEmpty(book.ImagePath))
+            {
+                <img class="card-img-top" src="/pics/Books/@book.ImagePath" alt="Card image cap">
+            }
+            else
+            {
+                <img class="card-img-top" src="/pics/Books/default.png" alt="Card image cap">
+            }
+            <div class="card-body">
+                <h5 class="card-title">@book.Title</h5>
+                <p class="card-text text-justify">
+                    @if (string.IsNullOrEmpty(book.Description))
+                    {
+                    <p>There is no description provided for this book.</p>
+                }
+                else if (book.Description.Length > 125)
+                {
+                    @(book.Description.Substring(0, 125) + "...")
+                }
+
+                else
+                {
+                    <p>
+                        @book.Description
+                    </p>
+                }
+                    </p>
+                    <div class="text-right">
+                        @await Component.InvokeAsync("BookTabActions", new { model = book })
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
