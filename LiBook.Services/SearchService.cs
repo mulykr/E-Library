@@ -23,10 +23,24 @@ namespace LiBook.Services
             _mapper = mapper;
         }
 
+        public SearchService(IRepository<Author> repositoryAuthor,
+            IMapper mapper)
+        {
+            _repositoryAuthor = repositoryAuthor;
+            _mapper = mapper;
+        }
+
+        public SearchService(IRepository<Book> repositoryBook,
+            IMapper mapper)
+        {
+            _repositoryBook = repositoryBook;
+            _mapper = mapper;
+        }
+
         public IEnumerable<AuthorDto> SearchAuthor(string key)
         {
             var found = _repositoryAuthor
-                .Get(i => i.FirstName.ToLower().Contains(key) || i.LastName.ToLower().Contains(key))
+                .Get(i => i.FirstName.ToLower().Contains(key.ToLower()) || i.LastName.ToLower().Contains(key.ToLower()))
                 .Select(i => _mapper.Map<Author, AuthorDto>(i));
 
             return found;
@@ -34,7 +48,7 @@ namespace LiBook.Services
 
         public IEnumerable<BookDto> SearchBook(string key)
         {
-            var found = _repositoryBook.Get(i => i.Title.ToLower().Contains(key))
+            var found = _repositoryBook.Get(i => i.Title.ToLower().Contains(key.ToLower()))
                 .Select(i => _mapper.Map<Book, BookDto>(i));
 
             return found;
