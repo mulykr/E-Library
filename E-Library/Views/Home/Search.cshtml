@@ -1,15 +1,34 @@
 ﻿@model string
 
+<h3>Search results by key "@Model"</h3>
 
-<div class="container">
-    <div class="row">
-        <div class="col">
+@using (Html.BeginForm("Search", "Home"))
+{
+    <div style="display:flex;">
+        <input class="form-control border-right-0 border-left-0 border-top-0" value="@Model" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" name="key" placeholder="Search" aria-label="Search" id="search" />
+        <input type="submit" class="btn" style="background-color: rgb(127, 0, 152);color:white" value="Search"/>
+    </div>
+}
+
+<br/>
+
+<div class="row">
+    <div class="col-md-6">
+        <h5>Books</h5>
+        <hr />
+        <br />
+        <div class="row">
+
             @await Component.InvokeAsync("SearchBook", Model)
         </div>
-        <div class="col">
+    </div>
+    <div class="col-md-6">
+        <h5>Authors</h5>
+        <hr />
+        <br />
+        <div class="row">
+
             @await Component.InvokeAsync("SearchAuthor", Model)
-
         </div>
-
     </div>
 </div>
