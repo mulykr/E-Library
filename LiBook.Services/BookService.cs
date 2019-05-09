@@ -84,6 +84,34 @@ namespace LiBook.Services
             }
         }
 
+        public string UploadPdf(BookDto bookDto, IFormFile file)
+        {
+            if (file != null)
+            {
+                var uploadFolder = Path.Combine(_appConfiguration.WebRootPath, "pdf");
+                var fileExists = bookDto.PdfFilePath != null && 
+                                 File.Exists(Path.Combine(uploadFolder, bookDto.PdfFilePath));
+                var extension = Path.GetExtension(file.FileName);
+                if (!_appConfiguration.AllowedFileExtensions.Contains(extension.ToLower()))
+                {
+                    throw new ArgumentException("Wrong file extension");
+                }
+
+                var newFileName = Guid.NewGuid() + extension;
+                var stream = new FileStream(Path.Combine(uploadFolder, newFileName), FileMode.OpenOrCreate);
+                file.CopyTo(stream);
+                stream.Dispose();
+                if (fileExists)
+                {
+                    File.Delete(Path.Combine(uploadFolder, bookDto.PdfFilePath));
+                }
+                
+                return newFileName;
+            }
+
+            throw new ArgumentNullException(nameof(file));
+        }
+
         public void Update(BookDto item, IFormFile file)
         {
 

@@ -12,6 +12,9 @@ namespace LiBook.Models
 
         public string ImagePath { get; set; }
 
+        public string PdfFilePath { get; set; }
+
+
         public ICollection<AuthorBookViewModel> AuthorsBooks { get; set; }
     }
 }

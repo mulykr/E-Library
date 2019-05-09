@@ -24,7 +24,14 @@
                     <img src="/pics/Books/@Model.ImagePath" class="img-thumbnail"/>
                 </div>
                 <div class="col-md-6">
-                    <label>Choose a file</label>
+                    <label>Choose files</label>
+                    <div class="custom-file" id="customFile">
+                        <input type="file" class="custom-file-input" id="pdf" name="pdf" aria-describedby="fileHelp">
+                        <label class="custom-file-label" for="file">
+                            Select pdf file...
+                        </label>
+                    </div>
+                    <br/>
                     <div class="custom-file" id="customFile">
                         <input type="file" class="custom-file-input" id="file" name="file" aria-describedby="fileHelp" onchange="readURL(this, 'selectedImg')">
                         <label class="custom-file-label" for="file">

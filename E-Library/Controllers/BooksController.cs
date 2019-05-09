@@ -14,15 +14,12 @@ namespace LiBook.Controllers
     public class BooksController : Controller
     {
         private readonly IBookService _service;
-        private readonly IAuthorService _authorService;
         private readonly IMapper _mapper;
 
         public BooksController(IBookService service,
-            IAuthorService authorService,
             IMapper mapper)
         {
             _service = service;
-            _authorService = authorService;
             _mapper = mapper;
         }
 
@@ -55,13 +52,14 @@ namespace LiBook.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public IActionResult Create([Bind("Id,Title,Description")] BookViewModel book, IFormFile file)
+        public IActionResult Create([Bind("Id,Title,Description")] BookViewModel book, IFormFile file, IFormFile pdf)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
                     var newBook = _mapper.Map<BookViewModel, BookDto>(book);
+                    newBook.PdfFilePath = _service.UploadPdf(newBook, pdf);
                     _service.Create(newBook, file);
                 }
                 catch (Exception e)
@@ -90,7 +88,7 @@ namespace LiBook.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public IActionResult Edit(string id, [Bind("Id,Title,Description")] BookViewModel book, IFormFile file)
+        public IActionResult Edit(string id, [Bind("Id,Title,Description")] BookViewModel book, IFormFile file, IFormFile pdf)
         {
             if (id != book.Id)
             {
@@ -102,6 +100,7 @@ namespace LiBook.Controllers
                 try
                 {
                     var updatedBook = _mapper.Map<BookViewModel, BookDto>(book);
+                    updatedBook.PdfFilePath = _service.UploadPdf(_mapper.Map<BookViewModel, BookDto>(book), pdf);
                     _service.Update(updatedBook,file);
                 }
                 catch (DbUpdateConcurrencyException)

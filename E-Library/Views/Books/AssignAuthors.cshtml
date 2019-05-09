@@ -65,11 +65,11 @@
         <div class="card">
             @if (!string.IsNullOrEmpty(Model.ImagePath))
             {
-                <img class="h-50 card-img-top" src="/pics/Books/@Model.ImagePath" alt="Card image cap">
+                <img class="card-img-top" src="/pics/Books/@Model.ImagePath" alt="Card image cap">
             }
             else
             {
-                <img class="h-50 card-img-top" src="/pics/Books/default.png" alt="Card image cap">
+                <img class="card-img-top" src="/pics/Books/default.png" alt="Card image cap">
             }
             <div class="card-body text-center">
                 <h5 class="card-title"><a asp-action="Details" asp-route-id="@Model.Id">@Model.Title</a></h5>
