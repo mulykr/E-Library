@@ -13,7 +13,7 @@ namespace LiBook.Controllers
 
         public IActionResult Search(string key)
         {
-            return View("Search",key);
+            return View("Search", key.ToLower());
         }
 
         public IActionResult Privacy()

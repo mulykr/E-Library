@@ -3,10 +3,7 @@ using LiBook.Models;
 using LiBook.Services.DTO;
 using LiBook.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LiBook.Components
 {
@@ -30,8 +27,7 @@ namespace LiBook.Components
             {
                 result.Add(_mapper.Map<AuthorDto, AuthorViewModel>(i));
             }
-
-
+            
             return View(result);
         }
     }
