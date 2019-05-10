@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AutoMapper;
 using LiBook.Data;
 using LiBook.Data.Entities;
-using LiBook.Data.Interfaces;
 using LiBook.Data.Repositories;
 using LiBook.Services;
 using LiBook.Services.DTO;
 using LiBook.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Moq;
 using Xunit;
 
-namespace LiBook.Tests.Servises
+namespace LiBook.Tests.Services
 {
     public class SearchServiceTests
     {
