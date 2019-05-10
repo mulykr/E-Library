@@ -6,6 +6,7 @@ using LiBook.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace LiBook.Controllers
 {
@@ -46,13 +47,17 @@ namespace LiBook.Controllers
             
             try
             {
-                var wlDto = new CommentDto
+                if (comment == null || comment.Length < 50 || comment.Length > 250)
+                {
+                    throw new ArgumentException("Comment text length must be between 50 and 250.\n", nameof(comment));
+                }
+                var commentViewModel = new CommentViewModel()
                 {
                     BookId = id,
                     UserId = User.GetUserId(),
                     Message = comment
                 };
-                _service.AddComment(wlDto);
+                _service.AddComment(_mapper.Map<CommentViewModel, CommentDto>(commentViewModel));
                 return Redirect($"/Books/Details/{id}");
             }
             catch (Exception e)

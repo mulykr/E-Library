@@ -16,6 +16,11 @@ namespace LiBook.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(key))
+                {
+                    throw new ArgumentException("Invalid key word to run search. Try again");
+                }
+
                 return View("Search", key.ToLower());
             }
             catch (Exception e)

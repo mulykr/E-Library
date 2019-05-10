@@ -1,5 +1,6 @@
 ﻿using LiBook.Data.Entities;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace LiBook.Models
 {
@@ -15,6 +16,8 @@ namespace LiBook.Models
 
         public UserProfile User { get; set; }
 
+        [MinLength(50)]
+        [MaxLength(250)]
         public string Message { get; set; }
 
         public DateTime TimeStamp { get; set; }

@@ -3,20 +3,28 @@
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="row">
+    <div class="col-md-9">
+        <h2 class="text-danger">@Model.Exception.Message</h2>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+        @if (Model.ShowRequestId)
+        {
+            <p>
+                <strong>Request ID:</strong> <code>@Model.RequestId</code>
+            </p>
+        }
 
-<div>
-    Some error occured during the processing your request.
-    <p>
-        <b>Message:</b>
-        @Model?.Exception?.Message
-    </p>
+        <div>
+            Some error occured during the processing your request.
+            <p>
+                <b>Message:</b>
+                @Model?.Exception?.Message
+            </p>
+        </div>
+        <a href="/" class="btn btn-success">Go Home</a>
+    </div>
+    <div class="col-md-3">
+        <img src="/images/ops.png" class="img-fluid" />
+    </div>
 </div>
+
