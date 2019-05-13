@@ -138,7 +138,10 @@ namespace LiBook.Controllers
                 try
                 {
                     var updatedBook = _mapper.Map<BookViewModel, BookDto>(book);
-                    updatedBook.PdfFilePath = _service.UploadPdf(_mapper.Map<BookViewModel, BookDto>(book), pdf);
+                    if (pdf!=null)
+                    {
+                        updatedBook.PdfFilePath = _service.UploadPdf(_mapper.Map<BookViewModel, BookDto>(book), pdf);
+                    }
                     _service.Update(updatedBook, file);
                 }
                 catch (DbUpdateConcurrencyException)
