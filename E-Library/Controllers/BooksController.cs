@@ -74,7 +74,7 @@ namespace LiBook.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public IActionResult Create([Bind("Id,Title,Description")] BookViewModel book, IFormFile file, IFormFile pdf)
+        public IActionResult Create([Bind("Id,Title,Genre,Description")] BookViewModel book, IFormFile file, IFormFile pdf)
         {
             if (ModelState.IsValid)
             {
@@ -126,7 +126,7 @@ namespace LiBook.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public IActionResult Edit(string id, [Bind("Id,Title,Description")] BookViewModel book, IFormFile file, IFormFile pdf)
+        public IActionResult Edit(string id, [Bind("Id,Title,Genre,Description")] BookViewModel book, IFormFile file, IFormFile pdf)
         {
             if (id != book.Id)
             {

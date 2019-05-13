@@ -16,6 +16,12 @@
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label>Select genre</label>
+                @Html.DropDownList("Genre",
+                                    new SelectList(Enum.GetValues(typeof(Genre))),
+                                    new { @class="form-control"})
+            </div>
             <label>Choose files</label>
             <div class="custom-file" id="customFile">
                 <input type="file" class="custom-file-input" id="file" name="file" aria-describedby="fileHelp" onchange="readURL(this, 'selectedImg')">
@@ -23,7 +29,7 @@
                     Select image...
                 </label>
             </div>
-
+            <p></p>
             <div class="custom-file" id="customFile">
                 <input type="file" class="custom-file-input" id="pdf" name="pdf" aria-describedby="fileHelp">
                 <label class="custom-file-label" for="file">
@@ -31,6 +37,7 @@
                 </label>
             </div>
         </div>
+        
         <div class="col-md-6">
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -39,6 +46,7 @@
             </div>
         </div>
     </div>
+    <p></p>
     <div class="row">
         <div class="form-group col-lg-6">
             <input type="submit" value="Save" class="btn btn-success" /> 
