@@ -6,7 +6,15 @@
 }
 
 <div style="background-color: rgba(255, 255, 255, 0.7); padding: 2em;" class="card">
-    <h2>@Model.Title</h2>
+    <h2>
+        <a asp-action="Index" asp-controller="Home">LiBook</a>
+        <a class="fa fa-arrow-right"></a>
+        <a asp-action="Index">Books</a>
+        <a class="fa fa-arrow-right"></a>
+
+        @Model.Title
+
+    </h2>
     <div class="row">
         <div class="col-md-4">
             <img src="/pics/Books/@Model.ImagePath" class="img-fluid" />
@@ -39,7 +47,7 @@
             <!--foreach loop through categories-->
             @foreach (var genre in Model?.BookGenre)
             {
-                <span class="badge badge-warning" style="border-radius: 5px;">#@genre.Genre.Name.ToString().ToLower()</span> 
+                <span class="badge badge-warning" style="border-radius: 5px;">#@genre.Genre.Name.ToString().ToLower()</span>
             }
         </div>
     </div>
@@ -52,16 +60,12 @@
                 <div class="col-md-6">
                     <h5>Comments</h5>
                 </div>
-                <div class="col-md-6 text-right">
-                    @Html.ActionLink("\tCreate", "AddComment", "Comment", new { id = Model.Id }, new { @class = "btn btn-success fa fa-plus-circle" })
-                </div>
+
             </div>
-            <br />
-            @await Component.InvokeAsync("BookComments", new { model = Model })
 
             <div class="row">
                 <div class="col-md-12">
-                    
+
                     <form asp-action="AddCommentConfirmed" asp-controller="Comment">
                         <input type="hidden" asp-for="Id" />
                         <textarea name="comment" id="comment" placeholder="Enter your comment here" class="input-group-lg" rows="5" style="min-width: 100%;" maxlength="250" minlength="50"></textarea>
@@ -69,8 +73,10 @@
                         <input type="submit" value="Comment it!" class="btn btn-block btn-success" />
                     </form>
                 </div>
-                
-             </div>
+
+            </div>
+            <br />
+            @await Component.InvokeAsync("BookComments", new { model = Model })
 
         </div>
         <div class="col-md-4">
