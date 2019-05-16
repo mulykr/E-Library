@@ -49,6 +49,17 @@ namespace LiBook
             services.AddIdentity<UserProfile, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddAuthorization(options =>
+            {
+
+                options.AddPolicy("Admin",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("Admin");
+                    });
+
+            });
+
             CreateRoles(services.BuildServiceProvider()).Wait();
                 
 
