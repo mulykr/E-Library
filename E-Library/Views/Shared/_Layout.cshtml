@@ -21,11 +21,11 @@
         </div>
         <div class="navbar">
             <ul class="nav justify-content-start">
-                <li class="nav-item"><a asp-action="Index" asp-controller="Books" class="nav-link text-light">Books</a></li>
-                <li class="nav-item"><a asp-action="Index" asp-controller="Authors" class="nav-link text-light">Authors</a></li>
+                <li class="nav-item"><a asp-action="Index" id="menu_books" asp-controller="Books" class="nav-link text-light">Books</a></li>
+                <li class="nav-item"><a asp-action="Index" id="menu_authors" asp-controller="Authors" class="nav-link text-light">Authors</a></li>
                 @if (User.IsInRole("Admin"))
                 {
-                   <li class="nav-item"><a asp-action="Index" asp-controller="Genres" class="nav-link text-light">Genres</a></li>
+                   <li class="nav-item"><a asp-action="Index" id="menu_genres" asp-controller="Genres" class="nav-link text-light">Genres</a></li>
                 }
             </ul>
             <partial name="_LoginPartial" />

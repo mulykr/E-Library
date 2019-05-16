@@ -15,6 +15,11 @@ function readURL(input, targetId) {
     }
 }
 
+function highlight(id) {
+    $("#" + id).removeClass("text-light");
+    $("#" + id).css("color", "rgb(186, 211, 252)");
+}
+
 $(document).ready(function () {
     $("nav").css("padding", "0");
 })
