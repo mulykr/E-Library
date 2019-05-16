@@ -14,7 +14,7 @@ namespace LiBook.Models
 
         public string PdfFilePath { get; set; }
 
-        public Genre Genre { get; set; } 
+        public ICollection<BookGenreViewModel> BooksGenres { get; set; } 
 
         public ICollection<AuthorBookViewModel> AuthorsBooks { get; set; }
     }

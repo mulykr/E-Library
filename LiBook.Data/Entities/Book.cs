@@ -21,5 +21,7 @@ namespace LiBook.Data.Entities
         public ICollection<WishListItem> WishListItems { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
+
+        public ICollection<BookGenre> BooksGenres { get; set; }
     }
 }

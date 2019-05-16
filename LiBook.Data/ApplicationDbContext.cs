@@ -29,6 +29,8 @@ namespace LiBook.Data
 
         public virtual DbSet<Comment> Comments { get; set; }
 
+        public virtual DbSet<Genre> Genres { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -68,6 +70,20 @@ namespace LiBook.Data
                 .HasOne(p => p.User)
                 .WithMany(p => p.Comments)
                 .HasForeignKey(p => p.UserId);
+
+            // Genre many-to-many
+            modelBuilder.Entity<BookGenre>()
+                .HasKey(x => new { x.BookId, x.GenreId});
+
+            modelBuilder.Entity<BookGenre>()
+                .HasOne(p => p.Book)
+                .WithMany(p => p.BooksGenres)
+                .HasForeignKey(p => p.BookId);
+
+            modelBuilder.Entity<BookGenre>()
+                .HasOne(p => p.Genre)
+                .WithMany(p => p.BooksGenres)
+                .HasForeignKey(p => p.GenreId);
         }
     }
 }
