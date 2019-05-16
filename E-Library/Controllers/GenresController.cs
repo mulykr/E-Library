@@ -1,33 +1,37 @@
 ﻿using System;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using LiBook.Models;
-using LiBook.Services.DTO;
-using Microsoft.AspNetCore.Http;
-using LiBook.Services.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using LiBook.Data;
+using LiBook.Data.Entities;
+using LiBook.Services.Interfaces;
+using AutoMapper;
+using LiBook.Services.DTO;
+using LiBook.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace LiBook.Controllers
 {
-    public class AuthorsController : Controller
+    public class GenresController : Controller
     {
-        private readonly IAuthorService _service;
+        private readonly IGenreService _service;
         private readonly IMapper _mapper;
 
-        public AuthorsController(IAuthorService service, IMapper mapper)
+        public GenresController(IGenreService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
         }
 
-        // GET: Authors
+        // GET: Genres
         public IActionResult Index()
         {
             try
             {
-                return View(_service.GetList().Select(item => _mapper.Map<AuthorDto, AuthorViewModel>(item)));
+                return View(_service.GetList().Select(item => _mapper.Map<GenreDTO, GenreViewModel>(item)));
             }
             catch (Exception e)
             {
@@ -39,19 +43,18 @@ namespace LiBook.Controllers
             }
         }
 
-        // GET: Authors/Details/5
+        // GET: Genres/Details/5
         public IActionResult Details(string id)
         {
-            
             try
             {
-                var author = _service.Get(id);
-                if (author == null)
+                var genre = _service.Get(id);
+                if (genre == null)
                 {
                     return NotFound();
                 }
 
-                return View(_mapper.Map<AuthorDto, AuthorViewModel>(author));
+                return View(_mapper.Map<GenreDTO, GenreViewModel>(genre));
             }
             catch (Exception e)
             {
@@ -64,24 +67,23 @@ namespace LiBook.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        // GET: Authors/Create
+        // GET: Genres/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Authors/Create
+        // POST: Genres/Create
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,FirstName,LastName,Biography")] AuthorViewModel author, IFormFile file)
+        public IActionResult Create([Bind("Id,Name")] GenreViewModel genre)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var newAuthor = _mapper.Map<AuthorViewModel, AuthorDto>(author);
-                    _service.Create(newAuthor, file);
+                    var newGenre = _mapper.Map<GenreViewModel, GenreDTO>(genre);
+                    _service.AddToGenre(newGenre);
                 }
                 catch (Exception e)
                 {
@@ -94,22 +96,22 @@ namespace LiBook.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            return View(author);
+            return View(genre);
         }
 
         [Authorize(Roles = "Admin")]
-        // GET: Authors/Edit/5
+        // GET: Genres/Edit/5
         public IActionResult Edit(string id)
-        {          
+        {
             try
             {
-                var author = _service.Get(id);
-                if (author == null)
+                var genre = _service.Get(id);
+                if (genre == null)
                 {
                     return NotFound();
                 }
 
-            return View(_mapper.Map<AuthorDto, AuthorViewModel>(author));
+                return View(_mapper.Map<GenreDTO, GenreViewModel>(genre));
             }
             catch (Exception e)
             {
@@ -122,14 +124,12 @@ namespace LiBook.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        // POST: Authors/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Genres/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(string id, [Bind("Id,FirstName,LastName,Biography")] AuthorViewModel author, IFormFile file)
+        public IActionResult Edit(string id, [Bind("Id,Name")] GenreViewModel genre)
         {
-            if (id != author.Id)
+            if (id != genre.Id)
             {
                 return NotFound();
             }
@@ -138,17 +138,17 @@ namespace LiBook.Controllers
             {
                 try
                 {
-                    var updateAuthor = _mapper.Map<AuthorViewModel, AuthorDto>(author);
-                    _service.Update(updateAuthor, file);
+                    var updateGenre = _mapper.Map<GenreViewModel, GenreDTO>(genre);
+                    _service.Update(updateGenre);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorExists(author.Id))
+                    if (!GenreExists(genre.Id))
                     {
                         return NotFound();
                     }
                     throw;
-                    
+
                 }
                 catch (Exception e)
                 {
@@ -160,22 +160,22 @@ namespace LiBook.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(author);
+            return View(genre);
         }
 
         [Authorize(Roles = "Admin")]
-        // GET: Authors/Delete/5
+        // GET: Genres/Delete/5
         public IActionResult Delete(string id)
         {
             try
             {
-                var author = _service.Get(id);
-                if (author == null)
+                var genre = _service.Get(id);
+                if (genre == null)
                 {
                     return NotFound();
                 }
 
-                return View(_mapper.Map<AuthorDto, AuthorViewModel>(author));
+                return View(_mapper.Map<GenreDTO, GenreViewModel>(genre));
             }
             catch (Exception e)
             {
@@ -187,15 +187,14 @@ namespace LiBook.Controllers
             }
         }
 
-        // POST: Authors/Delete/5
+        // POST: Genres/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public IActionResult DeleteConfirmed(string id)
+        public ActionResult DeleteConfirmed(string id)
         {
             try
             {
-                _service.Delete(id);
+                _service.DeleteFromGenre(id);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -207,10 +206,9 @@ namespace LiBook.Controllers
                     Exception = e
                 });
             }
-
         }
 
-        private bool AuthorExists(string id)
+        private bool GenreExists(string id)
         {
             return _service.Get(id) != null;
         }

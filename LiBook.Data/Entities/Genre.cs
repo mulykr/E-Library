@@ -4,8 +4,12 @@ using System.Text;
 
 namespace LiBook.Data.Entities
 {
-    public enum Genre
+    public class Genre
     {
-        Adventure, Drama, Fantasy, Horror, Romance, Science, Detective
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public ICollection<BookGenre> BooksGenres { get; set; }
     }
 }

@@ -71,6 +71,7 @@ namespace LiBook
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddSingleton<IAppConfiguration, AppConfiguration>(_ => new AppConfiguration(Environment.WebRootPath, Configuration["AllowedFileExtensions"]));
+            services.AddScoped<IGenreService, GenreService>();
 
             services.AddScoped<IRepository<Book>, BookRepository>();
             services.AddScoped<IRepository<Author>, AuthorRepository>();
@@ -78,6 +79,7 @@ namespace LiBook
             services.AddScoped<IRepository<WishListItem>, WishItemsRepository>();
             services.AddScoped<IRepository<Comment>, CommentRepository>();
             services.AddScoped<IRepository<UserProfile>, UserRepository>();
+            services.AddScoped<IRepository<Genre>, GenreRepository>();
 
             services.AddAutoMapper();
 

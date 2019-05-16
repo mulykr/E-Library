@@ -4,14 +4,16 @@ using LiBook.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LiBook.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190516154433_initt")]
+    partial class initt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,7 +59,7 @@ namespace LiBook.Data.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("GenreId");
+                    b.Property<int>("Genre");
 
                     b.Property<string>("ImagePath");
 
@@ -67,22 +69,7 @@ namespace LiBook.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GenreId");
-
                     b.ToTable("Books");
-                });
-
-            modelBuilder.Entity("LiBook.Data.Entities.BookGenre", b =>
-                {
-                    b.Property<string>("BookId");
-
-                    b.Property<string>("GenreId");
-
-                    b.HasKey("BookId", "GenreId");
-
-                    b.HasIndex("GenreId");
-
-                    b.ToTable("BookGenre");
                 });
 
             modelBuilder.Entity("LiBook.Data.Entities.Comment", b =>
@@ -105,18 +92,6 @@ namespace LiBook.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("LiBook.Data.Entities.Genre", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("LiBook.Data.Entities.WishListItem", b =>
@@ -332,26 +307,6 @@ namespace LiBook.Data.Migrations
                     b.HasOne("LiBook.Data.Entities.Book", "Book")
                         .WithMany("AuthorsBooks")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("LiBook.Data.Entities.Book", b =>
-                {
-                    b.HasOne("LiBook.Data.Entities.Genre", "Genre")
-                        .WithMany()
-                        .HasForeignKey("GenreId");
-                });
-
-            modelBuilder.Entity("LiBook.Data.Entities.BookGenre", b =>
-                {
-                    b.HasOne("LiBook.Data.Entities.Book", "Book")
-                        .WithMany("BooksGenres")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LiBook.Data.Entities.Genre", "Genre")
-                        .WithMany("BooksGenres")
-                        .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
