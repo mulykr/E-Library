@@ -18,12 +18,19 @@
                 <dd class="text-justify">
                     @Html.DisplayFor(model => model.Description)
                 </dd>
+
                 <dd class="float-right">
                     @await Component.InvokeAsync("BookDetailsManagement", new { model = Model })
                     @await Component.InvokeAsync("LikeButton", new { model = Model })
                     @await Component.InvokeAsync("DownloadBook", new { model = Model })
                 </dd>
             </dl>
+        </div>
+        <div class="text-right float-right" style="width: 99%">
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="AssingGenre" asp-route-id="@Model.Id" class="btn btn-info fa fa-plus"></a>
+            }
         </div>
     </div>
 </div>
