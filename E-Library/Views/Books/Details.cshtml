@@ -5,19 +5,21 @@
     var book = Model;
 }
 
-<div style="background-color: rgba(255, 255, 255, 0.7); padding: 2em;" class="card">
-    <h2>
-        <a asp-action="Index" asp-controller="Home">LiBook</a>
-        <a class="fa fa-arrow-right"></a>
-        <a asp-action="Index">Books</a>
-        <a class="fa fa-arrow-right"></a>
-
-        @Model.Title
-
-    </h2>
+<div class="card" style="background-color: rgba(255, 255, 255, 0.7); padding: 2em;">
     <div class="row">
+        <div class="container-fluid">
+            <span class="text-primary">
+                <a asp-action="Index" asp-controller="Home">LiBook</a>
+                &#8594;
+                <a asp-action="Index">Books</a>
+                &#8594;
+                @Model.Title
+            </span>
+        </div>
+        <br/>
+        <hr/>
         <div class="col-md-4">
-            <img src="/pics/Books/@Model.ImagePath" class="img-fluid" />
+            <img src="/pics/Books/@Model.ImagePath" class="img-fluid"/>
         </div>
         <div class="col-md-8">
             <dl class="dl-horizontal">
@@ -29,9 +31,9 @@
                 </dd>
 
                 <dd class="float-right">
-                    @await Component.InvokeAsync("BookDetailsManagement", new { model = Model })
-                    @await Component.InvokeAsync("LikeButton", new { model = Model })
-                    @await Component.InvokeAsync("DownloadBook", new { model = Model })
+                    @await Component.InvokeAsync("BookDetailsManagement", new {model = Model})
+                    @await Component.InvokeAsync("LikeButton", new {model = Model})
+                    @await Component.InvokeAsync("DownloadBook", new {model = Model})
                 </dd>
             </dl>
         </div>
@@ -63,19 +65,18 @@
 
             </div>
 
-            <div class="row">
-                <div class="col-md-12">
-
+            <br />
+            <div class="card">
+                <div class="card-body">
                     <form asp-action="AddCommentConfirmed" asp-controller="Comment">
                         <input type="hidden" asp-for="Id" />
-                        <textarea name="comment" id="comment" placeholder="Enter your comment here" class="input-group-lg" rows="5" style="min-width: 100%;" maxlength="250" minlength="50"></textarea>
+                        <textarea name="comment" id="comment" placeholder="Enter your comment here" class="input-group-lg border-top-0 border-right-0 border-left-0" rows="5" style="min-width: 100%;" maxlength="250" minlength="50"></textarea>
                         <br />
                         <input type="submit" value="Comment it!" class="btn btn-block btn-success" />
                     </form>
                 </div>
-
             </div>
-            <br />
+            <br/>
             @await Component.InvokeAsync("BookComments", new { model = Model })
 
         </div>
