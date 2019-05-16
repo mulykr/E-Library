@@ -4,8 +4,12 @@ using System.Text;
 
 namespace LiBook.Services.DTO
 {
-    public enum GenreDTO
+    public class GenreDTO
     {
-        Adventure, Drama, Fantasy, Horror, Romance, Science, Detective
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public ICollection<BookGenreDTO> BooksGenres { get; set; }
     }
 }

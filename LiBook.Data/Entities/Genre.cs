@@ -10,6 +10,6 @@ namespace LiBook.Data.Entities
 
         public string Name { get; set; }
 
-        public ICollection<Book> Books { get; set; }
+        public ICollection<BookGenre> BooksGenres { get; set; }
     }
 }

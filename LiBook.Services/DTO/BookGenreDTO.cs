@@ -4,7 +4,16 @@ using System.Text;
 
 namespace LiBook.Services.DTO
 {
-    class BookGenreDTOcs
+    public class BookGenreDTO
     {
+        public string Id { get; set; }
+
+        public string BookId { get; set; }
+
+        public string GenreId { get; set; }
+
+        public BookDto Book { get; set; }
+
+        public GenreDTO Genre { get; set; }
     }
 }

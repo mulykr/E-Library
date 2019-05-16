@@ -81,6 +81,31 @@ namespace LiBook.Services
             _repository.Save();
         }
 
+        public void AssignGanre(string bookId, string ganreId)
+        {
+            var book = _repository.Get(i => i.Id == bookId).First();
+            if (book.BooksGenres.Any(i => i.GenreId == ganreId && i.BookId == bookId)) return;
+            book.BooksGenres.Add(new BookGenre
+            {
+                BookId = bookId,
+                GenreId= ganreId
+            });
+
+            _repository.Update(book);
+            _repository.Save();
+        }
+
+        public void RemoveGanre(string bookId)
+        {
+            var book = _repository.Get(i => i.Id == bookId).First();
+            if (!book.BooksGenres.Any()) return;
+
+            book.BooksGenres.Clear();
+
+            _repository.Update(book);
+            _repository.Save();
+        }
+
         public string UploadPdf(BookDto bookDto, IFormFile file)
         {
             if (file != null)
