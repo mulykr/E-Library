@@ -21,6 +21,10 @@
         </div>
         <div class="navbar">
             <ul class="nav justify-content-start">
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item"><a asp-action="Index" asp-controller="Admin" class="nav-link text-light">Users</a></li>
+                }
                 <li class="nav-item"><a asp-action="Index" asp-controller="Books" class="nav-link text-light">Books</a></li>
                 <li class="nav-item"><a asp-action="Index" asp-controller="Authors" class="nav-link text-light">Authors</a></li>
             </ul>
