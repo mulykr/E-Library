@@ -32,7 +32,7 @@ namespace LiBook.Services
             _repository.Save();
         }
 
-        public void DeleteFromWGenre(string id)
+        public void DeleteFromGenre(string id)
         {
             var book = Get(id);
             _repository.Delete(id);
@@ -42,6 +42,13 @@ namespace LiBook.Services
         public GenreDTO Get(string id)
         {
             return _mapper.Map<Genre, GenreDTO>(_repository.Get(id));
+        }
+
+        public void Update(GenreDTO item)
+        {
+            var genre = _mapper.Map<GenreDTO, Genre>(item);
+            _repository.Update(genre);
+            _repository.Save();
         }
 
         public IEnumerable<GenreDTO> GetList()

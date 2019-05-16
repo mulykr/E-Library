@@ -10,8 +10,9 @@ namespace LiBook.Services.Interfaces
         GenreDTO Get(string id);
         IEnumerable<GenreDTO> GetList();
         //IEnumerable<GenreDTO> GetByBook(BookDto book);
+        void Update(GenreDTO item);
         void AddToGenre(GenreDTO genreDto);
-        void DeleteFromWGenre(string id);
+        void DeleteFromGenre(string id);
         //bool IsInGenre(BookDto bookDTO);
     }
 }
