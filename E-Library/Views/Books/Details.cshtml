@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var book = Model;
 }
 
 <div style="background-color: rgba(255, 255, 255, 0.7); padding: 2em;" class="card">
@@ -52,11 +53,25 @@
                     <h5>Comments</h5>
                 </div>
                 <div class="col-md-6 text-right">
-                    @Html.ActionLink("\tCreate", "AddComment", "Comment", new { id = Model.Id }, new { @class = "btn btn-success fa fa-plus-circle"})
+                    @Html.ActionLink("\tCreate", "AddComment", "Comment", new { id = Model.Id }, new { @class = "btn btn-success fa fa-plus-circle" })
                 </div>
             </div>
-            <br/>
-            @await Component.InvokeAsync("BookComments", new {model = Model})
+            <br />
+            @await Component.InvokeAsync("BookComments", new { model = Model })
+
+            <div class="row">
+                <div class="col-md-12">
+                    
+                    <form asp-action="AddCommentConfirmed" asp-controller="Comment">
+                        <input type="hidden" asp-for="Id" />
+                        <textarea name="comment" id="comment" placeholder="Enter your comment here" class="input-group-lg" rows="5" style="min-width: 100%;" maxlength="250" minlength="50"></textarea>
+                        <br />
+                        <input type="submit" value="Comment it!" class="btn btn-block btn-success" />
+                    </form>
+                </div>
+                
+             </div>
+
         </div>
         <div class="col-md-4">
             <div class="row">
