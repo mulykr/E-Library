@@ -11,6 +11,6 @@ namespace LiBook.Models
 
         public string Name { get; set; }
 
-        public ICollection<BookGenreViewModel> BooksGenres { get; set; }
+        public ICollection<BookGenreViewModel> BookGenre { get; set; }
     }
 }

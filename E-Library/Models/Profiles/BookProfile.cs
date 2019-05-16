@@ -12,6 +12,14 @@ namespace LiBook.Models.Profiles
             CreateMap<BookViewModel, BookDto>();
             CreateMap<BookDto, Book>();
             CreateMap<Book, BookDto>();
+            CreateMap<Genre, GenreDTO>();
+            CreateMap<GenreDTO, Genre>();
+            CreateMap<GenreDTO, GenreViewModel>();
+            CreateMap<GenreViewModel, GenreDTO>();
+            CreateMap<BookGenre, BookGenreDTO>();
+            CreateMap<BookGenreDTO, BookGenre>();
+            CreateMap<BookGenreDTO, BookGenreViewModel>();
+            CreateMap<BookGenreViewModel, BookGenreDTO>();
         }
     }
 }

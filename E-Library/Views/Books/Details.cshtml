@@ -36,7 +36,10 @@
     <div class="row">
         <div class="col-sm-12 text-lg-right" style="font-size: 1.3em;">
             <!--foreach loop through categories-->
-            <span class="badge badge-warning" style="border-radius: 5px;">#@Model.Genre.ToString().ToLower()</span>
+            @foreach (var genre in Model?.BookGenre)
+            {
+                <span class="badge badge-warning" style="border-radius: 5px;">#@genre.Genre.Name.ToString().ToLower()</span> 
+            }
         </div>
     </div>
 </div>

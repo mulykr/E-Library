@@ -16,20 +16,20 @@
         <input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
     </div>
 </div>
-<br/>
+<br />
 <div class="table-responsive">
     <table class="table">
         <thead>
-        <tr class="text-info font-weight-bold">
-            <td>#</td>
-            <td>Name</td>
-            <td>Email</td>
-            <td class="text-center">Actions</td>
-        </tr>
+            <tr class="text-info font-weight-bold">
+                <td>#</td>
+                <td>Name</td>
+                <td>Email</td>
+                <td class="text-center">Actions</td>
+            </tr>
         </thead>
         @foreach (var user in Model)
         {
-        
+
             <tr class="user">
                 <td>@i</td>
                 <td>@(user.FirstName + " " + user.LastName)</td>
@@ -37,18 +37,18 @@
                 <td class="text-center">
                     @if (!await UserManager.IsInRoleAsync(user, "Admin"))
                     {
-                         if (!await UserManager.GetLockoutEnabledAsync(user))
-                         {
-                             <form asp-action="LockUser" asp-route-id="@user.Id">
-                                 <input type="submit" class="btn btn-danger" value="Lock"/>
-                             </form>
-                         }
-                         else
-                         {
-                             <form asp-action="UnlockUser" asp-route-id="@user.Id">
-                                 <input type="submit" class="btn btn-success" value="Unlock"/>
-                             </form>
-                         }
+                        if (!await UserManager.GetLockoutEnabledAsync(user))
+                        {
+                            <form asp-action="LockUser" asp-route-id="@user.Id">
+                                <input type="submit" class="btn btn-danger" value="Lock" />
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-action="UnlockUser" asp-route-id="@user.Id">
+                                <input type="submit" class="btn btn-success" value="Unlock" />
+                            </form>
+                        }
                     }
                 </td>
             </tr>
@@ -56,7 +56,11 @@
         }
     </table>
 </div>
-<script type="text/javascript" src="/lib/jquery/dist/jquery.js"></script>
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script src="/js/site.js"></script>
+<script type="text/javascript">
+    highlight("menu_admin");
+</script>
 <script type="text/javascript">
     $("#search").keyup(function () {
         var txt = $('#search').val();

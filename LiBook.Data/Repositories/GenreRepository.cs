@@ -45,7 +45,8 @@ namespace LiBook.Data.Repositories
         public IEnumerable<Genre> Get(Expression<Func<Genre, bool>> filter = null, Func<IQueryable<Genre>, IOrderedQueryable<Genre>> orderBy = null, string includeProperties = "")
         {
             IQueryable<Genre> query = _context.Genres
-                .Include(i => i.BooksGenres);
+                .Include(i => i.BooksGenres)
+                .ThenInclude(i => i.Genre);
             if (filter != null)
             {
                 query = query.Where(filter);
