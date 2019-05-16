@@ -67,7 +67,7 @@ namespace LiBook.Data.Repositories
 
         public IEnumerable<Genre> GetList()
         {
-            throw new NotImplementedException();
+            return _context.Genres;
         }
 
         public void Save()

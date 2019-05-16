@@ -210,6 +210,49 @@ namespace LiBook.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
+        public IActionResult AssingGenre(string id)
+        {
+            try
+            {
+                var book = _service.Get(id);
+                var bookViewModel = _mapper.Map<BookDto, BookViewModel>(book);
+                return View(bookViewModel);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult AssingGenre(string id, string[] gerges)
+        {
+            try
+            {
+                _service.RemoveAuthors(id);
+                foreach (var genreId in gerges)
+                {
+                    _service.AssignGanre(id, genreId);
+                }
+
+                return RedirectToAction("Details", new { id = id });
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
+        }
+
         // GET: Books/Delete/5
         [Authorize(Roles = "Admin")]
         public IActionResult Delete(string id)
