@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace LiBook.Data.Repositories
 {
@@ -22,7 +21,6 @@ namespace LiBook.Data.Repositories
         public void Create(Genre item)
         {
             _context.Genres.Add(item);
-            _context.SaveChanges();
         }
 
         public void Delete(string id)
@@ -30,7 +28,6 @@ namespace LiBook.Data.Repositories
             var genre = _context.Genres.Find(id);
             if (genre != null)
                 _context.Genres.Remove(genre);
-            _context.SaveChanges();
         }
 
         public Genre Get(string id)
@@ -45,6 +42,7 @@ namespace LiBook.Data.Repositories
         public IEnumerable<Genre> Get(Expression<Func<Genre, bool>> filter = null, Func<IQueryable<Genre>, IOrderedQueryable<Genre>> orderBy = null, string includeProperties = "")
         {
             IQueryable<Genre> query = _context.Genres
+                .AsNoTracking()
                 .Include(i => i.BooksGenres)
                 .ThenInclude(i => i.Genre);
             if (filter != null)
@@ -68,7 +66,10 @@ namespace LiBook.Data.Repositories
 
         public IEnumerable<Genre> GetList()
         {
-            return _context.Genres;
+            return _context.Genres
+                .AsNoTracking()
+                .Include(i => i.BooksGenres)
+                .ThenInclude(i => i.Book);
         }
 
         public void Save()
@@ -79,7 +80,6 @@ namespace LiBook.Data.Repositories
         public void Update(Genre item)
         {
             _context.Genres.Update(item);
-            _context.SaveChanges();
         }
 
         #region Dispose pattern

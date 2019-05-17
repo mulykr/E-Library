@@ -83,7 +83,7 @@ namespace LiBook.Controllers
                 try
                 {
                     var newGenre = _mapper.Map<GenreViewModel, GenreDTO>(genre);
-                    _service.AddToGenre(newGenre);
+                    _service.Create(newGenre);
                 }
                 catch (Exception e)
                 {
@@ -194,7 +194,7 @@ namespace LiBook.Controllers
         {
             try
             {
-                _service.DeleteFromGenre(id);
+                _service.Delete(id);
 
                 return RedirectToAction(nameof(Index));
             }
