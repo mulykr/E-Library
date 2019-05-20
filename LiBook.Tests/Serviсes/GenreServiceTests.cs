@@ -118,6 +118,34 @@ namespace LiBook.Tests.Serviсes
             repository.Verify(r => r.Save(), Times.Once());
         }
 
+        [Fact]
+        public void DeleteTest()
+        {
+            // Arrange
+            var expected = new GenreDTO()
+            {
+                Id = "1",
+                Name = "Fantasy"
+            };
+            var repository = new Mock<IRepository<Genre>>();
+            repository.Setup(r => r.Get(expected.Id)).Returns(new Genre
+            {
+                Id = "1",
+                Name = "Fantasy"
+            });
+            var mapper = new Mock<IMapper>();
+            mapper.Setup(m => m.Map<Genre, GenreDTO>(It.IsAny<Genre>())).Returns(expected);
+            var svc = new GenreService(repository.Object, mapper.Object);
+
+            // Act
+            svc.Delete(expected.Id);
+
+            // Assert
+
+            repository.Verify(r => r.Delete(It.IsAny<string>()), Times.Once());
+            repository.Verify(r => r.Save(), Times.Once());
+        }
+
         private IEnumerable<GenreDTO> GetTestCollectionDto()
         {
             return new[]
