@@ -19,6 +19,39 @@ namespace LiBook.Tests.Serviсes
     public class GenreServiceTests
     {
         [Fact]
+        public void GetListTest()
+        {
+            // Arrange
+            var list = GetTestCollectionDto();
+            var svc = SetUpService();
+
+            // Act
+            IEnumerable<GenreDTO> actual = svc.GetList();
+
+            // Assert
+            Assert.Equal(actual.Count(), list.Count());
+        }
+
+        [Theory]
+        [InlineData("1")]
+        [InlineData("2")]
+        [InlineData("3")]
+        public void GetByIdTest(string id)
+        {
+            // Arrange
+            var svc = SetUpService();
+            var dtos = GetTestCollectionDto();
+            var expected = dtos.First(i => i.Id == id);
+
+            // Act
+            var actual = svc.Get(id);
+
+            // Assert
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
+        }
+
+        [Fact]
         public void CreateTest()
         {
             // Arrange
