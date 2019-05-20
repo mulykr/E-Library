@@ -53,7 +53,8 @@ namespace LiBook.Data
             modelBuilder.Entity<WishListItem>()
                 .HasOne(i => i.Book)
                 .WithMany(i => i.WishListItems)
-                .HasForeignKey(i => i.BookId);
+                .HasForeignKey(i => i.BookId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<WishListItem>()
                 .HasOne(p => p.User)
@@ -64,12 +65,14 @@ namespace LiBook.Data
             modelBuilder.Entity<Comment>()
                 .HasOne(v => v.Book)
                 .WithMany(v => v.Comments)
-                .HasForeignKey(v => v.BookId);
+                .HasForeignKey(i => i.BookId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Comment>()
                 .HasOne(p => p.User)
                 .WithMany(p => p.Comments)
-                .HasForeignKey(p => p.UserId);
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Genre many-to-many
             modelBuilder.Entity<BookGenre>()

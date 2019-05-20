@@ -9,9 +9,9 @@ namespace LiBook.Services.Interfaces
 
         void RemoveAuthors(string bookId);
 
-        void AssignGanre(string bookId, string ganreId);
+        void AssignGenre(string bookId, string genreId);
 
-        void RemoveGanre(string ganreId);
+        void RemoveGenres(string genreId);
 
         string UploadPdf(BookDto book, IFormFile file);
     }

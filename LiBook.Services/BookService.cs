@@ -81,23 +81,23 @@ namespace LiBook.Services
             _repository.Save();
         }
 
-        public void AssignGanre(string bookId, string ganreId)
+        public void AssignGenre(string bookId, string genreId)
         {
             var book = _repository.Get(i => i.Id == bookId).First();
-            if (book.BooksGenres.Any(i => i.GenreId == ganreId && i.BookId == bookId)) return;
+            if (book.BooksGenres.Any(i => i.GenreId == genreId && i.BookId == bookId)) return;
             book.BooksGenres.Add(new BookGenre
             {
                 BookId = bookId,
-                GenreId= ganreId
+                GenreId= genreId
             });
 
             _repository.Update(book);
             _repository.Save();
         }
 
-        public void RemoveGanre(string bookId)
+        public void RemoveGenres(string genreId)
         {
-            var book = _repository.Get(i => i.Id == bookId).First();
+            var book = _repository.Get(i => i.Id == genreId).First();
             if (!book.BooksGenres.Any()) return;
 
             book.BooksGenres.Clear();

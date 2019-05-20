@@ -21,6 +21,8 @@ namespace LiBook.Data.Repositories
         public IEnumerable<Book> GetList()
         {
             return _context.Books
+                .Include(i => i.BooksGenres)
+                .ThenInclude(i => i.Genre)
                 .Include(i => i.AuthorsBooks)
                 .ThenInclude(i => i.Author);
         }
@@ -29,6 +31,8 @@ namespace LiBook.Data.Repositories
         {
             return _context.Books
                 .AsNoTracking()
+                .Include(i => i.BooksGenres)
+                .ThenInclude(i => i.Genre)
                 .Include(item => item.AuthorsBooks)
                 .ThenInclude(item => item.Author)
                 .FirstOrDefault(item => item.Id == id);
@@ -37,7 +41,10 @@ namespace LiBook.Data.Repositories
         public IEnumerable<Book> Get(Expression<Func<Book, bool>> filter = null, Func<IQueryable<Book>, IOrderedQueryable<Book>> orderBy = null, string includeProperties = "")
         {
             IQueryable<Book> query = _context.Books
-                .Include(i => i.AuthorsBooks);
+                .Include(i => i.BooksGenres)
+                .ThenInclude(i => i.Genre)
+                .Include(i => i.AuthorsBooks)
+                .ThenInclude(i => i.Author);
             if (filter != null)
             {
                 query = query.Where(filter);

@@ -14,7 +14,7 @@ namespace LiBook.Services.DTO
 
         public string PdfFilePath { get; set; }
 
-        public ICollection<BookGenreDTO> BookGenre { get; set; }
+        public ICollection<BookGenreDTO> BooksGenres { get; set; }
 
         public ICollection<AuthorBookDto> AuthorsBooks { get; set; }
 

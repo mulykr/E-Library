@@ -211,7 +211,7 @@ namespace LiBook.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult AssingGenre(string id)
+        public IActionResult AssignGenres(string id)
         {
             try
             {
@@ -231,14 +231,14 @@ namespace LiBook.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult AssingGenre(string id, string[] gerges)
+        public IActionResult AssignGenres(string id, string[] genres)
         {
             try
             {
-                _service.RemoveAuthors(id);
-                foreach (var genreId in gerges)
+                _service.RemoveGenres(id);
+                foreach (var genreId in genres)
                 {
-                    _service.AssignGanre(id, genreId);
+                    _service.AssignGenre(id, genreId);
                 }
 
                 return RedirectToAction("Details", new { id = id });
@@ -283,20 +283,20 @@ namespace LiBook.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(string id)
         {
-            try
-            {
+            //try
+            //{
                 _service.Delete(id);
 
                 return RedirectToAction(nameof(Index));
-            }
-            catch (Exception e)
-            {
-                return View("Error", new ErrorViewModel
-                {
-                    RequestId = Request.HttpContext.TraceIdentifier,
-                    Exception = e
-                });
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    return View("Error", new ErrorViewModel
+            //    {
+            //        RequestId = Request.HttpContext.TraceIdentifier,
+            //        Exception = e
+            //    });
+            //}
         }
 
         private bool BookExists(string id)

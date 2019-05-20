@@ -78,7 +78,7 @@
     </div>
     <div class="col-md-9">
         <input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
-        <form asp-action="AssignAuthors" method="post">
+        <form asp-action="AssignGenres" method="post">
             <input type="submit" class="btn btn-block btn-success" value="Save" />
             <input type="hidden" value="@Model.Id" name="id" id="id" />
             <br />
@@ -92,7 +92,7 @@
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">
-                                            <input type="checkbox" class="custom-checkbox" name="authors" value="@genre.Id" @(Model.BookGenre.Any(i => i.GenreId == genre.Id) ? "checked=''" : "") />
+                                            <input type="checkbox" class="custom-checkbox" name="genres" value="@genre.Id" @(Model.BooksGenres.Any(i => i.GenreId == genre.Id) ? "checked=''" : "") />
                                         </div>
                                     </div>
                                     <label class="form-control text-info">@genre.Name</label>
@@ -109,7 +109,7 @@
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">
-                                            <input type="checkbox" class="custom-checkbox" name="authors" value="@genre.Id" @(Model.BookGenre.Any(i => i.GenreId== genre.Id) ? "checked=''" : "") />
+                                            <input type="checkbox" class="custom-checkbox" name="genres" value="@genre.Id" @(Model.BooksGenres.Any(i => i.GenreId== genre.Id) ? "checked=''" : "") />
                                         </div>
                                     </div>
                                     <label class="form-control text-info">@genre.Name</label>
@@ -126,7 +126,7 @@
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">
-                                            <input type="checkbox" class="custom-checkbox" name="authors" value="@genre.Id" @(Model.BookGenre.Any(i => i.GenreId == genre.Id) ? "checked=''" : "") />
+                                            <input type="checkbox" class="custom-checkbox" name="genres" value="@genre.Id" @(Model.BooksGenres.Any(i => i.GenreId == genre.Id) ? "checked=''" : "") />
                                         </div>
                                     </div>
                                     <label class="form-control text-info">@genre.Name</label>

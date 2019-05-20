@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var colors = new[] { "rgb(65, 137, 252)", "rgb(202, 252, 111)", "rgba(30, 230, 220)", "rgb(255, 81, 119)", "rgb(255, 199, 81)" };
+    var c = 0;
 }
 
 <div style="background-color: rgba(255, 255, 255, 0.7); padding: 2em;" class="card">
@@ -27,18 +29,18 @@
             </dl>
         </div>
         <div class="text-right float-right" style="width: 99%">
-            @if (User.IsInRole("Admin"))
-            {
-                <a asp-action="AssingGenre" asp-route-id="@Model.Id" class="btn btn-info fa fa-plus"></a>
-            }
+            
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12 text-lg-right" style="font-size: 1.3em;">
-            <!--foreach loop through categories-->
-            @foreach (var genre in Model.BookGenre)
+            @foreach (var genre in Model.BooksGenres)
             {
-                <span class="badge badge-warning" style="border-radius: 5px;">#@genre.Genre.Name.ToLower()</span> 
+                <span class="badge" style="border-radius: 5px; background-color: @colors[c++%5]">#@genre.Genre.Name.ToLower()</span> 
+            }
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="AssignGenres" asp-route-id="@Model.Id" class="btn btn-success fa fa-plus"></a>
             }
         </div>
     </div>
