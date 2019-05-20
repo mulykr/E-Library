@@ -52,6 +52,49 @@ namespace LiBook.Tests.Serviсes
         }
 
         [Fact]
+        public void GetByIdNotExistingTest()
+        {
+            // Arrange
+            var svc = SetUpService();
+
+            // Act
+            var actual = svc.Get("4");
+
+            // Assert
+            Assert.Null(actual);
+        }
+
+
+        [Fact]
+        public void UpdateTest()
+        {
+            // Arrange
+            var expected = new GenreDTO
+            {
+                Id = "1",
+                Name = "Adventure"
+            };
+            var repository = new Mock<IRepository<Genre>>();
+            repository.Setup(r => r.Get(expected.Id)).Returns(new Genre
+            {
+                Id = "1",
+                Name = "Adventure"
+            });
+            var mapper = new Mock<IMapper>();
+            mapper.Setup(m => m.Map<Genre, GenreDTO>(It.IsAny<Genre>())).Returns(expected);
+            var svc = new GenreService(repository.Object, mapper.Object);
+
+
+            // Act
+            svc.Update(expected);
+
+            // Assert
+            mapper.Verify(m => m.Map<GenreDTO, Genre>(It.IsAny<GenreDTO>()), Times.Once());
+            repository.Verify(r => r.Update(It.IsAny<Genre>()), Times.Once());
+            repository.Verify(r => r.Save(), Times.Once());
+        }
+
+        [Fact]
         public void CreateTest()
         {
             // Arrange
