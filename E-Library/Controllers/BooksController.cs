@@ -40,6 +40,27 @@ namespace LiBook.Controllers
             }
         }
 
+        public IActionResult Search(string key)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(key))
+                {
+                    throw new ArgumentException("Invalid key word to run search. Try again");
+                }
+
+                return View("Search", key.ToLower());
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
+        }
+
         // GET: Books/Details/5
         public IActionResult Details(string id)
         {

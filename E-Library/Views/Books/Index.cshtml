@@ -19,9 +19,18 @@
         }
     </div>
 </div>
+
 <input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
 
 <br />
+
+@using (Html.BeginForm("Search", "Books"))
+{
+    <div style="display:flex;">
+        <input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" name="key" placeholder="Search" aria-label="Search" id="search" />
+        <input type="submit" class="btn" style="background-color: rgb(127, 0, 152);color:white" value="Search" />
+    </div>
+}
 <div class="row card-columns">
     @foreach (var book in Model)
     {

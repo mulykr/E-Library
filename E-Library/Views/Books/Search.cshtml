@@ -1,0 +1,36 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Search";
+}
+
+<input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
+
+@using (Html.BeginForm("Search", "Books"))
+{
+    <div style="display:flex;">
+        <input class="form-control border-right-0 border-left-0 border-top-0" value="@Model" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" name="key" placeholder="Search" aria-label="Search" id="search" />
+        <input type="submit" class="btn" style="background-color: rgb(127, 0, 152);color:white" value="Search" />
+    </div>
+}
+
+<br />
+<div class="row card-columns">
+    @await Component.InvokeAsync("SearchBookByGenre", Model)
+</div>
+
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script src="/js/site.js"></script>
+<script type="text/javascript">
+    highlight("menu_books");
+</script>
+<script type="text/javascript">
+    $("#search").keyup(function () {
+        var txt = $('#search').val();
+        $('.book').each(function () {
+            $(this).hide();
+            if ($(this).text().toUpperCase().indexOf(txt.toUpperCase()) != -1) {
+                $(this).show();
+            }
+        });
+    });
+</script>
