@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiBook.Data", "LiBook.Data\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiBook.Services", "LiBook.Services\LiBook.Services.csproj", "{3907B26E-68DA-4119-9CEE-0B13A0F29C2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiBook.Tests", "LiBook.Tests\LiBook.Tests.csproj", "{62AE88D1-98D9-485E-B517-FE4788701C9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiBook.Tests", "LiBook.Tests\LiBook.Tests.csproj", "{62AE88D1-98D9-485E-B517-FE4788701C9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

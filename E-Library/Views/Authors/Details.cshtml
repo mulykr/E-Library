@@ -6,10 +6,20 @@
 }
 
 <div style="background-color: rgba(255, 255, 255, 0.7); padding: 2em;" class="card">
-    <h2>@Model.FirstName @Model.LastName</h2>
     <div class="row">
+        <div class="container-fluid">
+            <span class="text-primary">
+                <a asp-action="Index" asp-controller="Home">LiBook</a>
+                &#8594;
+                <a asp-action="Index">Authors</a>
+                &#8594;
+                @Model.FirstName @Model.LastName
+            </span>
+        </div>
+        <br/>
+        <hr/>
         <div class="col-md-4">
-            <img src="~/pics/Authors/@Model.ImagePath" class="img-fluid" />
+            <img src="~/pics/Authors/@Model.ImagePath" class="img-fluid"/>
         </div>
         <div class="col-md-8">
             <dl class="dl-horizontal">
@@ -20,7 +30,7 @@
                     @Html.DisplayFor(model => model.Biography)
                 </dd>
                 <dd class="text-right">
-                    @await Component.InvokeAsync("AuthorDetailsManagement", new { model = Model})
+                    @await Component.InvokeAsync("AuthorDetailsManagement", new {model = Model})
                 </dd>
             </dl>
         </div>
