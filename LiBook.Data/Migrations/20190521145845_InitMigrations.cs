@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LiBook.Data.Migrations
 {
-    public partial class InitMigration : Migration
+    public partial class InitMigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -67,17 +67,15 @@ namespace LiBook.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Books",
+                name: "Genres",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    Title = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    ImagePath = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Books", x => x.Id);
+                    table.PrimaryKey("PK_Genres", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -126,8 +124,8 @@ namespace LiBook.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -171,8 +169,8 @@ namespace LiBook.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -187,26 +185,125 @@ namespace LiBook.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AuthorBooks",
+                name: "Books",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    BookId = table.Column<string>(nullable: true),
-                    AuthorId = table.Column<string>(nullable: true)
+                    Title = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    ImagePath = table.Column<string>(nullable: true),
+                    PdfFilePath = table.Column<string>(nullable: true),
+                    GenreId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AuthorBooks", x => x.Id);
+                    table.PrimaryKey("PK_Books", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Books_Genres_GenreId",
+                        column: x => x.GenreId,
+                        principalTable: "Genres",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AuthorBooks",
+                columns: table => new
+                {
+                    BookId = table.Column<string>(nullable: false),
+                    AuthorId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuthorBooks", x => new { x.AuthorId, x.BookId });
                     table.ForeignKey(
                         name: "FK_AuthorBooks_Authors_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "Authors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AuthorBooks_Books_BookId",
                         column: x => x.BookId,
                         principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookGenre",
+                columns: table => new
+                {
+                    BookId = table.Column<string>(nullable: false),
+                    GenreId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookGenre", x => new { x.BookId, x.GenreId });
+                    table.ForeignKey(
+                        name: "FK_BookGenre_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookGenre_Genres_GenreId",
+                        column: x => x.GenreId,
+                        principalTable: "Genres",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    BookId = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
+                    Message = table.Column<string>(nullable: true),
+                    TimeStamp = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WishListItems",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    BookId = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
+                    TimeStamp = table.Column<DateTime>(nullable: false),
+                    Note = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WishListItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WishListItems_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WishListItems_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -251,14 +348,39 @@ namespace LiBook.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuthorBooks_AuthorId",
-                table: "AuthorBooks",
-                column: "AuthorId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AuthorBooks_BookId",
                 table: "AuthorBooks",
                 column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookGenre_GenreId",
+                table: "BookGenre",
+                column: "GenreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Books_GenreId",
+                table: "Books",
+                column: "GenreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_BookId",
+                table: "Comments",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WishListItems_BookId",
+                table: "WishListItems",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WishListItems_UserId",
+                table: "WishListItems",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -282,16 +404,28 @@ namespace LiBook.Data.Migrations
                 name: "AuthorBooks");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "BookGenre");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "WishListItems");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Authors");
 
             migrationBuilder.DropTable(
                 name: "Books");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Genres");
         }
     }
 }

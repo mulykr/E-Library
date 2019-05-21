@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LiBook.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190422084417_WishListUpdate")]
-    partial class WishListUpdate
+    [Migration("20190521145845_InitMigrations")]
+    partial class InitMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -59,13 +59,66 @@ namespace LiBook.Data.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<string>("GenreId");
+
                     b.Property<string>("ImagePath");
+
+                    b.Property<string>("PdfFilePath");
 
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GenreId");
+
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("LiBook.Data.Entities.BookGenre", b =>
+                {
+                    b.Property<string>("BookId");
+
+                    b.Property<string>("GenreId");
+
+                    b.HasKey("BookId", "GenreId");
+
+                    b.HasIndex("GenreId");
+
+                    b.ToTable("BookGenre");
+                });
+
+            modelBuilder.Entity("LiBook.Data.Entities.Comment", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BookId");
+
+                    b.Property<string>("Message");
+
+                    b.Property<DateTime>("TimeStamp");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("LiBook.Data.Entities.Genre", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("LiBook.Data.Entities.WishListItem", b =>
@@ -74,6 +127,8 @@ namespace LiBook.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("BookId");
+
+                    b.Property<string>("Note");
 
                     b.Property<DateTime>("TimeStamp");
 
@@ -210,11 +265,9 @@ namespace LiBook.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("ProviderKey")
-                        .HasMaxLength(128);
+                    b.Property<string>("ProviderKey");
 
                     b.Property<string>("ProviderDisplayName");
 
@@ -245,11 +298,9 @@ namespace LiBook.Data.Migrations
                 {
                     b.Property<string>("UserId");
 
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(128);
+                    b.Property<string>("Name");
 
                     b.Property<string>("Value");
 
@@ -286,11 +337,45 @@ namespace LiBook.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("LiBook.Data.Entities.Book", b =>
+                {
+                    b.HasOne("LiBook.Data.Entities.Genre", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreId");
+                });
+
+            modelBuilder.Entity("LiBook.Data.Entities.BookGenre", b =>
+                {
+                    b.HasOne("LiBook.Data.Entities.Book", "Book")
+                        .WithMany("BooksGenres")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("LiBook.Data.Entities.Genre", "Genre")
+                        .WithMany("BooksGenres")
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("LiBook.Data.Entities.Comment", b =>
+                {
+                    b.HasOne("LiBook.Data.Entities.Book", "Book")
+                        .WithMany("Comments")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("LiBook.Data.Entities.UserProfile", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("LiBook.Data.Entities.WishListItem", b =>
                 {
                     b.HasOne("LiBook.Data.Entities.Book", "Book")
                         .WithMany("WishListItems")
-                        .HasForeignKey("BookId");
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("LiBook.Data.Entities.UserProfile", "User")
                         .WithMany("WishListItems")

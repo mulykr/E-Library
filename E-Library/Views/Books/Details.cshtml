@@ -52,7 +52,6 @@
             @if (User.IsInRole("Admin"))
             {
                 <a asp-action="AssignGenres" asp-route-id="@Model.Id" class="btn btn-success fa fa-plus"></a>
-                <span class="badge badge-warning" style="border-radius: 5px;">#@genre.Genre.Name.ToString().ToLower()</span>
             }
         </div>
     </div>
