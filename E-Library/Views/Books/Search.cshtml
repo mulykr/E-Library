@@ -1,17 +1,47 @@
-﻿@model string
+﻿@model ICollection<string>
+@using LiBook.Services.Interfaces
+
 @{
     ViewData["Title"] = "Search";
+}
+@inject IGenreService GenreService
+@{
+    var u = GenreService.GetList().ToArray();
 }
 
 <input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
 
-@using (Html.BeginForm("Search", "Books"))
-{
-    <div style="display:flex;">
-        <input class="form-control border-right-0 border-left-0 border-top-0" value="@Model" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" name="key" placeholder="Search" aria-label="Search" id="search" />
-        <input type="submit" class="btn" style="background-color: rgb(127, 0, 152);color:white" value="Search" />
+<div class="row">
+
+    <div class="col-md-9">
+        <form asp-action="Search" asp-controller="Books" method="post">
+            <br />
+            <input type="submit" class="btn btn-block btn-success" value="send" />
+
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="list-group">
+                        @foreach (var genre in u)
+                        {
+                            <li class="list-group-item author bg-white">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <input type="checkbox" class="custom-checkbox" name="keys" value="@genre.Id" />
+                                        </div>
+                                    </div>
+                                    <label class="form-control text-info">@genre.Name</label>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </form>
     </div>
-}
+</div>
+
+
 
 <br />
 <div class="row card-columns">

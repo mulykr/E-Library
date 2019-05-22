@@ -1,7 +1,11 @@
 ﻿@model IEnumerable<LiBook.Models.BookViewModel>
 @using LiBook.Services.DTO
 @using LiBook.Services.Interfaces
-
+@using LiBook.Models
+@inject IGenreService GenreService
+@{
+    var u = GenreService.GetList().ToArray();
+}
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -24,13 +28,51 @@
 
 <br />
 
-@using (Html.BeginForm("Search", "Books"))
-{
-    <div style="display:flex;">
-        <input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" name="key" placeholder="Search" aria-label="Search" id="search" />
-        <input type="submit" class="btn" style="background-color: rgb(127, 0, 152);color:white" value="Search" />
+
+
+
+
+<div  style="background-color:red;height:20px">
+    <div class=" genres" >
+
+        <div class="col-md-9">
+            <form asp-action="Search" asp-controller="Books" method="post">
+                <input type="submit" class="btn btn-block btn-success" value="send" />
+
+                <br />
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            @foreach (var genre in u)
+                            {
+                                <li class="list-group-item author bg-white">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <input type="checkbox" class="custom-checkbox" name="keys" value="@genre.Id" />
+                                            </div>
+                                        </div>
+                                        <label class="form-control text-info">@genre.Name</label>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-}
+
+</div>
+
+
+    
+
+
+
+
+
 <div class="row card-columns">
     @foreach (var book in Model)
     {

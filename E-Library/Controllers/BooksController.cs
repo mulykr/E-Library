@@ -40,16 +40,20 @@ namespace LiBook.Controllers
             }
         }
 
-        public IActionResult Search(string key)
+        public IActionResult Search(string []keys)
         {
             try
             {
-                if (string.IsNullOrEmpty(key))
-                {
-                    throw new ArgumentException("Invalid key word to run search. Try again");
-                }
+                //if (string.IsNullOrEmpty(keys))
+                //{
+                //    throw new ArgumentException("Invalid key word to run search. Try again");
+                //}
 
-                return View("Search", key.ToLower());
+                for(int i = 0; i < keys.Length;i++)
+                {
+                    keys[i].ToLower();
+                }
+                return View("Search", keys);
             }
             catch (Exception e)
             {

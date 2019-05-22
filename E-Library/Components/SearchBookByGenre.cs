@@ -24,11 +24,17 @@ namespace LiBook.Components
 
         }
 
-        public IViewComponentResult Invoke(string key)
+        public IViewComponentResult Invoke(string []keys)
         {
             var res = _service.GetList();
             List<BookViewModel> result = new List<BookViewModel>();
-            var q = res.Where(i => i.BooksGenres.Any(t => t.Genre.Name == key) == true);
+            var q = new List<BookDto>();
+                for (int i = 0; i < keys.Length;i++)
+                {
+                     q= res.Where(j => j.BooksGenres.Any(t => t.GenreId == keys[i]) == true).ToList();
+                }
+            
+
             foreach (var w in q)
             {
                 result.Add(_mapper.Map<BookDto, BookViewModel>(w));
