@@ -166,6 +166,17 @@ namespace LiBook.Tests.Services
                     Title = "Stephen",
                     Description = "King",
                     ImagePath = "Books/1.jpg",
+                    BooksGenres = new List<BookGenre>
+                    {
+                        new BookGenre
+                        {
+                            Genre = new Genre
+                            {
+                                Id = "1",
+                                Name = "Adventure"
+                            }
+                        }
+                    }
                 },
                  new Book
                 {
@@ -173,6 +184,17 @@ namespace LiBook.Tests.Services
                     Title = "Stephen",
                     Description = "King",
                     ImagePath = "Books/1.jpg",
+                    BooksGenres = new List<BookGenre>
+                    {
+                        new BookGenre
+                        {
+                            Genre = new Genre
+                            {
+                                Id = "2",
+                                Name = "Fantasy"
+                            }
+                        }
+                    }
                 },
                  new Book
                 {
@@ -180,6 +202,17 @@ namespace LiBook.Tests.Services
                     Title = "Stephen",
                     Description = "King",
                     ImagePath = "Books/1.jpg",
+                    BooksGenres = new List<BookGenre>
+                    {
+                        new BookGenre
+                        {
+                            Genre = new Genre
+                            {
+                                Id = "2",
+                                Name = "Fantasy"
+                            }
+                        }
+                    }
                 }
             };
         }

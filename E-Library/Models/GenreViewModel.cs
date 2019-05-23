@@ -11,6 +11,8 @@ namespace LiBook.Models
 
         public string Name { get; set; }
 
+        public string Color { get; set; }
+
         public ICollection<BookGenreViewModel> BookGenre { get; set; }
     }
 }
