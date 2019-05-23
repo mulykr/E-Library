@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using AutoMapper;
 using LiBook.Data;
 using LiBook.Data.Entities;
+using LiBook.Data.Interfaces;
 using LiBook.Data.Repositories;
 using LiBook.Services;
 using LiBook.Services.DTO;
@@ -44,6 +46,24 @@ namespace LiBook.Tests.Services
             Assert.Equal(expected, res.FirstOrDefault().Title);
         }
 
+        [Fact]
+        public void SearchBookByGenre()
+        {
+            var genreDto = new GenreDTO
+            {
+                Id = "1",
+                Name = "Advenure"
+            };
+            var svc = SetUpBookService();
+            var search = new string[] { genreDto.Name };
+            var expected = GetTestBookDtoCollection()
+                .Where(i => i.BooksGenres.
+                All(j => j.GenreId == genreDto.Id));
+            var actual = svc.SearchBookByGenre(search);
+            
+            Assert.Equal(expected, actual);
+        }
+
         private IEnumerable<Author> GetTestAuthorCollection()
         {
             return new[]
@@ -54,7 +74,7 @@ namespace LiBook.Tests.Services
                     FirstName = "Stephen",
                     LastName = "King",
                     Biography = "Some biography",
-                    ImagePath = "Authors/1.jpg"
+                    ImagePath = "Authors/1.jpg",
                 },
                 new Author
                 {
@@ -75,6 +95,67 @@ namespace LiBook.Tests.Services
             };
         }
 
+        private IEnumerable<BookDto> GetTestBookDtoCollection()
+        {
+            return new[]
+            {
+                new BookDto
+                {
+                    Id = "1",
+                    Title = "Stephen",
+                    Description = "King",
+                    ImagePath = "Books/1.jpg",
+                    BooksGenres = new List<BookGenreDTO>
+                    {
+                        new BookGenreDTO
+                        {
+                            Genre = new GenreDTO
+                            {
+                                Id = "1",
+                                Name = "Adventure"
+                            }
+                        }
+                    }
+                },
+                 new BookDto
+                {
+                    Id = "2",
+                    Title = "Stephen",
+                    Description = "King",
+                    ImagePath = "Books/1.jpg",
+                    BooksGenres = new List<BookGenreDTO>
+                    {
+                        new BookGenreDTO
+                        {
+                            Genre = new GenreDTO
+                            {
+                                Id = "2",
+                                Name = "Fantasy"
+                            }
+                        }
+                    }
+                },
+                 new BookDto
+                {
+                    Id = "3",
+                    Title = "Stephen",
+                    Description = "King",
+                    ImagePath = "Books/1.jpg",
+                    BooksGenres = new List<BookGenreDTO>
+                    {
+                        new BookGenreDTO
+                        {
+                            Genre = new GenreDTO
+                            {
+                                Id = "3",
+                                Name = "Novel"
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
         private IEnumerable<Book> GetTestBookCollection()
         {
             return new[]
@@ -84,25 +165,24 @@ namespace LiBook.Tests.Services
                     Id = "1",
                     Title = "Stephen",
                     Description = "King",
-                    ImagePath = "Books/1.jpg"
+                    ImagePath = "Books/1.jpg",
                 },
-                new Book
+                 new Book
                 {
                     Id = "2",
                     Title = "Stephen",
                     Description = "King",
-                    ImagePath = "Books/1.jpg"
+                    ImagePath = "Books/1.jpg",
                 },
-                new Book
+                 new Book
                 {
                     Id = "3",
                     Title = "Stephen",
                     Description = "King",
-                    ImagePath = "Books/1.jpg"
+                    ImagePath = "Books/1.jpg",
                 }
             };
         }
-
         private SearchService SetUpAuthorService()
         {
             var list = GetTestAuthorCollection().AsQueryable();
