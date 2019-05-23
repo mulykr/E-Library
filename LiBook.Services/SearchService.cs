@@ -54,6 +54,18 @@ namespace LiBook.Services
             return found;
         }
 
-        
+        public IEnumerable<BookDto> SearchBookByGenre(string[] keys)
+        {
+            var res = _repositoryBook.GetList();
+            var found = new List<BookDto>();
+            for (int i = 0; i < keys.Length; i++)
+            {
+                found = res.Where(j => j.BooksGenres.Any(t => t.GenreId == keys[i]) == true)
+                    .Select(m=>_mapper.Map<Book, BookDto>(m))
+                    .ToList();
+            }
+            return found;
+        }
+
     }
 }

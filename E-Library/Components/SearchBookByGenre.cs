@@ -12,11 +12,11 @@ namespace LiBook.Components
 {
     public class SearchBookByGenre: ViewComponent
     {
-        private readonly IBookService _service;
+        private readonly ISearchService _service;
         private readonly IMapper _mapper;
 
 
-        public SearchBookByGenre(IBookService service,
+        public SearchBookByGenre(ISearchService service,
              IMapper mapper)
         {
             _service = service;
@@ -26,20 +26,12 @@ namespace LiBook.Components
 
         public IViewComponentResult Invoke(string []keys)
         {
-            var res = _service.GetList();
             List<BookViewModel> result = new List<BookViewModel>();
-            var q = new List<BookDto>();
-                for (int i = 0; i < keys.Length;i++)
-                {
-                     q= res.Where(j => j.BooksGenres.Any(t => t.GenreId == keys[i]) == true).ToList();
-                }
-            
-
-            foreach (var w in q)
+            var res = _service.SearchBookByGenre(keys);
+            foreach (var w in res)
             {
                 result.Add(_mapper.Map<BookDto, BookViewModel>(w));
             }
-            
             return View(result);
         }
     }
