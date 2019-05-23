@@ -131,7 +131,7 @@ namespace LiBook.Services
                 return newFileName;
             }
 
-            throw new ArgumentNullException(nameof(file));
+            return null;
         }
 
         public void Update(BookDto item, IFormFile file)

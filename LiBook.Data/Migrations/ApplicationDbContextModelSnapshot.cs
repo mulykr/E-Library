@@ -4,20 +4,18 @@ using LiBook.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LiBook.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190523184303_genreColor")]
-    partial class genreColor
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -107,6 +105,26 @@ namespace LiBook.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("LiBook.Data.Entities.CommentLike", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CommentId");
+
+                    b.Property<bool>("Liked");
+
+                    b.Property<string>("UserProfileId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("UserProfileId");
+
+                    b.ToTable("CommentLikes");
                 });
 
             modelBuilder.Entity("LiBook.Data.Entities.Genre", b =>
@@ -370,6 +388,17 @@ namespace LiBook.Data.Migrations
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("LiBook.Data.Entities.CommentLike", b =>
+                {
+                    b.HasOne("LiBook.Data.Entities.Comment", "Comment")
+                        .WithMany("CommentLikes")
+                        .HasForeignKey("CommentId");
+
+                    b.HasOne("LiBook.Data.Entities.UserProfile", "UserProfile")
+                        .WithMany("CommentLikes")
+                        .HasForeignKey("UserProfileId");
                 });
 
             modelBuilder.Entity("LiBook.Data.Entities.WishListItem", b =>

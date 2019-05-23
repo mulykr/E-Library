@@ -47,7 +47,7 @@
         <div class="col-sm-12 text-lg-right" style="font-size: 1.3em;">
             @foreach (var genre in Model.BooksGenres)
             {
-                <span class="badge" style="border-radius: 5px; background-color: @colors[c++%5]">#@genre.Genre.Name.ToLower()</span> 
+                <span class="badge text-white" style="border-radius: 5px; background-color: #@genre.Genre.Color">#@genre.Genre.Name.ToLower()</span> 
             }
             @if (User.IsInRole("Admin"))
             {
