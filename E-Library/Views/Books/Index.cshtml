@@ -1,10 +1,9 @@
 ﻿@model IEnumerable<LiBook.Models.BookViewModel>
-@using LiBook.Services.DTO
 @using LiBook.Services.Interfaces
 @using LiBook.Models
 @inject IGenreService GenreService
 @{
-    var u = GenreService.GetList().ToArray();
+    var genres = GenreService.GetList().ToArray();
 }
 @{
     ViewData["Title"] = "Index";
@@ -20,76 +19,51 @@
         }
     </div>
 </div>
-<input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
-<br />
-<div class="poster">
-        <h2>Оберіть жанр</h2>
-        <div class="descr">
-                    <form asp-action="Search" asp-controller="Books" method="post">
-                        <input type="submit" class="btn btn-block btn-success" value="Знайти" />
-                        <div class="row">
-                            <div class="col-md">
-                                <ul class="list-group">
-                                    @foreach (var genre in u)
-                                    {
-                                        <li class="list-group-item author bg-white">
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <input type="checkbox" class="custom-checkbox" name="keys" value="@genre.Id" />
-                                                    </div>
-                                                </div>
-                                                <label class="form-control text-info">@genre.Name</label>
-                                            </div>
-                                        </li>
-                                    }
-                                </ul>
+<form asp-action="Search" asp-controller="Books" method="post">
+    <input name="word" class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="word" />
+    <br />
+    <div class="row">
+        <div class="col-sm-2">
+            @foreach (var genre in genres)
+            {
+                <div class="chiller_cb">
+                    <input id="@genre.Id" type="checkbox" name="genres" value="@genre.Id">
+                    <label for="@genre.Id">@genre.Name</label>
+                    <span></span>
+                </div>
+            }
+
+            <input type="submit" value="Search" class="btn btn-block text-white" style="background-color: rgb(127, 0, 152);" />
+        </div>
+        <div class="col-sm-10">
+            <div class="row card-columns">
+                @foreach (var book in Model)
+                {
+                    <div class="col-md-3 book">
+                        <div class="card">
+                            @if (!string.IsNullOrEmpty(book.ImagePath))
+                            {
+                                <img class="h-50 card-img-top" src="/pics/Books/@book.ImagePath" alt="Card image cap">
+                            }
+                            else
+                            {
+                                <img class="h-50 card-img-top" src="/pics/Books/default.png" alt="Card image cap">
+                            }
+                            <div class="card-body">
+                                <h5 class="card-title">@book.Title</h5>
+                                <div class="text-right">
+                                    @await Component.InvokeAsync("BookTabActions", new { model = book })
+                                </div>
                             </div>
                         </div>
-                    </form>
-        </div>
-</div>
-<br />
-<div class="row card-columns">
-    @foreach (var book in Model)
-    {
-        <div class="col-md-3 book">
-            <div class="card">
-                @if (!string.IsNullOrEmpty(book.ImagePath))
-                {
-                    <img class="h-50 card-img-top" src="/pics/Books/@book.ImagePath" alt="Card image cap">
-                }
-                else
-                {
-                    <img class="h-50 card-img-top" src="/pics/Books/default.png" alt="Card image cap">
-                }
-                <div class="card-body">
-                    <h5 class="card-title">@book.Title</h5>
-                    <p class="card-text text-justify">
-                        @if (string.IsNullOrEmpty(book.Description))
-                        {
-                        <p>There is no description provided for this book.</p>
-                    }
-                    else if (book.Description.Length > 125)
-                    {
-                        @(book.Description.Substring(0, 125) + "...")
-                    }
-
-                    else
-                    {
-                        <p>
-                            @book.Description
-                        </p>
-                    }
-                        </p>
-                        <div class="text-right">
-                            @await Component.InvokeAsync("BookTabActions", new { model = book })
-                        </div>
                     </div>
-                </div>
+                }
             </div>
-        }
-</div>
+
+        </div>
+    </div>
+</form>
+
 
 <script src="/lib/jquery/dist/jquery.js"></script>
 <script src="/js/site.js"></script>

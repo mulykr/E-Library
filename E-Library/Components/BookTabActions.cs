@@ -13,9 +13,9 @@ namespace LiBook.Components
             if (isAdmin)
             {
                 return new HtmlContentViewComponentResult(
-                    new HtmlString($"<a href=\"/books/details/{model.Id}\" class=\"btn btn-success\">Open</a> " +
-                    $"<a href=\"/books/edit/{model.Id}\" class=\"btn btn-info\">Edit</a> " +
-                    $"<a href=\"/books/delete/{model.Id}\" class=\"btn btn-danger\">Remove</a>"));
+                    new HtmlString($"<a href=\"/books/details/{model.Id}\" class=\"btn btn-success fa fa-eye\"> </a> " +
+                    $"<a href=\"/books/edit/{model.Id}\" class=\"btn btn-info fa fa-pencil\"> </a> " +
+                    $"<a href=\"/books/delete/{model.Id}\" class=\"btn btn-danger fa fa-trash-o\"> </a>"));
             }
 
             return new HtmlContentViewComponentResult(

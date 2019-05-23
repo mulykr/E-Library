@@ -1,4 +1,4 @@
-﻿@model ICollection<string>
+﻿@model object[]
 @using LiBook.Services.Interfaces
 
 @{
@@ -6,7 +6,7 @@
 }
 @inject IGenreService GenreService
 @{
-    var u = GenreService.GetList().ToArray();
+    var genres = GenreService.GetList().ToArray();
 }
 
 <div class="row">
@@ -19,38 +19,30 @@
         }
     </div>
 </div>
-<input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
-<br />
-<div class="poster">
-        <h2>Оберіть жанр</h2>
-        <div class="descr">
-                    <form asp-action="Search" asp-controller="Books" method="post">
-                        <input type="submit" class="btn btn-block btn-success" value="Знайти" />
-                        <div class="row">
-                            <div class="col-md">
-                                <ul class="list-group">
-                                    @foreach (var genre in u)
-                                    {
-                                        <li class="list-group-item author bg-white">
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <input type="checkbox" class="custom-checkbox" name="keys" value="@genre.Id" @(Model.Any(i => i == genre.Id) ? "checked=''" : "") />                                                   </div>
-                                                </div>
-                                                <label class="form-control text-info">@genre.Name</label>
-                                            </div>
-                                        </li>
-                                    }
-                                </ul>
-                            </div>
-                        </div>
-                    </form>
+<form asp-action="Search" asp-controller="Books" method="post">
+    <input name="word" class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="word" value="@Model[1]"/>
+    <br />
+    <div class="row">
+        <div class="col-sm-2">
+            @foreach (var genre in genres)
+            {
+                <div class="chiller_cb">
+                    <input id="@genre.Id" type="checkbox" name="genres" value="@genre.Id" @(((string[])Model[0]).Any(i => i == genre.Id) ? "checked" : "")>
+                    <label for="@genre.Id">@genre.Name</label>
+                    <span></span>
+                </div>
+            }
+
+            <br/>
+            <input type="submit" value="Search" class="btn btn-block text-white" style="background-color: rgb(127, 0, 152);" />
         </div>
-</div>
-<br />
-<div class="row card-columns">
-    @await Component.InvokeAsync("SearchBookByGenre", Model)
-</div>
+        <div class="col-sm-10">
+            <div class="row card-columns">
+                @await Component.InvokeAsync("SearchBookByGenre", new  { genres = Model[0], word = Model[1] })
+            </div>
+        </div>
+    </div>
+</form>
 
 <script src="/lib/jquery/dist/jquery.js"></script>
 <script src="/js/site.js"></script>
@@ -58,8 +50,8 @@
     highlight("menu_books");
 </script>
 <script type="text/javascript">
-    $("#search").keyup(function () {
-        var txt = $('#search').val();
+    $("#word").keyup(function () {
+        var txt = $('#word').val();
         $('.book').each(function () {
             $(this).hide();
             if ($(this).text().toUpperCase().indexOf(txt.toUpperCase()) != -1) {
