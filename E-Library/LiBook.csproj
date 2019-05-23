@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\pdf\" />
+    <Folder Include="wwwroot\pdf\" />
   </ItemGroup>
 
 </Project>
