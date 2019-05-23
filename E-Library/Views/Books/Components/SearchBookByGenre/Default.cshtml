@@ -14,23 +14,7 @@
             }
             <div class="card-body">
                 <h5 class="card-title">@book.Title</h5>
-                <p class="card-text text-justify">
-                    @if (string.IsNullOrEmpty(book.Description))
-                    {
-                    <p>There is no description provided for this book.</p>
-                }
-                else if (book.Description.Length > 125)
-                {
-                    @(book.Description.Substring(0, 125) + "...")
-                }
-
-                else
-                {
-                    <p>
-                        @book.Description
-                    </p>
-                }
-                    </p>
+                
                     <div class="text-right">
                         @await Component.InvokeAsync("BookTabActions", new { model = book })
                     </div>
@@ -38,3 +22,10 @@
             </div>
         </div>
     }
+
+@if (!Model.Any())
+{
+    <div class="col-md-12 text-center">
+        <img class="img-fluid text-center" src="/images/not_found.gif" style="max-height: 400px;"/>
+    </div>
+}
