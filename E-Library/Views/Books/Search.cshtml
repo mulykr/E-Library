@@ -9,40 +9,45 @@
     var u = GenreService.GetList().ToArray();
 }
 
-<input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
-
 <div class="row">
-
-    <div class="col-md-9">
-        <form asp-action="Search" asp-controller="Books" method="post">
-            <br />
-            <input type="submit" class="btn btn-block btn-success" value="send" />
-
-            <div class="row">
-                <div class="col-md-4">
-                    <ul class="list-group">
-                        @foreach (var genre in u)
-                        {
-                            <li class="list-group-item author bg-white">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <input type="checkbox" class="custom-checkbox" name="keys" value="@genre.Id" />
-                                        </div>
-                                    </div>
-                                    <label class="form-control text-info">@genre.Name</label>
-                                </div>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-        </form>
+    <div class="col-md-6">
+    </div>
+    <div class="col-md-6 text-right">
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-success fa fa-plus"></a>
+        }
     </div>
 </div>
-
-
-
+<input class="form-control border-right-0 border-left-0 border-top-0" style="border-bottom: 2px solid rgb(127, 0, 152)" type="text" placeholder="Search" aria-label="Search" id="search" />
+<br />
+<div class="poster">
+        <h2>Оберіть жанр</h2>
+        <div class="descr">
+                    <form asp-action="Search" asp-controller="Books" method="post">
+                        <input type="submit" class="btn btn-block btn-success" value="Знайти" />
+                        <div class="row">
+                            <div class="col-md">
+                                <ul class="list-group">
+                                    @foreach (var genre in u)
+                                    {
+                                        <li class="list-group-item author bg-white">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <input type="checkbox" class="custom-checkbox" name="keys" value="@genre.Id" />
+                                                    </div>
+                                                </div>
+                                                <label class="form-control text-info">@genre.Name</label>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+        </div>
+</div>
 <br />
 <div class="row card-columns">
     @await Component.InvokeAsync("SearchBookByGenre", Model)
