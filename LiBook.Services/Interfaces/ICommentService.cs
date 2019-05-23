@@ -12,5 +12,6 @@ namespace LiBook.Services.Interfaces
         IEnumerable<CommentDto> GetByUser(ClaimsPrincipal user);
         void AddComment(CommentDto commentDto);
         void DeleteComment(CommentDto commentDto);
+        void Like(string commentId, ClaimsPrincipal user);
     }
 }

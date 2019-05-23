@@ -60,7 +60,7 @@ namespace LiBook
 
             });
 
-            //CreateRoles(services.BuildServiceProvider()).Wait();
+            CreateRoles(services.BuildServiceProvider()).Wait();
                 
 
             services.AddScoped<IUserService, UserService>();

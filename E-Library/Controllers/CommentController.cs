@@ -6,7 +6,7 @@ using LiBook.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using Microsoft.CodeAnalysis.Operations;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace LiBook.Controllers
 {
@@ -14,32 +14,12 @@ namespace LiBook.Controllers
     public class CommentController:Controller
     {
         private readonly ICommentService _service;
-        private readonly IBookService _bookService;
         private readonly IMapper _mapper;
 
-        public CommentController(ICommentService service, IBookService bookService, IMapper mapper)
+        public CommentController(ICommentService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
-            _bookService = bookService;
-        }
-
-        public IActionResult AddComment(string id)
-        {
-            try
-            {
-                var bookDto = _bookService.Get(id);
-                var book = _mapper.Map<BookDto, BookViewModel>(bookDto);
-                return View(book);
-            }
-            catch (Exception e)
-            {
-                return View("Error", new ErrorViewModel
-                {
-                    RequestId = Request.HttpContext.TraceIdentifier,
-                    Exception = e
-                });
-            }
         }
 
         public IActionResult AddCommentConfirmed(string id, string comment)
@@ -72,7 +52,6 @@ namespace LiBook.Controllers
 
         public IActionResult Delete(string id)
         {
-            
             try
             {
                 var wlDto = new CommentDto
@@ -82,6 +61,24 @@ namespace LiBook.Controllers
                 var comment = _service.Get(id);
                 _service.DeleteComment(wlDto);
                 return Redirect($"/Books/Details/{comment.BookId}");
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
+        }
+        
+        public IActionResult Like(string id)
+        {
+            try
+            {
+                _service.Like(id, User);
+                var bookId = _service.Get(id).BookId;
+                return RedirectToAction("Details", "Books", new {id = bookId});
             }
             catch (Exception e)
             {

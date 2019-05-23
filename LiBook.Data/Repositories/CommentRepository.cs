@@ -25,6 +25,7 @@ namespace LiBook.Data.Repositories
         public IEnumerable<Comment> GetList()
         {
             return _context.Comments
+                .Include(i => i.CommentLikes)
                 .Include(i => i.Book)
                 .Include(i => i.User);
         }
@@ -32,6 +33,7 @@ namespace LiBook.Data.Repositories
         public IEnumerable<Comment> GetListByBook(Book book)
         {
             _context.Comments
+                .Include(i => i.CommentLikes)
                 .Include(i => i.Book)
                 .Where(i => i.BookId == book.Id);
             return book.Comments;
@@ -40,6 +42,7 @@ namespace LiBook.Data.Repositories
         public Comment Get(string id)
         {
             return _context.Comments
+                .Include(i => i.CommentLikes)
                 .Include(i => i.Book)
                 .Include(i => i.User)
                 .FirstOrDefault(i => i.Id == id);
@@ -48,6 +51,7 @@ namespace LiBook.Data.Repositories
         public IEnumerable<Comment> Get(Expression<Func<Comment, bool>> filter = null, Func<IQueryable<Comment>, IOrderedQueryable<Comment>> orderBy = null, string includeProperties = "")
         {
             IQueryable<Comment> query = _context.Comments
+                .Include(i => i.CommentLikes)
                 .Include(i => i.Book)
                 .Include(i => i.User);
             if (filter != null)

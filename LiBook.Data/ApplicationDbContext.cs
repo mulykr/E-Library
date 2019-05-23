@@ -29,6 +29,8 @@ namespace LiBook.Data
 
         public virtual DbSet<Comment> Comments { get; set; }
 
+        public virtual DbSet<CommentLike> CommentLikes { get; set; }
+
         public virtual DbSet<Genre> Genres { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

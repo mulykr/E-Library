@@ -69,5 +69,33 @@ namespace LiBook.Services
             }
         }
 
+        public void Like(string commentId, ClaimsPrincipal user)
+        {
+            var comment = _repository.Get(commentId);
+            if (comment != null)
+            {
+                if (comment.CommentLikes.Any(i => i.UserProfileId == user.GetUserId()))
+                {
+                    var like = comment.CommentLikes.First(i => i.UserProfileId == user.GetUserId());
+                    comment.CommentLikes.Remove(like);
+                }
+                else
+                {
+                    comment.CommentLikes.Add(new CommentLike
+                    {
+                        CommentId = commentId,
+                        UserProfileId = user.GetUserId(),
+                        Liked = true
+                    });
+                }
+
+                _repository.Update(comment);
+                _repository.Save();
+            }
+            else
+            {
+                throw new ArgumentException("Invalid comment Id.");
+            }
+        }
     }
 }

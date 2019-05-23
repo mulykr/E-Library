@@ -1,5 +1,6 @@
 ﻿using LiBook.Data.Entities;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace LiBook.Models
@@ -21,5 +22,7 @@ namespace LiBook.Models
         public string Message { get; set; }
 
         public DateTime TimeStamp { get; set; }
+
+        public ICollection<CommentLikeViewModel> CommentLikes { get; set; }
     }
 }

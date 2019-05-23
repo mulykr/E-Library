@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace LiBook.Data.Entities
 {
@@ -17,5 +18,7 @@ namespace LiBook.Data.Entities
         public string Message { get; set; }
 
         public DateTime TimeStamp { get; set; }
+
+        public ICollection<CommentLike> CommentLikes { get; set; }
     }
 }

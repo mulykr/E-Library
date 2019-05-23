@@ -1,5 +1,6 @@
 ﻿using LiBook.Data.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace LiBook.Services.DTO
 {
@@ -18,5 +19,6 @@ namespace LiBook.Services.DTO
         public string Message { get; set; }
 
         public DateTime TimeStamp { get; set; }
+        public ICollection<CommentLikeDto> CommentLikes { get; set; } 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
+using System.Security.Claims;
 using LiBook.Models;
 using LiBook.Services.Extensions.Identity;
 using Microsoft.AspNetCore.Html;
@@ -15,12 +16,23 @@ namespace LiBook.Components
             var isOwner = User != null && (User as ClaimsPrincipal).GetUserId() == model.UserId;
             if (isAdmin || isOwner)
             {
+                var likeBtn = "";
+                if (model.CommentLikes.Any(i => i.UserProfileId == (User as ClaimsPrincipal).GetUserId()))
+                {
+                    likeBtn = $"<a href=\"/Comment/Like/{model.Id}\" class=\"fa fa-thumbs-up\" style=\"font-size: 1.4em;\"> {model.CommentLikes.Count} </a>";
+                }
+                else
+                {
+                    likeBtn = $"<a href=\"/Comment/Like/{model.Id}\" class=\"fa fa-thumbs-o-up\" style=\"font-size: 1.4em;\"> {model.CommentLikes.Count} </a>";
+                }
+
                 return new HtmlContentViewComponentResult(
-                    new HtmlString($"<a href=\"/Comment/Delete/{model.Id}\" class=\"btn btn-danger\">Remove</a>"));
+                    new HtmlString(likeBtn + "\t" +
+                                   $"<a href=\"/Comment/Delete/{model.Id}\" class=\"btn btn-danger\">Remove</a>"));
             }
 
             return new HtmlContentViewComponentResult(
-                new HtmlString($""));
+                new HtmlString($"<a href=\"/Comment/Like/{model.Id}\" class=\"fa fa-thumbs-o-up\" style=\"font-size: 1.4em;\"> {model.CommentLikes.Count} </a>"));
         }
     }
 }
