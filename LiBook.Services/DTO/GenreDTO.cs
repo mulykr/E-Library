@@ -10,6 +10,8 @@ namespace LiBook.Services.DTO
 
         public string Name { get; set; }
 
+        public string Color { get; set; }
+
         public ICollection<BookGenreDTO> BookGenre { get; set; }
     }
 }

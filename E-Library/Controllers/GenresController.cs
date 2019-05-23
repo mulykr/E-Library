@@ -76,7 +76,7 @@ namespace LiBook.Controllers
         // POST: Genres/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Name")] GenreViewModel genre)
+        public IActionResult Create([Bind("Id,Name,Color")] GenreViewModel genre)
         {
             if (ModelState.IsValid)
             {
@@ -127,7 +127,7 @@ namespace LiBook.Controllers
         // POST: Genres/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(string id, [Bind("Id,Name")] GenreViewModel genre)
+        public IActionResult Edit(string id, [Bind("Id,Name,Color")] GenreViewModel genre)
         {
             if (id != genre.Id)
             {
