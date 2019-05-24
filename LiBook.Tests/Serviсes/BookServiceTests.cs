@@ -373,6 +373,46 @@ namespace LiBook.Tests.Serviсes
         }
 
         [Fact]
+        public void RemoveGenreTest()
+        {
+            // Arrange
+            var expected = new BookDto()
+            {
+                Id = "1",
+                Title = "Fname",
+                Description = "Lname"
+            };
+            var repository = new Mock<IRepository<Book>>();
+            repository.Setup(r => r.Get(It.IsAny<Expression<Func<Book, bool>>>(), null, ""))
+                .Returns(new[] {
+                    new Book
+                    {
+                        Id = "1",
+                        Title = "Fname",
+                        Description = "Lname",
+                        BooksGenres = new List<BookGenre>()
+                        {
+                            new BookGenre()
+                            {
+                                BookId = "1",
+                                GenreId = "1"
+                            }
+                        }
+                    }
+                });
+            var mapper = new Mock<IMapper>();
+            mapper.Setup(m => m.Map<Book, BookDto>(It.IsAny<Book>())).Returns(expected);
+            var svc = new BookService(repository.Object, mapper.Object, _config.Object);
+
+            // Act
+            svc.RemoveGenres("1");
+
+            // Assert
+            repository.Verify(i => i.Update(It.IsAny<Book>()), Times.Once());
+            repository.Verify(i => i.Save(), Times.Once());
+        }
+
+        [Fact]
         public void RemoveNoneAuthorsTest()
         {
             // Arrange
@@ -402,6 +442,46 @@ namespace LiBook.Tests.Serviсes
 
             // Act
             svc.RemoveAuthors("1");
+
+            // Assert
+            repository.Verify(i => i.Update(It.IsAny<Book>()), Times.Never());
+            repository.Verify(i => i.Save(), Times.Never());
+        }
+
+        [Fact]
+        public void RemoveNoneGenresTest()
+        {
+            // Arrange
+            var expected = new BookDto()
+            {
+                Id = "1",
+                Title = "Fname",
+                Description = "Lname"
+            };
+            var repository = new Mock<IRepository<Book>>();
+            repository.Setup(r => r.Get(It.IsAny<Expression<Func<Book, bool>>>(), null, ""))
+                .Returns(new[] {
+                    new Book
+                    {
+                        Id = "1",
+                        Title = "Fname",
+                        Description = "Lname",
+                        AuthorsBooks = new List<AuthorBook>()
+                        {
+                            
+                        },
+                        BooksGenres = new List<BookGenre>()
+                        {
+
+                        }
+                    }
+                });
+            var mapper = new Mock<IMapper>();
+            mapper.Setup(m => m.Map<Book, BookDto>(It.IsAny<Book>())).Returns(expected);
+            var svc = new BookService(repository.Object, mapper.Object, _config.Object);
+
+            // Act
+            svc.RemoveGenres("1");
 
             // Assert
             repository.Verify(i => i.Update(It.IsAny<Book>()), Times.Never());
