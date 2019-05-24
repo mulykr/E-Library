@@ -85,55 +85,34 @@
             
             <div class="row">
                 <div class="col-md-4">
-                    <ul class="list-group">
-                        @foreach (var author in collection1)
-                        {
-                        <li class="list-group-item author bg-white">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">
-                                        <input type="checkbox" class="custom-checkbox" name="authors" value="@author.Id" @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked=''" : "") />
-                                    </div>
-                                </div>
-                                <label class="form-control text-info">@author.FirstName @author.LastName</label>
-                            </div>
-                        </li>
-                        }
-                    </ul>
+                    @foreach (var author in collection1)
+                    {
+                        <div class="chiller_cb">
+                            <input id="@author.Id" type="checkbox" name="authors" value="@author.Id @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked=''" : "")">
+                            <label for="@author.Id">@author.FirstName @author.LastName</label>
+                            <span></span>
+                        </div>
+                    }
                 </div>
                 <div class="col-md-4">
-                    <ul class="list-group">
                         @foreach (var author in collection2)
                         {
-                            <li class="list-group-item author bg-white">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <input type="checkbox" class="custom-checkbox" name="authors" value="@author.Id" @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked=''" : "") />
-                                        </div>
-                                    </div>
-                                    <label class="form-control text-info">@author.FirstName @author.LastName</label>
-                                </div>
-                            </li>
+                        <div class="chiller_cb">
+                            <input id="@author.Id" type="checkbox" name="authors" value="@author.Id @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked=''" : "")">
+                            <label for="@author.Id">@author.FirstName @author.LastName</label>
+                            <span></span>
+                        </div>
                         }
-                    </ul>
                 </div>
                 <div class="col-md-4">
-                    <ul class="list-group">
                         @foreach (var author in collection3)
                         {
-                        <li class="list-group-item author bg-white">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">
-                                        <input type="checkbox" class="custom-checkbox" name="authors" value="@author.Id" @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked=''" : "") />
-                                    </div>
-                                </div>
-                                <label class="form-control text-info">@author.FirstName @author.LastName</label>
-                            </div>
-                        </li>
+                        <div class="chiller_cb">
+                            <input id="@author.Id" type="checkbox" name="authors" value="@author.Id @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked=''" : "")">
+                            <label for="@author.Id">@author.FirstName @author.LastName</label>
+                            <span></span>
+                        </div>
                         }
-                    </ul>
                 </div>
             </div>
         </form>

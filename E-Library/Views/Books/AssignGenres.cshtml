@@ -85,55 +85,34 @@
 
             <div class="row">
                 <div class="col-md-4">
-                    <ul class="list-group">
                         @foreach (var genre in collection1)
                         {
-                            <li class="list-group-item author bg-white">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <input type="checkbox" class="custom-checkbox" name="genres" value="@genre.Id" @(Model.BooksGenres.Any(i => i.GenreId == genre.Id) ? "checked=''" : "") />
-                                        </div>
-                                    </div>
-                                    <label class="form-control text-info">@genre.Name</label>
-                                </div>
-                            </li>
+                            <div class="chiller_cb">
+                                <input id="@genre.Id" type="checkbox" name="genres" value="@genre.Id" @(Model.BooksGenres.Any(i => i.GenreId == genre.Id) ? "checked=''" : "")>
+                                <label for="@genre.Id">@genre.Name</label>
+                                <span></span>
+                            </div>
                         }
-                    </ul>
                 </div>
                 <div class="col-md-4">
-                    <ul class="list-group">
                         @foreach (var genre in collection2)
                         {
-                            <li class="list-group-item author bg-white">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <input type="checkbox" class="custom-checkbox" name="genres" value="@genre.Id" @(Model.BooksGenres.Any(i => i.GenreId== genre.Id) ? "checked=''" : "") />
-                                        </div>
-                                    </div>
-                                    <label class="form-control text-info">@genre.Name</label>
-                                </div>
-                            </li>
+                            <div class="chiller_cb bor">
+                                <input id="@genre.Id" type="checkbox" name="genres" value="@genre.Id" @(Model.BooksGenres.Any(i => i.GenreId == genre.Id) ? "checked=''" : "")>
+                                <label for="@genre.Id">@genre.Name</label>
+                                <span></span>
+                            </div>
                         }
-                    </ul>
                 </div>
                 <div class="col-md-4">
-                    <ul class="list-group">
                         @foreach (var genre in collection3)
                         {
-                            <li class="list-group-item author bg-white">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <input type="checkbox" class="custom-checkbox" name="genres" value="@genre.Id" @(Model.BooksGenres.Any(i => i.GenreId == genre.Id) ? "checked=''" : "") />
-                                        </div>
-                                    </div>
-                                    <label class="form-control text-info">@genre.Name</label>
-                                </div>
-                            </li>
+                            <div class="chiller_cb">
+                                <input id="@genre.Id" type="checkbox" name="genres" value="@genre.Id" @(Model.BooksGenres.Any(i => i.GenreId == genre.Id) ? "checked=''" : "")>
+                                <label for="@genre.Id">@genre.Name</label>
+                                <span></span>
+                            </div>
                         }
-                    </ul>
                 </div>
             </div>
         </form>
