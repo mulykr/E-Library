@@ -4,14 +4,16 @@ using LiBook.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LiBook.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190524104416_cascadecommentlikes")]
+    partial class cascadecommentlikes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -399,8 +401,7 @@ namespace LiBook.Data.Migrations
 
                     b.HasOne("LiBook.Data.Entities.UserProfile", "UserProfile")
                         .WithMany("CommentLikes")
-                        .HasForeignKey("UserProfileId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserProfileId");
                 });
 
             modelBuilder.Entity("LiBook.Data.Entities.WishListItem", b =>

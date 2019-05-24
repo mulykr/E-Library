@@ -5,6 +5,7 @@
     var colors = new[] { "rgb(65, 137, 252)", "rgb(202, 252, 111)", "rgba(30, 230, 220)", "rgb(255, 81, 119)", "rgb(255, 199, 81)" };
     var c = 0;
     var book = Model;
+    var defaultImageBack = "bg.jpg";
 }
 
 <div class="card" style="background-color: rgba(255, 255, 255, 0.7); padding: 2em;">
@@ -21,7 +22,14 @@
         <br/>
         <hr/>
         <div class="col-md-4">
-            <img src="/pics/Books/@Model.ImagePath" class="img-fluid"/>
+            @if (string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <img src="/pics/Books/default.png" class="img-fluid"/>
+            }
+            else
+            {
+                <img src="/pics/Books/@Model.ImagePath" class="img-fluid"/>
+            }
         </div>
         <div class="col-md-8">
             <dl class="dl-horizontal">
@@ -124,5 +132,5 @@
 <script src="/lib/jquery/dist/jquery.backstretch.js"></script>
 <script type="text/javascript" src="/js/bg.js"></script>
 <script type="text/javascript">
-    bg("/pics/Books/@Model.ImagePath");
+    bg("/pics/Books/@(Model.ImagePath??defaultImageBack)");
 </script>
