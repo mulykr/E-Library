@@ -43,29 +43,6 @@ namespace LiBook.Controllers
             }
         }
 
-        // GET: Genres/Details/5
-        public IActionResult Details(string id)
-        {
-            try
-            {
-                var genre = _service.Get(id);
-                if (genre == null)
-                {
-                    return NotFound();
-                }
-
-                return View(_mapper.Map<GenreDTO, GenreViewModel>(genre));
-            }
-            catch (Exception e)
-            {
-                return View("Error", new ErrorViewModel
-                {
-                    RequestId = Request.HttpContext.TraceIdentifier,
-                    Exception = e
-                });
-            }
-        }
-
         [Authorize(Roles = "Admin")]
         // GET: Genres/Create
         public IActionResult Create()
