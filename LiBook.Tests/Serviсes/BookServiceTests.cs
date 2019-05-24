@@ -207,6 +207,39 @@ namespace LiBook.Tests.Serviсes
         }
 
         [Fact]
+        public void AssignGenreTest()
+        {
+            // Arrange
+            var expected = new BookDto()
+            {
+                Id = "1",
+                Title = "Fname",
+                Description = "Lname"
+            };
+            var repository = new Mock<IRepository<Book>>();
+            repository.Setup(r => r.Get(It.IsAny<Expression<Func<Book, bool>>>(), null, ""))
+                .Returns(new[] {
+                    new Book
+                {
+                    Id = "1",
+                    Title = "Fname",
+                    Description = "Lname",
+                    BooksGenres = new List<BookGenre>()
+                }
+            });
+            var mapper = new Mock<IMapper>();
+            mapper.Setup(m => m.Map<Book, BookDto>(It.IsAny<Book>())).Returns(expected);
+            var svc = new BookService(repository.Object, mapper.Object, _config.Object);
+
+            // Act
+            svc.AssignGenre("1", "1");
+
+            // Assert
+            repository.Verify(i => i.Update(It.IsAny<Book>()), Times.Once());
+            repository.Verify(i => i.Save(), Times.Once());
+        }
+
+        [Fact]
         public void AssignExistingAuthorTest()
         {
             // Arrange
@@ -230,6 +263,59 @@ namespace LiBook.Tests.Serviсes
                             {
                                 BookId = "1",
                                 AuthorId = "1"
+                            }
+                        }
+                    }
+                });
+            var mapper = new Mock<IMapper>();
+            mapper.Setup(m => m.Map<Book, BookDto>(It.IsAny<Book>())).Returns(expected);
+            var svc = new BookService(repository.Object, mapper.Object, _config.Object);
+
+            // Act
+            svc.AssignAuthor("1", "1");
+
+            // Assert
+            repository.Verify(i => i.Update(It.IsAny<Book>()), Times.Never());
+            repository.Verify(i => i.Save(), Times.Never());
+        }
+
+        [Fact]
+        public void AssignExistingGenreTest()
+        {
+            // Arrange
+            var expected = new BookDto()
+            {
+                Id = "1",
+                Title = "Fname",
+                Description = "Lname"
+            };
+            var repository = new Mock<IRepository<Book>>();
+            repository.Setup(r => r.Get(It.IsAny<Expression<Func<Book, bool>>>(), null, ""))
+                .Returns(new[] {
+                    new Book
+                    {
+                        Id = "1",
+                        Title = "Fname",
+                        Description = "Lname",
+                        AuthorsBooks = new List<AuthorBook>()
+                        {
+                            new AuthorBook()
+                            {
+                                BookId = "1",
+                                AuthorId = "1"
+                            }
+                        },
+                        BooksGenres = new List<BookGenre>()
+                        {
+                            new BookGenre()
+                            {
+                                BookId = "1",
+                                GenreId = "1",
+                                Genre = new Genre
+                                {
+                                    Id = "1",
+                                    Name = "Genre"
+                                }
                             }
                         }
                     }
