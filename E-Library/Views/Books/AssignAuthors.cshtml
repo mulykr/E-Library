@@ -88,7 +88,7 @@
                     @foreach (var author in collection1)
                     {
                         <div class="chiller_cb">
-                            <input id="@author.Id" type="checkbox" name="authors" value="@author.Id @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked=''" : "")">
+                            <input id="@author.Id" type="checkbox" name="authors" value="@author.Id" @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked" : "")>
                             <label for="@author.Id">@author.FirstName @author.LastName</label>
                             <span></span>
                         </div>
@@ -98,7 +98,7 @@
                         @foreach (var author in collection2)
                         {
                         <div class="chiller_cb">
-                            <input id="@author.Id" type="checkbox" name="authors" value="@author.Id @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked=''" : "")">
+                            <input id="@author.Id" type="checkbox" name="authors" value="@author.Id" @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked" : "")>
                             <label for="@author.Id">@author.FirstName @author.LastName</label>
                             <span></span>
                         </div>
@@ -108,7 +108,7 @@
                         @foreach (var author in collection3)
                         {
                         <div class="chiller_cb">
-                            <input id="@author.Id" type="checkbox" name="authors" value="@author.Id @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked=''" : "")">
+                            <input id="@author.Id" type="checkbox" name="authors" value="@author.Id" @(Model.AuthorsBooks.Any(i => i.AuthorId == author.Id) ? "checked" : "")>
                             <label for="@author.Id">@author.FirstName @author.LastName</label>
                             <span></span>
                         </div>

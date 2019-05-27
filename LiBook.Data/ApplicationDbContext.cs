@@ -76,6 +76,18 @@ namespace LiBook.Data
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<CommentLike>()
+                .HasOne(i => i.Comment)
+                .WithMany(i => i.CommentLikes)
+                .HasForeignKey(i => i.CommentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CommentLike>()
+                .HasOne(i => i.UserProfile)
+                .WithMany(i => i.CommentLikes)
+                .HasForeignKey(i => i.UserProfileId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // Genre many-to-many
             modelBuilder.Entity<BookGenre>()
                 .HasKey(x => new { x.BookId, x.GenreId});
