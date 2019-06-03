@@ -42,6 +42,15 @@ namespace LiBook.Services
                 .Select(i=>_mapper.Map<Comment, CommentDto>(i));
         }
 
+        public IEnumerable<CommentDto> GetByAuthor(AuthorDto author)
+        {
+            return _repository
+                .Get(i => i.AuthorId == author.Id)
+                .OrderBy(i => i.TimeStamp)
+                .Reverse()
+                .Select(i => _mapper.Map<Comment, CommentDto>(i));
+        }
+
         public IEnumerable<CommentDto> GetByUser(ClaimsPrincipal user)
         {
             return _repository.Get(i =>

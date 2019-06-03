@@ -18,5 +18,7 @@ namespace LiBook.Models
         public string Biography { get; set; }
 
         public ICollection<AuthorBookViewModel> AuthorsBooks { get; set; }
+
+        public ICollection<CommentViewModel> AuthorComments { get; set; }
     }
 }

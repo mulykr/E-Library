@@ -1,0 +1,41 @@
+﻿@model IEnumerable<CommentViewModel>
+@{
+    Layout = null;
+}
+
+@if (!Model.Any())
+{
+    <div class="row">
+        <div class="col-md-9">
+            <p class="text-justify">
+                There are no comments yet. Be the first who comments this author! You should know that comment has to contain from 50 to 250 charachters :)
+            </p>
+        </div>
+        <div class="col-md-3">
+            <img src="/images/cat.gif" class="img-fluid" />
+        </div>
+    </div>
+}
+
+@foreach (var comment in Model)
+{
+    <div class="card">
+        <div class="card-body">
+            <h6>
+                <b>
+                    @{
+                        var from = comment.User.FirstName + " " + comment.User.LastName != " " ? comment.User.FirstName + " " + comment.User.LastName : "Funny Cat";
+                    }
+                    @from at @comment.TimeStamp.ToShortDateString() @comment.TimeStamp.ToShortTimeString()
+                </b>
+            </h6>
+            <p class="text-justify">
+                @comment.Message
+            </p>
+            <div class="text-right">
+                @await Component.InvokeAsync("CommentManageAuthorPanel", new { model = comment })
+            </div>
+        </div>
+    </div>
+    <br />
+}

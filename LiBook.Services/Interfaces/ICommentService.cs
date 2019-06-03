@@ -9,6 +9,7 @@ namespace LiBook.Services.Interfaces
     {
         CommentDto Get(string id);
         IEnumerable<CommentDto> GetByBook(BookDto book);
+        IEnumerable<CommentDto> GetByAuthor(AuthorDto author);
         IEnumerable<CommentDto> GetByUser(ClaimsPrincipal user);
         void AddComment(CommentDto commentDto);
         void DeleteComment(CommentDto commentDto);

@@ -50,6 +50,34 @@ namespace LiBook.Controllers
             }
         }
 
+        public IActionResult AddCommentConfirmedAuthor(string id, string comment)
+        {
+
+            try
+            {
+                if (comment == null || comment.Length < 50 || comment.Length > 250)
+                {
+                    throw new ArgumentException("Comment text length must be between 50 and 250.\n", nameof(comment));
+                }
+                var commentViewModel = new CommentViewModel()
+                {
+                    AuthorId = id,
+                    UserId = User.GetUserId(),
+                    Message = comment
+                };
+                _service.AddComment(_mapper.Map<CommentViewModel, CommentDto>(commentViewModel));
+                return Redirect($"/Authors/Details/{id}");
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
+        }
+
         public IActionResult Delete(string id)
         {
             try
@@ -71,7 +99,29 @@ namespace LiBook.Controllers
                 });
             }
         }
-        
+
+        public IActionResult DeleteAuthorComment(string id)
+        {
+            try
+            {
+                var wlDto = new CommentDto
+                {
+                    Id = id
+                };
+                var comment = _service.Get(id);
+                _service.DeleteComment(wlDto);
+                return Redirect($"/Authors/Details/{comment.AuthorId}");
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
+        }
+
         public IActionResult Like(string id)
         {
             try
@@ -79,6 +129,24 @@ namespace LiBook.Controllers
                 _service.Like(id, User);
                 var bookId = _service.Get(id).BookId;
                 return RedirectToAction("Details", "Books", new {id = bookId});
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
+        }
+
+        public IActionResult LikeAuthor(string id)
+        {
+            try
+            {
+                _service.Like(id, User);
+                var AuthorId = _service.Get(id).AuthorId;
+                return RedirectToAction("Details", "Authors", new { id = AuthorId });
             }
             catch (Exception e)
             {

@@ -12,6 +12,10 @@ namespace LiBook.Services.DTO
 
         public Book Book { get; set; }
 
+        public string AuthorId { get; set; }
+
+        public Author Author { get; set; }
+
         public string UserId { get; set; }
 
         public UserProfile User { get; set; }
