@@ -29,6 +29,7 @@ namespace LiBook.Data.Repositories
                 .AsNoTracking()
                 .Include(item => item.AuthorsBooks)
                 .ThenInclude(item => item.Book)
+                .Include(item=>item.AuthorLikes)
                 .FirstOrDefault(item => item.Id == id);
         }
 

@@ -61,7 +61,6 @@ namespace LiBook
             });
 
             CreateRoles(services.BuildServiceProvider()).Wait();
-                
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBookService, BookService>();

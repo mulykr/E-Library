@@ -15,7 +15,7 @@ namespace LiBook.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -48,6 +48,26 @@ namespace LiBook.Data.Migrations
                     b.HasIndex("BookId");
 
                     b.ToTable("AuthorBooks");
+                });
+
+            modelBuilder.Entity("LiBook.Data.Entities.AuthorLike", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AuthorId");
+
+                    b.Property<bool>("Liked");
+
+                    b.Property<string>("UserProfileId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("UserProfileId");
+
+                    b.ToTable("AuthorLikes");
                 });
 
             modelBuilder.Entity("LiBook.Data.Entities.Book", b =>
@@ -355,6 +375,17 @@ namespace LiBook.Data.Migrations
                         .WithMany("AuthorsBooks")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("LiBook.Data.Entities.AuthorLike", b =>
+                {
+                    b.HasOne("LiBook.Data.Entities.Author", "Author")
+                        .WithMany("AuthorLikes")
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("LiBook.Data.Entities.UserProfile", "UserProfile")
+                        .WithMany()
+                        .HasForeignKey("UserProfileId");
                 });
 
             modelBuilder.Entity("LiBook.Data.Entities.Book", b =>

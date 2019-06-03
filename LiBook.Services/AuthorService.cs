@@ -10,6 +10,8 @@ using LiBook.Utilities.Images;
 using LiBook.Data.Interfaces;
 using LiBook.Services.DTO;
 using LiBook.Services.Interfaces;
+using System.Security.Claims;
+using LiBook.Services.Extensions.Identity;
 
 namespace LiBook.Services
 {
@@ -108,6 +110,35 @@ namespace LiBook.Services
             _repository.Delete(id);
             _repository.Save();
 
+        }
+
+        public void Like(string authorId, ClaimsPrincipal user)
+        {
+            var author = _repository.Get(authorId);
+            if (author != null)
+            {
+                if (author.AuthorLikes.Any(i => i.UserProfileId == user.GetUserId()))
+                {
+                    var like = author.AuthorLikes.First(i => i.UserProfileId == user.GetUserId());
+                    author.AuthorLikes.Remove(like);
+                }
+                else
+                {
+                    author.AuthorLikes.Add(new AuthorLike
+                    {
+                        AuthorId=authorId,
+                        UserProfileId = user.GetUserId(),
+                        Liked = true
+                    });
+                }
+
+                _repository.Update(author);
+                _repository.Save();
+            }
+            else
+            {
+                throw new ArgumentException("Invalid comment Id.");
+            }
         }
 
 

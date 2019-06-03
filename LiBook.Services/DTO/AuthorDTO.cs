@@ -15,5 +15,7 @@ namespace LiBook.Services.DTO
         public string Biography { get; set; }
 
         public ICollection<AuthorBookDto> AuthorsBooks { get; set; }
+
+        public ICollection<AuthorLikeDTO> AuthorLikes { get; set; }
     }
 }

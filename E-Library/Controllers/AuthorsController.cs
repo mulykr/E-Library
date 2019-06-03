@@ -210,6 +210,24 @@ namespace LiBook.Controllers
 
         }
 
+        public IActionResult Like(string id)
+        {
+            try
+            {
+                _service.Like(id, User);
+                var authorId = _service.Get(id).Id;
+                return RedirectToAction("Details", "Authors", new { id = authorId });
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                    Exception = e
+                });
+            }
+        }
+
         private bool AuthorExists(string id)
         {
             return _service.Get(id) != null;

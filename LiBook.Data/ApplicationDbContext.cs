@@ -6,10 +6,10 @@ namespace LiBook.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public ApplicationDbContext()
-        {
+        //public ApplicationDbContext()
+        //{
 
-        }
+        //}
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -30,6 +30,8 @@ namespace LiBook.Data
         public virtual DbSet<Comment> Comments { get; set; }
 
         public virtual DbSet<CommentLike> CommentLikes { get; set; }
+
+        public virtual DbSet<AuthorLike> AuthorLikes { get; set; }
 
         public virtual DbSet<Genre> Genres { get; set; }
 
